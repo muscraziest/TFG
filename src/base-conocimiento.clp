@@ -75,7 +75,7 @@
 	(slot indice)
 )
 
-(deftemplate notaExtraña
+(deftemplate notaExtrania
 
 	(slot voz)
 	(slot indice)
@@ -99,9 +99,7 @@
 	(slot indice)
 )
 
-
 ;Hechos asertados como conocimiento de teoría musical
-
 ;TONALIDADES
 (deftemplate tonalidad
 	(slot nombre)
@@ -153,7 +151,6 @@
 	(slot modo2)
 )
 
-
 (deffacts relativos
 	(relativo (nombre1 Cb) (modo1 mayor) (nombre2 Ab) (modo2 menor))
 	(relativo (nombre1 Gb) (modo1 mayor) (nombre2 Eb) (modo2 menor))
@@ -171,7 +168,6 @@
 	(relativo (nombre1 Fs) (modo1 mayor) (nombre2 Ds) (modo2 menor))
 	(relativo (nombre1 Ds) (modo1 mayor) (nombre2 As) (modo2 menor))
 )
-
 
 ;ESCALAS
 (deftemplate escala
@@ -1603,7 +1599,7 @@
 	(test(= ?j (+ ?i 1)))
 	(not (sucesionLogica (acorde1 ?g1) (acorde2 ?g2)))
 	=>
-	(assert (fallor (tipo sucesionLogica) (tiempo ?i)))
+	(assert (fallo (tipo sucesionLogica) (tiempo ?i)))
 )
 
 ; Regla para comprobar que no hay dos acordes en segunda inversión consecutivos
@@ -1611,7 +1607,7 @@
 
 	(acorde (inversion segunda) (indice ?i))
 	(acorde (inversion segunda) (indice ?j))
-	(test(eq ?i (+ ?j 1)))
+	(test(eq ?j (+ ?i 1)))
 	=>
 	(assert (fallo (tipo segundas_inversiones_consecutivas) (tiempo ?i)))
 )
@@ -1625,8 +1621,8 @@
 	(nota (tono ?t1) (voz 4) (indice ?i))
 	(nota (tono ?t2) (voz 4) (indice ?j))
 	(nota (tono ?t3) (voz 4) (indice ?k))
-	(test(eq ?i (+ ?j 1)))
-	(test(eq ?j (+ ?k 1)))
+	(test(eq ?j (+ ?i 1)))
+	(test(eq ?k (+ ?j 1)))
 	(not (sucesionLogica (acorde1 ?g1) (acorde2 ?g2)))
 	(not (sucesionLogica (acorde1 ?g2) (acorde2 ?g3)))
 	=>
@@ -1641,7 +1637,7 @@
 
 	(acorde (grado I) (inversion fundamental) (indice ?i))
 	(acorde (grado II) (inversion fundamental) (indice ?j))
-	(test(eq ?i (+ ?j 1)))
+	(test(eq ?j (+ ?i 1)))
 	=>
 	(assert (fallo (tipo sucesion_acordes_erronea_1) (tiempo ?i)))
 )
@@ -1650,7 +1646,7 @@
 
 	(acorde (grado II) (inversion fundamental) (indice ?i))
 	(acorde (grado III) (inversion fundamental) (indice ?j))
-	(test(eq ?i (+ ?j 1)))
+	(test(eq ?j (+ ?i 1)))
 	=>
 	(assert (fallo (tipo sucesion_acordes_erronea_2) (tiempo ?i)))
 )
@@ -1659,7 +1655,7 @@
 
 	(acorde (grado III) (inversion fundamental) (indice ?i))
 	(acorde (grado IV) (inversion fundamental) (indice ?j))
-	(test(eq ?i (+ ?j 1)))
+	(test(eq ?j (+ ?i 1)))
 	=>
 	(assert (fallo (tipo sucesion_acordes_erronea_3) (tiempo ?i)))
 )
@@ -2144,6 +2140,15 @@
 	(assert (acordeCompleto ?i))
 )
 
+; Regla para comprobar si hay acordes incompletos
+(defrule acordes_incompletos
+
+	(acorde (grado ?g) (indice ?i))
+	(not(exists(acordeCompleto ?i)))
+	=>
+	(assert(fallo (tipo acorde_incompleto) (tiempo ?i)))
+)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;		MODULO 2: FALLOS MELÓDICOS		      ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2170,7 +2175,7 @@
 	(acorde_3 (grado I) (nombre_tonalidad ?n) (modo_tonalidad ?m) (tercera ?tercera))
 	(nota (tono ?septima) (voz ?v) (indice ?i))
 	(nota (tono ?t) (voz ?v) (indice ?j))
-	(test(eq ?i (+ ?j 1)))
+	(test(eq ?j (+ ?i 1)))
 	(not(test(eq ?tercera ?t)))
 	=>
 	(assert(fallo (tipo resolucion_septima) (voz1 ?v) (voz2 ?v) (tiempo ?i)))
@@ -2208,7 +2213,7 @@
 ; NOTAS EXTRAÑAS
 
 ; Regla para encontrar notas extrañas en la voz soprano
-(defrule notas_extraña_soprano
+(defrule notas_extrania_soprano
 
 	(not(exists(acorde (indice ?i))))
 	(nota (tono ?t1) (voz 1) (indice ?i))
@@ -2275,11 +2280,11 @@
 		)
 	)		
 	=>
-	(notaExtraña (voz 1) (indice ?i))
+	(assert(notaExtrania (voz 1) (indice ?i)))
 )
 
 ; Regla para encontrar notas extrañas en la voz contraalto
-(defrule notas_extraña_contraalto
+(defrule notas_extrania_contraalto
 
 	(not(exists(acorde (indice ?i))))
 	(nota (tono ?t1) (voz 1) (indice ?i))
@@ -2346,11 +2351,11 @@
 		)
 	)		
 	=>
-	(notaExtraña (voz 2) (indice ?i))
+	(assert(notaExtrania (voz 2) (indice ?i)))
 )
 
 ; Regla para encontrar notas extrañas en la voz tenor
-(defrule notas_extraña_tenor
+(defrule notas_extrania_tenor
 
 	(not(exists(acorde (indice ?i))))
 	(nota (tono ?t1) (voz 1) (indice ?i))
@@ -2417,11 +2422,11 @@
 		)
 	)		
 	=>
-	(notaExtraña (voz 3) (indice ?i))
+	(assert(notaExtrania (voz 3) (indice ?i)))
 )
 
 ; Regla para encontrar notas extrañas en la voz bajo
-(defrule notas_extraña_bajo
+(defrule notas_extrania_bajo
 
 	(not(exists(acorde (indice ?i))))
 	(nota (tono ?t1) (voz 1) (indice ?i))
@@ -2488,16 +2493,16 @@
 		)
 	)		
 	=>
-	(notaExtraña (voz 4) (indice ?i))
+	(assert(notaExtrania (voz 4) (indice ?i)))
 )
 
 ; Regla para comprobar si una nota extraña es una nota de paso
 (defrule comprobar_notas_de_paso
 
-	(notaExtraña (voz ?v) (indice ?i))
+	(notaExtrania (voz ?v) (indice ?i))
 	(nota (tono ?t1) (voz ?v) (indice ?i))
 	(nota (tono ?t2) (voz ?v) (indice ?j))
-	(test(eq ?i (+ ?j 1)))
+	(test(eq ?j (+ ?i 1)))
 	(or
 		(exists (intervalo (distancia 2) (nota1 ?t1) (nota2 ?t2)))
 		(exists (intervalo (distancia 2) (nota1 ?t2) (nota2 ?t1)))
@@ -2511,12 +2516,12 @@
 ; Regla para comprobar si una nota extraña es una nota de floreo
 (defrule comprobar_notas_de_floreo
 
-	(notaExtraña (voz ?v) (indice ?i))
+	(notaExtrania (voz ?v) (indice ?i))
 	(nota (tono ?t1) (voz ?v) (indice ?i))
 	(nota (tono ?t2) (voz ?v) (indice ?j))
 	(nota (tono ?t3) (voz ?v) (indice ?k))
-	(test(eq ?i (+ ?j 1)))
-	(test(eq ?i (- ?k 1)))
+	(test(eq ?j (+ ?i 1)))
+	(test(eq ?k (- ?i 1)))
 	(or
 		(exists (intervalo (distancia 2) (nota1 ?t1) (nota2 ?t2)))
 		(exists (intervalo (distancia 2) (nota1 ?t2) (nota2 ?t1)))
@@ -2530,10 +2535,10 @@
 ; Regla para comprobar si una nota extraña es una nota de apoyatura
 (defrule comprobar_apoyaturas
 
-	(notaExtraña (voz ?v) (indice ?i))
+	(notaExtrania (voz ?v) (indice ?i))
 	(nota (tono ?t1) (voz ?v) (indice ?i))
 	(nota (tono ?t2) (voz ?v) (indice ?j))
-	(test(eq ?i (+ ?j 1)))
+	(test(eq ?j (+ ?i 1)))
 	(or
 		(exists (intervalo (distancia 2) (nota1 ?t1) (nota2 ?t2)))
 		(exists (intervalo (distancia 2) (nota1 ?t2) (nota2 ?t1)))
@@ -2645,7 +2650,7 @@
 	(test(< ?contrarios ?directos))
 	(test(< ?contrarios ?oblicuos))
 	=>
-	(assert(fallo (tipo contrapunto_voces_extremas) (voz1 1) (voz2 2) (indice 1)))
+	(assert(fallo (tipo contrapunto_voces_extremas) (voz1 1) (voz2 2) (tiempo 1)))
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2664,15 +2669,15 @@
 	(movimiento (tipo ascendente) (voz ?v) (indice ?j))
 	(intervalo (distancia ?d1) (nota1 ?t1) (nota2 ?t2))
 	(intervalo (distancia ?d2) (nota1 ?t2) (nota2 ?t3))
-	(intervalo (distancia ?d3) (tipo ?tipo) (nota1 ?t1) (nota ?t3))
+	(intervalo (distancia ?d3) (tipo ?tipo) (nota1 ?t1) (nota2 ?t3))
 	(test(>= ?d1 3))
 	(test(>= ?d2 3))
 	(intervalo_disonante (distancia ?d3) (tipo ?tipo))
 	=>
-	(assert(fallo (tipo contrapunto_salto_ascendente) (voz1 ?v) (voz2 ?V) (indice ?i)))
+	(assert(fallo (tipo contrapunto_salto_ascendente) (voz1 ?v) (voz2 ?v) (tiempo ?i)))
 )
 
-(defrule comprobar_contrapunto_salto_ascendente
+(defrule comprobar_contrapunto_salto_descendente
 
 	(nota_melodia (tono ?t1) (voz ?v) (indice ?i))
 	(nota_melodia (tono ?t2) (voz ?v) (indice ?j))
@@ -2683,12 +2688,12 @@
 	(movimiento (tipo descendente) (voz ?v) (indice ?j))
 	(intervalo (distancia ?d1) (nota1 ?t2) (nota2 ?t1))
 	(intervalo (distancia ?d2) (nota1 ?t3) (nota2 ?t2))
-	(intervalo (distancia ?d3) (tipo ?tipo) (nota1 ?t3) (nota ?t1))
+	(intervalo (distancia ?d3) (tipo ?tipo) (nota1 ?t3) (nota2 ?t1))
 	(test(>= ?d1 3))
 	(test(>= ?d2 3))
 	(intervalo_disonante (distancia ?d3) (tipo ?tipo))
 	=>
-	(assert(fallo (tipo contrapunto_salto_descendente) (voz1 ?v) (voz2 ?V) (indice ?i)))
+	(assert(fallo (tipo contrapunto_salto_descendente) (voz1 ?v) (voz2 ?v) (tiempo ?i)))
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2881,68 +2886,6 @@
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; BAJO
-(defrule contar_saltos_pequeños_ascendentes_bajo
-
-	?f <- (saltosPequeñosBajo ?c)
-	(nota_melodia (tono ?t1) (voz 4) (indice ?i))
-	(nota_melodia (tono ?t2) (voz 4) (indice ?j))
-	(test(eq ?j (+ ?i 1)))
-	(movimiento (tipo ascendente) (voz 4) (indice ?i))
-	(intervalo (distancia ?d) (nota1 ?t1) (nota2 ?t2))
-	(test(<= ?d 4))
-	=>
-	(retract ?f)
-	(bind ?c (+ ?c 1))
-	(assert(saltosPequeñosBajo ?c))
-)
-
-(defrule contar_saltos_pequeños_descendentes_bajo
-
-	?f <- (saltosPequeñosBajo ?c)
-	(nota_melodia (tono ?t1) (voz 4 (indice ?i))
-	(nota_melodia (tono ?t2) (voz 4 (indice ?j))
-	(test(eq ?j (+ ?i 1)))
-	(movimiento (tipo descendente) (voz 4) (indice ?i))
-	(intervalo (distancia ?d) (nota1 ?t2) (nota2 ?t1))
-	(test(<= ?d 4))
-	=>
-	(retract ?f)
-	(bind ?c (+ ?c 1))
-	(assert(saltosPequeñosBajo ?c))
-)
-
-(defrule contar_saltos_grandes_ascendentes_bajo
-
-	?f <- (saltosGrandesBajo ?c)
-	(nota_melodia (tono ?t1) (voz 4) (indice ?i))
-	(nota_melodia (tono ?t2) (voz 4) (indice ?j))
-	(test(eq ?j (+ ?i 1)))
-	(movimiento (tipo ascendente) (voz 4) (indice ?i))
-	(intervalo (distancia ?d) (nota1 ?t1) (nota2 ?t2))
-	(test(> ?d 4))
-	=>
-	(retract ?f)
-	(bind ?c (+ ?c 1))
-	(assert(saltosGrandesBajo ?c))
-)
-
-(defrule contar_saltos_grandes_descendentes_bajo
-
-	?f <- (saltosGrandesBajo ?c)
-	(nota_melodia (tono ?t1) (voz 4) (indice ?i))
-	(nota_melodia (tono ?t2) (voz 4) (indice ?j))
-	(test(eq ?j (+ ?i 1)))
-	(movimiento (tipo descendente) (voz41) (indice ?i))
-	(intervalo (distancia ?d) (nota1 ?t2) (nota2 ?t1))
-	(test(> ?d 4))
-	=>
-	(retract ?f)
-	(bind ?c (+ ?c 1))
-	(assert(saltosGrandesBajo ?c))
-)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Reglas para comprobar que las melodías soprano, contraalto y tenor son coherentes
 
 (defrule saltos_melodia_soprano
@@ -2950,7 +2893,7 @@
 	(saltosPequeñosSoprano ?b)
 	(>= ?a ?b)
 	=>
-	(assert(fallo (tipo melodia_incoherente) (voz1 1) (voz2 1) (indice 1)))
+	(assert(fallo (tipo melodia_incoherente) (voz1 1) (voz2 1) (tiempo 1)))
 )
 
 (defrule saltos_melodia_contraalto
@@ -2958,7 +2901,7 @@
 	(saltosPequeñosContraalto ?b)
 	(>= ?a ?b)
 	=>
-	(assert(fallo (tipo melodia_incoherente) (voz1 2) (voz2 2) (indice 1)))
+	(assert(fallo (tipo melodia_incoherente) (voz1 2) (voz2 2) (tiempo 1)))
 )
 
 (defrule saltos_melodia_tenor
@@ -2966,7 +2909,7 @@
 	(saltosPequeñosTenor ?b)
 	(>= ?a ?b)
 	=>
-	(assert(fallo (tipo melodia_incoherente) (voz1 3) (voz2 3) (indice 1)))
+	(assert(fallo (tipo melodia_incoherente) (voz1 3) (voz2 3) (tiempo 1)))
 )
 
 ; Regla para comprobar que no hay dos saltos grandes consecutivos en cualquier voz excepto el bajo
@@ -2985,7 +2928,7 @@
 	(test(> ?d1 4))
 	(test(> ?d2 4))
 	=>
-	(assert(fallo (tipo melodia_incoherente_saltos_grandes) (voz1 ?v) (voz2 ?v) (indice ?i)))
+	(assert(fallo (tipo melodia_incoherente_saltos_grandes) (voz1 ?v) (voz2 ?v) (tiempo ?i)))
 )
 
 (defrule comprobar_saltos_grandes_consecutivos_descendentes
@@ -3003,7 +2946,7 @@
 	(test(> ?d1 4))
 	(test(> ?d2 4))
 	=>
-	(assert(fallo (tipo melodia_incoherente_saltos_grandes) (voz1 ?v) (voz2 ?v) (indice ?i)))
+	(assert(fallo (tipo melodia_incoherente_saltos_grandes) (voz1 ?v) (voz2 ?v) (tiempo ?i)))
 )
 
 (defrule comprobar_saltos_grandes_consecutivos_ascendente_descendente
@@ -3021,7 +2964,7 @@
 	(test(> ?d1 4))
 	(test(> ?d2 4))
 	=>
-	(assert(fallo (tipo melodia_incoherente_saltos_grandes) (voz1 ?v) (voz2 ?v) (indice ?i)))
+	(assert(fallo (tipo melodia_incoherente_saltos_grandes) (voz1 ?v) (voz2 ?v) (tiempo ?i)))
 )
 
 (defrule comprobar_saltos_grandes_consecutivos_descendente_ascendente
@@ -3039,5 +2982,210 @@
 	(test(> ?d1 4))
 	(test(> ?d2 4))
 	=>
-	(assert(fallo (tipo melodia_incoherente_saltos_grandes) (voz1 ?v) (voz2 ?v) (indice ?i)))
+	(assert(fallo (tipo melodia_incoherente_saltos_grandes) (voz1 ?v) (voz2 ?v) (tiempo ?i)))
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;		MODULO 3: MOSTRAR FALLOS		      ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Reglas para mostrar los tipos de fallos
+(defrule mostrar_quintas
+
+	(declare (salience -10000))
+	(fallo (tipo quintas) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+	=>
+	(bind ?compas (/ ?i 16))
+	(bind ?parte (/ (mod ?i 16) 4))
+	(printout t "Hay quintas paralelas en las voces " ?v1 " y " ?v2 " en la " ?parte " del compas " ?compas ".")
+)
+
+(defrule mostrar_octavas
+
+	(declare (salience -10000))
+	(fallo (tipo octavas) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+	=>
+	(bind ?compas (/ ?i 16))
+	(bind ?parte (/ (mod ?i 16) 4))
+	(printout t "Hay octavas paralelas en las voces " ?v1 " y " ?v2 " en la " ?parte " del compas " ?compas ".")
+)
+
+(defrule mostrar_quintas_directas
+
+	(declare (salience -10000))
+	(fallo (tipo quintas_directas) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+	=>
+	(bind ?compas (/ ?i 16))
+	(bind ?parte (/ (mod ?i 16) 4))
+	(printout t "Hay quintas directas en voces extremas en la " ?parte " del compas " ?compas ".")
+)
+
+(defrule mostrar_octavas_directas
+
+	(declare (salience -10000))
+	(fallo (tipo octavas_directas) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+	=>
+	(bind ?compas (/ ?i 16))
+	(bind ?parte (/ (mod ?i 16) 4))
+	(printout t "Hay octavas directas en voces extremas en la " ?parte " del compas " ?compas ".")
+)
+
+(defrule mostrar_tritono
+
+	(declare (salience -10000))
+	(fallo (tipo tritono) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+	=>
+	(bind ?compas (/ ?i 16))
+	(bind ?parte (/ (mod ?i 16) 4))
+	(printout t "Hay tritono entre las voces " ?v1 " y " ?v2 " en la " ?parte " del compas " ?compas ".")
+)
+
+(defrule mostrar_duplicacion_sensibles
+
+	(declare (salience -10000))
+	(fallo (tipo duplicacion_sensible) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+	=>
+	(bind ?compas (/ ?i 16))
+	(bind ?parte (/ (mod ?i 16) 4))
+	(printout t "Las voces " ?v1 " y " ?v2 " duplican la sensible de la tonalidad en la " ?parte " del compas " ?compas ".")
+)
+
+(defrule mostrar_segundas_inv_consecutivas
+
+	(declare (salience -10000))
+	(fallo (tipo segundas_inversiones_consecutivas) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+	=>
+	(bind ?compas (/ ?i 16))
+	(bind ?parte (/ (mod ?i 16) 4))
+	(printout t "En la " ?parte " del compas " ?compas " hay dos acordes en segunda inversión consecutivos.")
+)
+
+(defrule mostrar_sucesion_erronea_1
+
+	(declare (salience -10000))
+	(fallo (tipo sucesion_acordes_erronea_1) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+	=>
+	(bind ?compas (/ ?i 16))
+	(bind ?parte (/ (mod ?i 16) 4))
+	(printout t "En la " ?parte " del compas " ?compas " se da la sucesión de acordes I-II en estado fundamental, la cual es incorrecta.")
+)
+
+(defrule mostrar_sucesion_erronea_2
+
+	(declare (salience -10000))
+	(fallo (tipo sucesion_acordes_erronea_2) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+	=>
+	(bind ?compas (/ ?i 16))
+	(bind ?parte (/ (mod ?i 16) 4))
+	(printout t "En la " ?parte " del compas " ?compas " se da la sucesión de acordes II-III en estado fundamental, la cual es incorrecta.")
+)
+
+(defrule mostrar_sucesion_erronea_3
+
+	(declare (salience -10000))
+	(fallo (tipo sucesion_acordes_erronea_3) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+	=>
+	(bind ?compas (/ ?i 16))
+	(bind ?parte (/ (mod ?i 16) 4))
+	(printout t "En la " ?parte " del compas " ?compas " se da la sucesión de acordes III-Iv en estado fundamental, la cual es incorrecta.")
+)
+
+(defrule mostrar_resolucion_sensible
+
+	(declare (salience -10000))
+	(fallo (tipo resolucion_sensible) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+	=>
+	(bind ?compas (/ ?i 16))
+	(bind ?parte (/ (mod ?i 16) 4))
+	(printout t "En la " ?parte " del compas " ?compas " la sensible en la voz " ?v1 " no resuelve.")
+)
+
+(defrule mostrar_resolucion_septima
+
+	(declare (salience -10000))
+	(fallo (tipo resolucion_septima) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+	=>
+	(bind ?compas (/ ?i 16))
+	(bind ?parte (/ (mod ?i 16) 4))
+	(printout t "En la " ?parte " del compas " ?compas " la septima en la voz " ?v1 " no resuelve.")
+)
+
+(defrule mostrar_segunda_aumentada_melodica
+
+	(declare (salience -10000))
+	(fallo (tipo segunda_aumentada_melodica) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+	=>
+	(bind ?compas (/ ?i 16))
+	(bind ?parte (/ (mod ?i 16) 4))
+	(printout t "En la " ?parte " del compas " ?compas " en melodía de la voz " ?v1 " hay una intervalo de 2 aumentada.")
+)
+
+(defrule mostrar_tritono_melodico
+
+	(declare (salience -10000))
+	(fallo (tipo tritono_melodico) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+	=>
+	(bind ?compas (/ ?i 16))
+	(bind ?parte (/ (mod ?i 16) 4))
+	(printout t "En la " ?parte " del compas " ?compas " en melodía de la voz " ?v1 " hay una intervalo de tritono.")
+)
+
+(defrule mostrar_contrapunto_voces_extremas
+
+	(declare (salience -10000))
+	(fallo (tipo contrapunto_voces_extremas) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+	=>
+	(bind ?compas (/ ?i 16))
+	(bind ?parte (/ (mod ?i 16) 4))
+	(printout t "No hay un buen contrapunto entre las voces extremas. Hay demasiados movimientos directos u oblicuos en comparación con el movimiento contrario que debería predominar.")
+)
+
+(defrule mostrar_contrapunto_saltos_1
+
+	(declare (salience -10000))
+	(fallo (tipo contrapunto_salto_ascendente) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+	=>
+	(bind ?compas (/ ?i 16))
+	(bind ?parte (/ (mod ?i 16) 4))
+	(printout t "En el compas " ?compas " hay disonancias entre notas con saltos ascendetes en la melodía de la voz " ?v1 ". Hay dos saltos consecutivos en los cuales la primera nota y la última son disonantes.")
+)
+
+(defrule mostrar_contrapunto_saltos_2
+
+	(declare (salience -10000))
+	(fallo (tipo contrapunto_salto_descendente) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+	=>
+	(bind ?compas (/ ?i 16))
+	(bind ?parte (/ (mod ?i 16) 4))
+	(printout t "En el compas " ?compas " hay disonancias entre notas con saltos descendentes en la melodía de la voz " ?v1 ". Hay dos saltos consecutivos en los cuales la primera nota y la última son disonantes.")
+)
+
+(defrule mostrar_melodia_incoherente
+
+	(declare (salience -10000))
+	(fallo (tipo melodia_incoherente) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+	=>
+	(bind ?compas (/ ?i 16))
+	(bind ?parte (/ (mod ?i 16) 4))
+	(printout t "La melodía de la voz " ?v1 " es bastante incoherente. Se producen demasiados saltos.")
+)
+
+(defrule mostrar_melodia_incoherente_saltos
+
+	(declare (salience -10000))
+	(fallo (tipo melodia_incoherente) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+	=>
+	(bind ?compas (/ ?i 16))
+	(bind ?parte (/ (mod ?i 16) 4))
+	(printout t "La melodía de la voz " ?v1 " es bastante incoherente en el compás " ?compas " al producirse dos saltos grandes consecutivos.")
+)
+
+(defrule mostrar_acordes_incompletos
+
+	(declare (salience -10000))
+	(fallo (tipo acordes_incompletos) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+	=>
+	(bind ?compas (/ ?i 16))
+	(bind ?parte (/ (mod ?i 16) 4))
+	(printout t "En la parte " ?parte " del " ?compas " hay un acorde incompleto.")
 )
