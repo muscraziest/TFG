@@ -1,0 +1,25 @@
+{% load static %}
+<html>
+	<head>
+		<title> SEAM </title>	
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" type = "text/css" href="{% static 'tfg_web.css' %}">
+	</head>
+	<body>
+		<div class="page-header">
+			<h1><a href="/tfg/"> Sistema Experto de Análisis Musical </a></h1>
+		</div>
+		<div class="explication">
+			<p> Bienvenido al Sistema Experto de Análisis de Partituras de coro.</p> 
+			<p> Selecciona de las siguientes opciones lo que quieres analizar y adjunta el archivo correspondiente. </p>
+		</div>
+		<div class="post">
+			<form action="" method="post" enctype="multipart/form-data">
+				{% csrf_token %}
+				{{ form.as_p }}
+				<input type="submit" value="Enviar" class="btn btn-success"/>
+			</form>
+		</div>
+	</body>
+</html>
