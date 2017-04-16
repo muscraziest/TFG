@@ -10,4 +10,4 @@ OPCIONES=(
 
 class Formulario(forms.Form):
 	opciones = forms.MultipleChoiceField(required=False,widget=forms.CheckboxSelectMultiple,choices=OPCIONES)
-	partitura = forms.FileField(validators=[validarExtension])
+	partitura = forms.FileField()

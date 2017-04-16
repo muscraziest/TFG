@@ -1,6 +1,5 @@
 import clips
 from . parser import *
-import sys
 
 def modulos(opciones,partitura):
 
