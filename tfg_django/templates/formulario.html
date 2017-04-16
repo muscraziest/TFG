@@ -21,5 +21,15 @@
 				<input type="submit" value="Enviar" class="btn btn-success"/>
 			</form>
 		</div>
+		{% if messages %}
+            {% for message in messages %}
+                <div class="container">
+					<div class="alert alert-danger alert-dismissable">
+						<a href='/tfg/' class='close' data-dismiss="alert" aria-label="close">&times;</a> 
+							<strong><span class="glyphicon glyphicon-warning-sign"></span> Error: </strong> el archivo debe tener extensión xml.
+					</div>
+			</div>		
+            {% endfor %}
+        {% endif %}
 	</body>
 </html>

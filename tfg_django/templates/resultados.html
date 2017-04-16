@@ -1,9 +1,62 @@
 {% load static %}
 <html>
+	<head>
+		<title> SEAM </title>	
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" type = "text/css" href="{% static 'tfg_web.css' %}">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	</head>
 	<body>
-		<p>Resultados modulo 1 </p>
-		<div id="list">
-			<p><iframe src="./tfg_web/fallos/fallos_mod1" frameborder="0" height="400" width="95%"></iframe></p>
+		<div class="page-header-results">
+			<h1>Resultados</h1>
+		</div>
+		<div class="container">
+			<ul class="nav nav-tabs" role="tablist">
+				{% if r_mod1 %}
+					<li class="active"><a data-toggle="tab">Errores Modulo 1</a></li>
+				{% endif %}
+				{% if r_mod1 and r_mod2 %}
+					<li><a data-toggle="tab">Errores Modulo 2</a></li>
+				{% elif not r_mod1 and r_mod2}
+					<li class="active"><a data-toggle="tab">Errores Modulo 2</a></li>
+				{% endif %}
+				{% if r_mod3 and not r_mod2 and not r_mod1 %}
+					<li class="active"><a data-toggle="tab">Errores Modulo 3</a></li>
+				{% elif r_mod3 and r_mod2 %}
+					<li><a data-toggle="tab">Errores Modulo 3</a></li>
+				{% elif r_mod3 and r_mod1 %}
+					<li><a data-toggle="tab">Errores Modulo 3</a></li>
+				{% endif %}
+			</ul>
+
+			<div class="tab-content">
+
+				{% if r_mod1 %}
+					<div class="tab-pane active fade in active" id="mod1">
+						{%for r in r_mod1 %}
+							<li>{{r}}</li>
+						{% endfor %}
+					</div>
+				{% endif %}
+
+				{% if r_mod2 %}
+					<div class="tab-pane fade" id="mod2">
+						{%for r in r_mod2 %}
+							<li>{{r}}</li>
+						{% endfor %}
+					</div>
+				{% endif %}
+
+				{% if r_mod3 %}
+					<div class="tab-pane fade" id="mod3">
+						{%for r in r_mod3 %}
+							<li>{{r}}</li>
+						{% endfor %}
+					</div>
+				{% endif %}
+			</div>
 		</div>
 	</body>
 </html>
