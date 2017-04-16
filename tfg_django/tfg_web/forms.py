@@ -1,4 +1,5 @@
 from django import forms
+from .validar import validarExtension
 
 OPCIONES=(
 
@@ -9,4 +10,4 @@ OPCIONES=(
 
 class Formulario(forms.Form):
 	opciones = forms.MultipleChoiceField(required=False,widget=forms.CheckboxSelectMultiple,choices=OPCIONES)
-	partitura = forms.FileField()
+	partitura = forms.FileField(validators=[validarExtension])

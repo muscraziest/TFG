@@ -25,7 +25,7 @@ def parserTonalidad(partitura):
 		tonalidad = str(tono_modo[int(tono_modo[0])])
 		tonalidad += ' menor'
 
-	f = open('./tfg_web/tonalidad','w')
+	f = open('./tfg_web/datos/tonalidad','w')
 	f.write(tonalidad)
 	f.close()
 
@@ -595,22 +595,22 @@ def parserAcordes(partitura):
 					contador_b = contador_b % total_semicorcheas
 
 	#Creamos un fichero y escribimos los datos extraidos del xml
-	f = open('./tfg_web/soprano_acordes','w')
+	f = open('./tfg_web/datos/soprano_acordes','w')
 	for i in soprano:
 		f.write(i)
 	f.close()
 
-	f = open('./tfg_web/contraalto_acordes','w')
+	f = open('./tfg_web/datos/contraalto_acordes','w')
 	for i in contraalto:
 		f.write(i)
 	f.close()
 
-	f = open('./tfg_web/tenor_acordes','w')
+	f = open('./tfg_web/datos/tenor_acordes','w')
 	for i in tenor:
 		f.write(i)
 	f.close()
 
-	f = open('./tfg_web/bajo_acordes','w')
+	f = open('./tfg_web/datos/bajo_acordes','w')
 	for i in bajo:
 		f.write(i)
 	f.close()
@@ -729,22 +729,22 @@ def parserMelodias(partitura):
 				bajo.append(' ')
 
 	#Creamos un fichero y escribimos los datos extraidos del xml
-	f = open('./tfg_web/soprano_melodia','w')
+	f = open('./tfg_web/datos/soprano_melodia','w')
 	for i in soprano:
 		f.write(i)
 	f.close()
 
-	f = open('./tfg_web/contraalto_melodia','w')
+	f = open('./tfg_web/datos/contraalto_melodia','w')
 	for i in contraalto:
 		f.write(i)
 	f.close()
 
-	f = open('./tfg_web/tenor_melodia','w')
+	f = open('./tfg_web/datos/tenor_melodia','w')
 	for i in tenor:
 		f.write(i)
 	f.close()
 
-	f = open('./tfg_web/bajo_melodia','w')
+	f = open('./tfg_web/datos/bajo_melodia','w')
 	for i in bajo:
 		f.write(i)
 	f.close()
@@ -804,28 +804,28 @@ def parserMovimientosAcordes():
 	movimientos_b = []
 
 	#Sacamos los movimientos para cada voz
-	movimientos_s = movimientosVoz('./tfg_web/soprano_acordes')
-	movimientos_c = movimientosVoz('./tfg_web/contraalto_acordes')
-	movimientos_t = movimientosVoz('./tfg_web/tenor_acordes')
-	movimientos_b = movimientosVoz('./tfg_web/bajo_acordes')
+	movimientos_s = movimientosVoz('./tfg_web/datos/soprano_acordes')
+	movimientos_c = movimientosVoz('./tfg_web/datos/contraalto_acordes')
+	movimientos_t = movimientosVoz('./tfg_web/datos/tenor_acordes')
+	movimientos_b = movimientosVoz('./tfg_web/datos/bajo_acordes')
 
 	#Guardamos los movimientos de cada voz en un fichero
-	f = open('./tfg_web/soprano_movimientos_a','w')
+	f = open('./tfg_web/datos/soprano_movimientos_a','w')
 	for i in movimientos_s:
 		f.write(i)
 	f.close()
 
-	f = open('./tfg_web/contraalto_movimientos_a','w')
+	f = open('./tfg_web/datos/contraalto_movimientos_a','w')
 	for i in movimientos_c:
 		f.write(i)
 	f.close()
 
-	f = open('./tfg_web/tenor_movimientos_a','w')
+	f = open('./tfg_web/datos/tenor_movimientos_a','w')
 	for i in movimientos_t:
 		f.write(i)
 	f.close()
 
-	f = open('./tfg_web/bajo_movimientos_a','w')
+	f = open('./tfg_web/datos/bajo_movimientos_a','w')
 	for i in movimientos_b:
 		f.write(i)
 	f.close()
@@ -839,28 +839,28 @@ def parserMovimientosMelodias():
 	movimientos_b = []
 
 	#Sacamos los movimientos para cada voz
-	movimientos_s = movimientosVoz('./tfg_web/soprano_melodia')
-	movimientos_c = movimientosVoz('./tfg_web/contraalto_melodia')
-	movimientos_t = movimientosVoz('./tfg_web/tenor_melodia')
-	movimientos_b = movimientosVoz('./tfg_web/bajo_melodia')
+	movimientos_s = movimientosVoz('./tfg_web/datos/soprano_melodia')
+	movimientos_c = movimientosVoz('./tfg_web/datos/contraalto_melodia')
+	movimientos_t = movimientosVoz('./tfg_web/datos/tenor_melodia')
+	movimientos_b = movimientosVoz('./tfg_web/datos/bajo_melodia')
 
 	#Guardamos los movimientos de cada voz en un fichero
-	f = open('./tfg_web/soprano_movimientos_m','w')
+	f = open('./tfg_web/datos/soprano_movimientos_m','w')
 	for i in movimientos_s:
 		f.write(i)
 	f.close()
 
-	f = open('./tfg_web/contraalto_movimientos_m','w')
+	f = open('./tfg_web/datos/contraalto_movimientos_m','w')
 	for i in movimientos_c:
 		f.write(i)
 	f.close()
 
-	f = open('./tfg_web/tenor_movimientos_m','w')
+	f = open('./tfg_web/datos/tenor_movimientos_m','w')
 	for i in movimientos_t:
 		f.write(i)
 	f.close()
 
-	f = open('./tfg_web/bajo_movimientos_m','w')
+	f = open('./tfg_web/datos/bajo_movimientos_m','w')
 	for i in movimientos_b:
 		f.write(i)
 	f.close()
