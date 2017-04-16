@@ -776,20 +776,20 @@ def movimientosVoz(file):
 			if(notas[i+1] == notas[i+3]):
 
 				if(orden(notas[i]) < orden(notas[i+2])):
-					movimientos.append('ascendente')
+					movimientos.append('ascendente ')
 				else:
-					movimientos.append('descendente')
+					movimientos.append('descendente ')
 
 			#Si estan a distinta altura
 			elif(notas[i+1] > notas[i+3]):
-				movimientos.append('descendente')
+				movimientos.append('descendente ')
 
 			else:
-				movimientos.append('ascendente')
+				movimientos.append('ascendente ')
 		
 		#Si son iguales
 		else:
-			movimientos.append('mantiene')
+			movimientos.append('mantiene ')
 
 		i = i+2
 
