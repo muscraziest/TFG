@@ -3,6 +3,60 @@
 ;;; Comprobar fallos de quitas, octavas, tritonos y sensibles ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;                     HECHOS ASERTADOS                      ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Regla para abrir el fichero de las tonalidades
+(defrule abrir_plantilla_tonalidades
+        (declare (salience 20))
+        =>
+        (open "plantilla_tonalidades" mydata_tonalidades)
+        (assert (SeguirLeyendoTonalidades))
+)
+
+; Regla para leer las tonalidades
+(defrule leer_tonalidades
+        ?f <- (SeguirLeyendoTonalidades)
+        =>
+        (bind ?nombre (read mydata_tonalidades))
+        (retract ?f)
+        (if (neq ?nombre EOF) then
+                (bind ?modo (read mydata_tonalidades))
+                (bind ?armadura (read mydata_tonalidades))
+                (bind ?sensible (read mydata_tonalidades))
+                (assert (tonalidad (nombre ?nombre) (modo ?modo) (armadura ?armadura) (sensible ?sensible)))
+                (assert (SeguirLeyendoTonalidades))
+        )
+)
+
+; Regla para abrir el fichero de los intervalos
+(defrule abrir_plantilla_intervalos
+        (declare (salience 20))
+        =>
+        (open "plantilla_intervalos" mydata_intervalos)
+        (assert (SeguirLeyendoIntervalos))
+)
+
+; Regla para leer los intervalos
+(defrule leer_intervalos
+        ?f <- (SeguirLeyendoIntervalos)
+        =>
+        (bind ?distancia (read mydata_intervalos))
+        (retract ?f)
+        (if (neq ?distancia EOF) then
+                (bind ?tipo (read mydata_intervalos))
+                (bind ?nota1 (read mydata_intervalos))
+                (bind ?nota2 (read mydata_intervalos))
+                (assert (intervalo (distancia ?distancia) (tipo ?tipo) (nota1 ?nota1) (nota2 ?nota2)))
+                (assert (SeguirLeyendoIntervalos))
+        )
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;                     HECHOS CALCULADOS                     ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;Hechos asertados a partir del conocimiento extraído de la partitura
 ; Regla para abrir el fichero de la tonalidad
 (defrule abrir_tonalidad
         (declare (salience 20))
@@ -237,6 +291,8 @@
         (close mydata_mov_contraalto)
         (close mydata_mov_tenor)
         (close mydata_mov_bajo)
+        (close mydata_tonalidades)
+        (close mydata_intervalos)
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -251,6 +307,7 @@
         (nota (tono ?t4) (voz ?v2) (indice ?i2))
         (test (< ?v1 ?v2))
         (test (= ?i2 (+ ?i1 1)))
+        (test (neq ?t1 ?t3))
         (and 
                 (exists (intervalo (distancia 5) (nota1 ?t2) (nota2 ?t1))) 
                 (exists (intervalo (distancia 5) (nota1 ?t4) (nota2 ?t3)))
@@ -326,6 +383,7 @@
         (nota (tono ?t4) (voz ?v2) (indice ?i2))
         (test (< ?v1 ?v2))
         (test (= ?i2 (+ ?i1 1)))
+        (test (neq ?t1 ?t3))
         (and 
                 (exists (intervalo (distancia 8) (nota1 ?t2) (nota2 ?t1))) 
                 (exists (intervalo (distancia 8) (nota1 ?t4) (nota2 ?t3)))
@@ -428,8 +486,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open "./tfg_web/fallos/fallos_mod1" data "w")
-        (printout data "Hay quintas paralelas en las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas ".")
+        (open "./tfg_web/fallos/fallos_mod1" data "a")
+        (printout data "Hay quintas paralelas en las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas "..")
         (close data)
 )
 
@@ -440,8 +498,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open "./tfg_web/fallos/fallos_mod1" data "w")
-        (printout data "Hay octavas paralelas en las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas ".")
+        (open "./tfg_web/fallos/fallos_mod1" data "a")
+        (printout data "Hay octavas paralelas en las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas ".." )
         (close data)
 )
 
@@ -452,8 +510,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open "./tfg_web/fallos/fallos_mod1" data "w")
-        (printout data "Hay quintas directas en voces extremas en la " ?parte " parte del compas " ?compas ".")
+        (open "./tfg_web/fallos/fallos_mod1" data "a")
+        (printout data "Hay quintas directas en voces extremas en la " ?parte " parte del compas " ?compas ".." )
         (close data)
 )
 
@@ -464,8 +522,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open "./tfg_web/fallos/fallos_mod1" data "w")
-        (printout data "Hay octavas directas en voces extremas en la " ?parte " parte del compas " ?compas ".")
+        (open "./tfg_web/fallos/fallos_mod1" data "a")
+        (printout data "Hay octavas directas en voces extremas en la " ?parte " parte del compas " ?compas ".." )
         (close data)
 )
 
@@ -476,8 +534,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open "./tfg_web/fallos/fallos_mod1" data "w")
-        (printout data "Hay un tritono entre las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas ".")
+        (open "./tfg_web/fallos/fallos_mod1" data "a")
+        (printout data "Hay un tritono entre las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas ".." )
         (close data)
 )
 
@@ -488,7 +546,7 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open "./tfg_web/fallos/fallos_mod1" data "w")
-        (printout data "Las voces " ?v1 " y " ?v2 " duplican la sensible de la tonalidad en la " ?parte " del compas " ?compas ".")
+        (open "./tfg_web/fallos/fallos_mod1" data "a")
+        (printout data "Las voces " ?v1 " y " ?v2 " duplican la sensible de la tonalidad en la " ?parte " del compas " ?compas ".." )
         (close data)
 )

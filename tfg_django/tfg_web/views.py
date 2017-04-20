@@ -3,6 +3,8 @@ from . forms import Formulario
 from . lanzarModulos import modulos
 from django.conf import settings
 from django.contrib import messages
+import os
+import shutil
 
 #Funcion para procesar las opciones elegidas por el usuario y lanzar el sistema experto
 def enviarDatos(request):
@@ -12,18 +14,27 @@ def enviarDatos(request):
 
 		if form.is_valid():
 
+			limpiarArchivos()
+
 			data = form.cleaned_data
 			opciones = data['opciones']
 			partitura = data['partitura']
 
-			#Comprobamos que la extension es correcta
+			#Comprobamos que se ha seleccionado al menos una opcion
+			if not opciones:
+				messages.error(request, " debes seleccionar al menos una opcion.")
+				return render(request,'formulario.html',{'form':form})
+
+			#Comprobamos que la extension de la partitura es correcta
 			if not partitura.name.endswith('.xml'):
-				messages.error(request, "Error: formato no valido. El archivo debe tener extension xml")
+				messages.error(request, " formato no valido. El archivo debe tener extension xml.")
 				return render(request,'formulario.html',{'form':form})
 
 			#Subimos el archivo
 			subirArchivo(request.FILES['partitura'])
 			#Ejecutamos los modulos del sistema experto
+			if not os.path.exists("./tfg_web/datos"):
+				os.makedirs("./tfg_web/datos")
 			modulos(opciones,settings.MEDIA_ROOT+'.xml')
 			#Mostramos los resultados
 			r_mod1,r_mod2,r_mod3 = mostrarResultados(opciones)
@@ -53,25 +64,44 @@ def mostrarResultados(opciones):
 	#Leemos los fallos de los modulos activados
 	if('opcion1' in opciones):
 		r_mod1=[]
-		with open('./tfg_web/fallos/fallos_mod1','r') as f:
-			for l in f:
-				r_mod1.append(l)
-		f.close()
+		with open('./tfg_web/fallos/fallos_mod1','r') as f1:
+			for l in f1:
+				l.replace("..",".\n")
+				r_mod1.append(l.split(".\n"))
+		f1.close()
 
 	if('opcion2' in opciones):
 		r_mod2=[]
-		with open('./tfg_web/fallos/fallos_mod2','r') as f:
-			for l in f:
-				r_mod2.append(l)
-		f.close()
+		with open('./tfg_web/fallos/fallos_mod2','r') as f2:
+			for l in f2:
+				l.replace("..",".\n")
+				r_mod2.append(l.split(".\n"))
+		f2.close()
 
 	if('opcion3' in opciones):
 		r_mod3=[]
-		with open('./tfg_web/fallos/fallos_mod3','r') as f:
-			for l in f:
-				r_mod3.append(l)
-		f.close()
+		with open('./tfg_web/fallos/fallos_mod3','r') as f3:
+			for l in f3:
+				l.replace("..",".\n")
+				r_mod3.append(l.split(".\n"))
+		f3.close()
 
 	return r_mod1,r_mod2,r_mod3
 
-		
+#Funcion auxiliar para eliminar los archivos generados en el analisis
+def limpiarArchivos():
+
+	if os.path.exists("./tfg_web/datos"):
+		shutil.rmtree("./tfg_web/datos")
+
+	if os.path.exists("partitura.xml"):
+		os.remove("partitura.xml")
+
+	if os.path.exists("./tfg_web/fallos/fallos_mod1"):
+		os.remove("./tfg_web/fallos/fallos_mod1")
+
+	if os.path.exists("./tfg_web/fallos/fallos_mod2"):
+		os.remove("./tfg_web/fallos/fallos_mod2")
+
+	if os.path.exists("./tfg_web/fallos/fallos_mod3"):
+		os.remove("./tfg_web/fallos/fallos_mod3")

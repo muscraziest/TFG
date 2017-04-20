@@ -97,17 +97,17 @@ def parserAcordes(partitura):
 			#Si hay alteracion accidental comprobamos el tipo de alteracion
 			if accidental is not None:
 				if note.find('accidental').text == 'sharp':
-					accidental = '#'
+					accidental = 's'
 				elif note.find('accidental').text == 'flat':
 					accidental = 'b'
 				else:
-					accidental = 'bc'
+					accidental = ''
 	
 			#Si no, comprobamos si esta alterada por la armadura
 			elif note.find('pitch').find('alter') is not None:
 				accidental = ''
 				if int(tonalidad[0]) > 0:
-					accidental = '#'
+					accidental = 's'
 				else:
 					accidental = 'b'
 	
@@ -658,17 +658,17 @@ def parserMelodias(partitura):
 			#Si hay alteracion accidental comprobamos el tipo de alteracion
 			if accidental is not None:
 				if note.find('accidental').text == 'sharp':
-					accidental = '#'
+					accidental = 's'
 				elif note.find('accidental').text == 'flat':
 					accidental = 'b'
 				else:
-					accidental = 'bc'
+					accidental = ''
 
 			#Si no, comprobamos si esta alterada por la armadura
 			elif note.find('pitch').find('alter') is not None:
 				accidental = ''
 				if int(tonalidad[0]) > 0:
-					accidental = '#'
+					accidental = 's'
 				else:
 					accidental = 'b'
 

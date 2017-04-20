@@ -9,52 +9,56 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	</head>
 	<body>
+		<div class="page-header">
+			<h1><a href="/tfg/"> Sistema Experto de Análisis Musical </a></h1>
+		</div>
 		<div class="page-header-results">
 			<h1>Resultados</h1>
 		</div>
 		<div class="container">
-			<ul class="nav nav-tabs" role="tablist">
-				{% if r_mod1 %}
-					<li class="active"><a data-toggle="tab">Errores Modulo 1</a></li>
-				{% endif %}
-				{% if r_mod1 and r_mod2 %}
-					<li><a data-toggle="tab">Errores Modulo 2</a></li>
-				{% elif not r_mod1 and r_mod2}
-					<li class="active"><a data-toggle="tab">Errores Modulo 2</a></li>
-				{% endif %}
-				{% if r_mod3 and not r_mod2 and not r_mod1 %}
-					<li class="active"><a data-toggle="tab">Errores Modulo 3</a></li>
-				{% elif r_mod3 and r_mod2 %}
-					<li><a data-toggle="tab">Errores Modulo 3</a></li>
-				{% elif r_mod3 and r_mod1 %}
-					<li><a data-toggle="tab">Errores Modulo 3</a></li>
-				{% endif %}
-			</ul>
+			{% if not r_mod1 and not r_mod2 and not r_mod3 %}	 
+				<p> La partitura no contiene ningun error!</p>
+			{% else %}
+				<ul class="nav nav-tabs" role="tablist">
+					{% if r_mod1 %}
+						<li class="active"><a data-toggle="tab" href="#mod1">Errores Modulo 1</a></li>
+					{% endif %}
+					{% if r_mod1 and r_mod2 %}
+						<li><a data-toggle="tab" href="#mod2">Errores Modulo 2</a></li>
+					{% elif not r_mod1 and r_mod2}
+						<li class="active"><a data-toggle="tab" href="#mod2">Errores Modulo 2</a></li>
+					{% endif %}
+					{% if r_mod3 and not r_mod2 and not r_mod1 %}
+						<li class="active"><a data-toggle="tab" href="#mod3">Errores Modulo 3</a></li>
+					{% elif r_mod3 and r_mod2 %}
+						<li><a data-toggle="tab" href="#mod3">Errores Modulo 3</a></li>
+					{% elif r_mod3 and r_mod1 %}
+						<li><a data-toggle="tab" href="#mod3">Errores Modulo 3</a></li>
+					{% endif %}
+				</ul>
 
-			<div class="tab-content">
-
-				{% if r_mod1 %}
-					<div class="tab-pane active fade in active" id="mod1">
-						{%for r in r_mod1 %}
-							<li>{{r}}</li>
-						{% endfor %}
-					</div>
-				{% endif %}
-
-				{% if r_mod2 %}
-					<div class="tab-pane fade" id="mod2">
-						{%for r in r_mod2 %}
-							<li>{{r}}</li>
-						{% endfor %}
-					</div>
-				{% endif %}
-
-				{% if r_mod3 %}
-					<div class="tab-pane fade" id="mod3">
-						{%for r in r_mod3 %}
-							<li>{{r}}</li>
-						{% endfor %}
-					</div>
+				<div class="tab-content">
+					{% if r_mod1 %}
+						<div class="tab-pane active fade in active" id="mod1">
+							{%for r in r_mod1 %}
+								<li>{{r}}</li>
+							{% endfor %}
+						</div>
+					{% endif %}
+					{% if r_mod2 %}
+						<div class="tab-pane fade" id="mod2">
+							{%for r in r_mod2 %}
+								<li>{{r}}</li>
+							{% endfor %}
+						</div>
+					{% endif %}
+					{% if r_mod3 %}
+						<div class="tab-pane fade" id="mod3">
+							{%for r in r_mod3 %}
+								<li>{{r}}</li>
+							{% endfor %}
+						</div>
+					{% endif %}
 				{% endif %}
 			</div>
 		</div>

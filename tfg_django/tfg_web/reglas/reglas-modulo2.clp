@@ -4,6 +4,127 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;                     HECHOS ASERTADOS                      ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Regla para abrir el fichero de las tonalidades
+(defrule abrir_plantilla_tonalidades
+        (declare (salience 20))
+        =>
+        (open "plantilla_tonalidades" mydata_tonalidades)
+        (assert (SeguirLeyendoTonalidades))
+)
+
+; Regla para leer las tonalidades
+(defrule leer_tonalidades
+        ?f <- (SeguirLeyendoTonalidades)
+        =>
+        (bind ?nombre (read mydata_tonalidades))
+        (retract ?f)
+        (if (neq ?nombre EOF) then
+                (bind ?modo (read mydata_tonalidades))
+                                (bind ?armadura (read mydata_tonalidades))
+                                (bind ?sensible (read mydata_tonalidades))
+                (assert (tonalidad (nombre ?nombre) (modo ?modo) (armadura ?armadura) (sensible ?sensible)))
+                (assert (SeguirLeyendoTonalidades))
+        )
+)
+
+; Regla para abrir el fichero de los intervalos
+(defrule abrir_plantilla_intervalos
+        (declare (salience 20))
+        =>
+        (open "plantilla_intervalos" mydata_intervalos)
+        (assert (SeguirLeyendoIntervalos))
+)
+
+; Regla para leer los intervalos
+(defrule leer_intervalos
+        ?f <- (SeguirLeyendoIntervalos)
+        =>
+        (bind ?distancia (read mydata_intervalos))
+        (retract ?f)
+        (if (neq ?distancia EOF) then
+                (bind ?tipo (read mydata_intervalos))
+                                (bind ?nota1 (read mydata_intervalos))
+                                (bind ?nota2 (read mydata_intervalos))
+                (assert (intervalo (distancia ?distancia) (tipo ?tipo) (nota1 ?nota1) (nota2 ?nota2)))
+                (assert (SeguirLeyendoIntervalos))
+        )
+)
+
+
+; Regla para abrir el fichero de los intervalos consonantes
+(defrule abrir_plantilla_intervalos_consonantes
+        (declare (salience 20))
+        =>
+        (open "plantilla_intervalos_consonantes" mydata_intervalos_consonantes)
+        (assert (SeguirLeyendoIntervalosConsonantes))
+)
+
+; Regla para leer los intervalos consonantes
+(defrule leer_intervalos_consonantes
+        ?f <- (SeguirLeyendoIntervalosConsonantes)
+        =>
+        (bind ?distancia (read mydata_intervalos_consonantes))
+        (retract ?f)
+        (if (neq ?distancia EOF) then
+                (bind ?tipo (read mydata_intervalos_consonantes))
+                (assert (intervalo_consonante (distancia ?distancia) (tipo ?tipo)))
+                (assert (SeguirLeyendoIntervalosConsonantes))
+        )
+)
+
+; Regla para abrir el fichero de los intervalos disonantes
+(defrule abrir_plantilla_intervalos_disonantes
+        (declare (salience 20))
+        =>
+        (open "plantilla_intervalos_disonantes" mydata_intervalos_disonantes)
+        (assert (SeguirLeyendoIntervalosDisonantes))
+)
+
+; Regla para leer los intervalos disonantes
+(defrule leer_intervalos_disonantes
+        ?f <- (SeguirLeyendoIntervalosDisonantes)
+        =>
+        (bind ?distancia (read mydata_intervalos_disonantes))
+        (retract ?f)
+        (if (neq ?distancia EOF) then
+                (bind ?tipo (read mydata_intervalos_disonantes))
+                (assert (intervalo_disonante (distancia ?distancia) (tipo ?tipo)))
+                (assert (SeguirLeyendoIntervalosDisonantes))
+        )
+)
+
+; Regla para abrir el fichero de las escalas
+(defrule abrir_plantilla_escalas
+        (declare (salience 20))
+        =>
+        (open "plantilla_escalas" mydata_escalas)
+        (assert (SeguirLeyendoEscalas))
+)
+
+; Regla para leer las escalas
+(defrule leer_escalas
+        ?f <- (SeguirLeyendoEscalas)
+        =>
+        (bind ?nombre_t (read mydata_escalas))
+        (retract ?f)
+        (if (neq ?nombre_t EOF) then
+                (bind ?modo_t (read mydata_escalas))
+                (bind ?gradoI (read mydata_escalas))
+                (bind ?gradoII (read mydata_escalas))
+                (bind ?gradoIII (read mydata_escalas))
+                (bind ?gradoIV (read mydata_escalas))
+                (bind ?gradoV (read mydata_escalas))
+                (bind ?gradoVI (read mydata_escalas))
+                (bind ?gradoVII (read mydata_escalas))
+                (assert (escala (nombre_t ?nombre_t) (modo_t ?modo_t) (gradoI ?gradoI) (gradoII ?gradoII) (gradoIII ?gradoIII) (gradoIV ?gradoIV) (gradoV ?gradoV) (gradoVI ?gradoVI) (gradoVII ?gradoVII)))
+                (assert (SeguirLeyendoEscalas))
+        )
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;                     HECHOS DEDUCIDOS                      ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -271,6 +392,11 @@
         (close mydata_mov_contraalto)
         (close mydata_mov_tenor)
         (close mydata_mov_bajo)
+        (close mydata_tonalidades)
+        (close mydata_intervalos)
+        (close mydata_intervalos_consonantes)
+        (close mydata_intervalos_disonantes)
+        (close mydata_escalas)
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -290,19 +416,19 @@
 )
 
 ; Regla para comprobar que las séptimas resuelven
-(defrule comprobar_septimas_resueltas
+;(defrule comprobar_septimas_resueltas
 
-        (acorde (grado V) (septima si) (indice ?i))
-        (tonalidad_obra (nombre ?n) (modo ?m))
-        (acorde_4 (grado V) (nombre_tonalidad ?n) (modo_tonalidad ?m) (septima ?septima))
-        (acorde_3 (grado I) (nombre_tonalidad ?n) (modo_tonalidad ?m) (tercera ?tercera))
-        (nota_melodia (tono ?septima) (voz ?v) (indice ?i))
-        (nota_melodia (tono ?t) (voz ?v) (indice ?j))
-        (test(eq ?j (+ ?i 1)))
-        (not(test(eq ?tercera ?t)))
-        =>
-        (assert(fallo (tipo resolucion_septima) (voz1 ?v) (voz2 ?v) (tiempo ?i)))
-)
+;        (acorde (grado V) (septima si) (indice ?i))
+;        (tonalidad_obra (nombre ?n) (modo ?m))
+;        (acorde_4 (grado V) (nombre_tonalidad ?n) (modo_tonalidad ?m) (septima ?septima))
+;        (acorde_3 (grado I) (nombre_tonalidad ?n) (modo_tonalidad ?m) (tercera ?tercera))
+;        (nota_melodia (tono ?septima) (voz ?v) (indice ?i))
+;        (nota_melodia (tono ?t) (voz ?v) (indice ?j))
+;        (test(eq ?j (+ ?i 1)))
+;        (test(neq ?tercera ?t))
+;        =>
+;        (assert(fallo (tipo resolucion_septima) (voz1 ?v) (voz2 ?v) (tiempo ?i)))
+;)
 
 ; Regla para si hay segundas aumentadas meódicas
 (defrule comprobar_segundas_aumentadas_melodicas
@@ -485,9 +611,9 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; SOPRANO
-(defrule contar_saltos_pequenos_ascendentes_soprano
+(defrule contar_saltos_pekenos_ascendentes_soprano
 
-        ?f <- (saltosPequenosSoprano ?c)
+        ?f <- (saltosPekenosSoprano ?c)
         (nota_melodia (tono ?t1) (voz 1) (indice ?i))
         (nota_melodia (tono ?t2) (voz 1) (indice ?j))
         (test(eq ?j (+ ?i 1)))
@@ -497,12 +623,12 @@
         =>
         (retract ?f)
         (bind ?c (+ ?c 1))
-        (assert(saltosPequenosSoprano ?c))
+        (assert(saltosPekenosSoprano ?c))
 )
 
-(defrule contar_saltos_pequenos_descendentes_soprano
+(defrule contar_saltos_pekenos_descendentes_soprano
 
-        ?f <- (saltosPequenosSoprano ?c)
+        ?f <- (saltosPekenosSoprano ?c)
         (nota_melodia (tono ?t1) (voz 1) (indice ?i))
         (nota_melodia (tono ?t2) (voz 1) (indice ?j))
         (test(eq ?j (+ ?i 1)))
@@ -512,7 +638,7 @@
         =>
         (retract ?f)
         (bind ?c (+ ?c 1))
-        (assert(saltosPequenosSoprano ?c))
+        (assert(saltosPekenosSoprano ?c))
 )
 
 (defrule contar_saltos_grandes_ascendentes_soprano
@@ -547,8 +673,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; CONTRAALTO
-(defrule contar_saltos_pequenos_ascendentes_contraalto
-        ?f <- (saltosPequenosContraalto ?c)
+(defrule contar_saltos_pekenos_ascendentes_contraalto
+        ?f <- (saltosPekenosContraalto ?c)
         (nota_melodia (tono ?t1) (voz 2) (indice ?i))
         (nota_melodia (tono ?t2) (voz 2) (indice ?j))
         (test(eq ?j (+ ?i 1)))
@@ -558,12 +684,12 @@
         =>
         (retract ?f)
         (bind ?c (+ ?c 1))
-        (assert(saltosPequenosContraalto ?c))
+        (assert(saltosPekenosContraalto ?c))
 )
 
-(defrule contar_saltos_pequenos_descendentes_contraalto
+(defrule contar_saltos_pekenos_descendentes_contraalto
 
-        ?f <- (saltosPequenosContraalto ?c)
+        ?f <- (saltosPekenosContraalto ?c)
         (nota_melodia (tono ?t1) (voz 2) (indice ?i))
         (nota_melodia (tono ?t2) (voz 2) (indice ?j))
         (test(eq ?j (+ ?i 1)))
@@ -573,7 +699,7 @@
         =>
         (retract ?f)
         (bind ?c (+ ?c 1))
-        (assert(saltosPequenosContraalto ?c))
+        (assert(saltosPekenosContraalto ?c))
 )
 
 (defrule contar_saltos_grandes_ascendentes_contraalto
@@ -608,9 +734,9 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; TENOR
-(defrule contar_saltos_pequenos_ascendentes_tenor
+(defrule contar_saltos_pekenos_ascendentes_tenor
 
-        ?f <- (saltosPequenosTenor ?c)
+        ?f <- (saltosPekenosTenor ?c)
         (nota_melodia (tono ?t1) (voz 3) (indice ?i))
         (nota_melodia (tono ?t2) (voz 3) (indice ?j))
         (test(eq ?j (+ ?i 1)))
@@ -620,12 +746,12 @@
         =>
         (retract ?f)
         (bind ?c (+ ?c 1))
-        (assert(saltosPequenosTenor ?c))
+        (assert(saltosPekenosTenor ?c))
 )
 
-(defrule contar_saltos_pequenos_descendentes_tenor
+(defrule contar_saltos_pekenos_descendentes_tenor
 
-        ?f <- (saltosPequenosTenor ?c)
+        ?f <- (saltosPekenosTenor ?c)
         (nota_melodia (tono ?t1) (voz 3) (indice ?i))
         (nota_melodia (tono ?t2) (voz 3) (indice ?j))
         (test(eq ?j (+ ?i 1)))
@@ -635,7 +761,7 @@
         =>
         (retract ?f)
         (bind ?c (+ ?c 1))
-        (assert(saltosPequenosTenor ?c))
+        (assert(saltosPekenosTenor ?c))
 )
 
 (defrule contar_saltos_grandes_ascendentes_tenor
@@ -672,7 +798,7 @@
 
 (defrule saltos_melodia_soprano
         (saltosGrandesSoprano ?a)
-        (saltosPequenosSoprano ?b)
+        (saltosPekenosSoprano ?b)
         (>= ?a ?b)
         =>
         (assert(fallo (tipo melodia_incoherente) (voz1 1) (voz2 1) (tiempo 1)))
@@ -680,7 +806,7 @@
 
 (defrule saltos_melodia_contraalto
         (saltosGrandesContraalto ?a)
-        (saltosPequenosContraalto ?b)
+        (saltosPekenosContraalto ?b)
         (>= ?a ?b)
         =>
         (assert(fallo (tipo melodia_incoherente) (voz1 2) (voz2 2) (tiempo 1)))
@@ -688,7 +814,7 @@
 
 (defrule saltos_melodia_tenor
         (saltosGrandesTenor ?a)
-        (saltosPequenosTenor ?b)
+        (saltosPekenosTenor ?b)
         (>= ?a ?b)
         =>
         (assert(fallo (tipo melodia_incoherente) (voz1 3) (voz2 3) (tiempo 1)))
@@ -778,8 +904,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open " ./tfg/web/fallos/fallos_mod2" data "w")
-        (printout data "En la " ?parte " parte del compas " ?compas " la sensible en la voz " ?v1 " no resuelve.")
+        (open " ./tfg/web/fallos/fallos_mod2" data "a")
+        (printout data "En la " ?parte " parte del compas " ?compas " la sensible en la voz " ?v1 " no resuelve.." )
         (close data)
 )
 
@@ -790,8 +916,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open " ./tfg/web/fallos/fallos_mod2" data "w")
-        (printout data "En la " ?parte " parte del compas " ?compas " la septima en la voz " ?v1 " no resuelve.")
+        (open " ./tfg/web/fallos/fallos_mod2" data "a")
+        (printout data "En la " ?parte " parte del compas " ?compas " la septima en la voz " ?v1 " no resuelve.." )
         (close data)
 )
 
@@ -802,8 +928,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open " ./tfg/web/fallos/fallos_mod2" data "w")
-        (printout data "En la " ?parte " parte del compas " ?compas " en melodía de la voz " ?v1 " hay una intervalo de 2 aumentada.")
+        (open " ./tfg/web/fallos/fallos_mod2" data "a")
+        (printout data "En la " ?parte " parte del compas " ?compas " en melodía de la voz " ?v1 " hay una intervalo de 2 aumentada.." )
         (close data)
 )
 
@@ -814,8 +940,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open " ./tfg/web/fallos/fallos_mod2" data "w")
-        (printout data "En la " ?parte " parte del compas " ?compas " en melodía de la voz " ?v1 " hay una intervalo de tritono.")
+        (open " ./tfg/web/fallos/fallos_mod2" data "a")
+        (printout data "En la " ?parte " parte del compas " ?compas " en melodía de la voz " ?v1 " hay una intervalo de tritono.." )
         (close data)
 )
 
@@ -826,8 +952,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open " ./tfg/web/fallos/fallos_mod2" data "w")
-        (printout data "No hay un buen contrapunto entre las voces extremas. Hay demasiados movimientos directos u oblicuos en comparación con el movimiento contrario que debería predominar.")
+        (open " ./tfg/web/fallos/fallos_mod2" data "a")
+        (printout data "No hay un buen contrapunto entre las voces extremas. Hay demasiados movimientos directos u oblicuos en comparación con el movimiento contrario que debería predominar.." )
         (close data)
 )
 
@@ -838,8 +964,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open " ./tfg/web/fallos/fallos_mod2" data "w")
-        (printout data "En el compas " ?compas " hay disonancias entre notas con saltos ascendetes en la melodía de la voz " ?v1 ". Hay dos saltos consecutivos en los cuales la primera nota y la última son disonantes.")
+        (open " ./tfg/web/fallos/fallos_mod2" data "a")
+        (printout data "En el compas " ?compas " hay disonancias entre notas con saltos ascendetes en la melodía de la voz " ?v1 ". Hay dos saltos consecutivos en los cuales la primera nota y la última son disonantes.." )
         (close data)
 )
 
@@ -850,8 +976,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open " ./tfg/web/fallos/fallos_mod2" data "w")
-        (printout data "En el compas " ?compas " hay disonancias entre notas con saltos descendentes en la melodía de la voz " ?v1 ". Hay dos saltos consecutivos en los cuales la primera nota y la última son disonantes.")
+        (open " ./tfg/web/fallos/fallos_mod2" data "a")
+        (printout data "En el compas " ?compas " hay disonancias entre notas con saltos descendentes en la melodía de la voz " ?v1 ". Hay dos saltos consecutivos en los cuales la primera nota y la última son disonantes.." )
         (close data)
 )
 
@@ -862,8 +988,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open " ./tfg/web/fallos/fallos_mod2" data "w")
-        (printout data "La melodía de la voz " ?v1 " es bastante incoherente. Se producen demasiados saltos.")
+        (open " ./tfg/web/fallos/fallos_mod2" data "a")
+        (printout data "La melodía de la voz " ?v1 " es bastante incoherente. Se producen demasiados saltos.." )
         (close data)
 )
 
@@ -873,9 +999,9 @@
         (fallo (tipo melodia_incoherente) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
         =>
         (bind ?compas (/ ?i 16))
-        (bind ?parte (/ (mod ?i 16) 4)
-        (open " ./tfg/web/fallos/fallos_mod2" data "w")
-        (printout data "La melodía de la voz " ?v1 " es bastante incoherente en el compás " ?compas " al producirse dos saltos grandes consecutivos.")
+        (bind ?parte (/ (mod ?i 16) 4))
+        (open " ./tfg/web/fallos/fallos_mod2" data "a")
+        (printout data "La melodía de la voz " ?v1 " es bastante incoherente en el compás " ?compas " al producirse dos saltos grandes consecutivos.." )
         (close data)
 )
 
@@ -886,7 +1012,7 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open " ./tfg/web/fallos/fallos_mod2" data "w")
-        (printout data "En la parte " ?parte " parte del " ?compas " hay un acorde incompleto.")
+        (open " ./tfg/web/fallos/fallos_mod2" data "a")
+        (printout data "En la parte " ?parte " parte del " ?compas " hay un acorde incompleto.." )
         (close data)
 )

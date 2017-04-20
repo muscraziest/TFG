@@ -3,6 +3,106 @@
 ;;;                     Análisis armónico                     ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;                     HECHOS ASERTADOS                      ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; Regla para abrir el fichero de las tonalidades
+(defrule abrir_plantilla_tonalidades
+        (declare (salience 20))
+        =>
+        (open "plantilla_tonalidades" mydata_tonalidades)
+        (assert (SeguirLeyendoTonalidades))
+)
+
+; Regla para leer las tonalidades
+(defrule leer_tonalidades
+        ?f <- (SeguirLeyendoTonalidades)
+        =>
+        (bind ?nombre (read mydata_tonalidades))
+        (retract ?f)
+        (if (neq ?nombre EOF) then
+                (bind ?modo (read mydata_tonalidades))
+                (bind ?armadura (read mydata_tonalidades))
+                (bind ?sensible (read mydata_tonalidades))
+                (assert (tonalidad (nombre ?nombre) (modo ?modo) (armadura ?armadura) (sensible ?sensible)))
+                (assert (SeguirLeyendoTonalidades))
+        )
+)
+
+; Regla para abrir el fichero de los intervalos
+(defrule abrir_plantilla_intervalos
+        (declare (salience 20))
+        =>
+        (open "plantilla_intervalos" mydata_intervalos)
+        (assert (SeguirLeyendoIntervalos))
+)
+
+; Regla para leer los intervalos
+(defrule leer_intervalos
+        ?f <- (SeguirLeyendoIntervalos)
+        =>
+        (bind ?distancia (read mydata_intervalos))
+        (retract ?f)
+        (if (neq ?distancia EOF) then
+                (bind ?tipo (read mydata_intervalos))
+                (bind ?nota1 (read mydata_intervalos))
+                (bind ?nota2 (read mydata_intervalos))
+                (assert (intervalo (distancia ?distancia) (tipo ?tipo) (nota1 ?nota1) (nota2 ?nota2)))
+                (assert (SeguirLeyendoIntervalos))
+        )
+)
+
+; Regla para abrir el fichero de las escalas
+(defrule abrir_plantilla_escalas
+        (declare (salience 20))
+        =>
+        (open "plantilla_escalas" mydata_escalas)
+        (assert (SeguirLeyendoEscalas))
+)
+
+; Regla para leer las escalas
+(defrule leer_escalas
+        ?f <- (SeguirLeyendoEscalas)
+        =>
+        (bind ?nombre_t (read mydata_escalas))
+        (retract ?f)
+        (if (neq ?nombre_t EOF) then
+                (bind ?modo_t (read mydata_escalas))
+                (bind ?gradoI (read mydata_escalas))
+                (bind ?gradoII (read mydata_escalas))
+                (bind ?gradoIII (read mydata_escalas))
+                (bind ?gradoIV (read mydata_escalas))
+                (bind ?gradoV (read mydata_escalas))
+                (bind ?gradoVI (read mydata_escalas))
+                (bind ?gradoVII (read mydata_escalas))
+                (assert (escala (nombre_t ?nombre_t) (modo_t ?modo_t) (gradoI ?gradoI) (gradoII ?gradoII) (gradoIII ?gradoIII) (gradoIV ?gradoIV) (gradoV ?gradoV) (gradoVI ?gradoVI) (gradoVII ?gradoVII)))
+                (assert (SeguirLeyendoEscalas))
+        )
+)
+
+; Regla para abrir el fichero de las sucesiones logicas
+(defrule abrir_plantilla_sucesiones_logicas
+        (declare (salience 20))
+        =>
+        (open "plantilla_sucesiones_logicas" mydata_sucesiones_logicas)
+        (assert (SeguirLeyendoSucesionesLogicas))
+)
+
+; Regla para leer las sucesiones logicas
+(defrule leer_sucesiones_logicas
+        ?f <- (SeguirLeyendoSucesionesLogicas)
+        =>
+        (bind ?acorde1 (read mydata_sucesiones_logicas))
+        (retract ?f)
+        (if (neq ?acorde1 EOF) then
+                (bind ?acorde2 (read mydata_sucesiones_logicas))
+                (assert (sucesion_logica (acorde1 ?acorde1) (acorde2 ?acorde2)))
+                (assert (SeguirLeyendoSucesionesLogicas))
+        )
+)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;                     HECHOS DEDUCIDOS                      ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -169,8 +269,11 @@
         (close mydata_contraalto)
         (close mydata_tenor)
         (close mydata_bajo)
+        (close mydata_tonalidades)
+        (close mydata_intervalos)
+        (close mydata_escalas)
+        (close mydata_sucesiones_logicas)
 )
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; ANALIZAR ACORDES TRIADA
 
@@ -472,9 +575,10 @@
 ; Regla para comprobar que no hay dos acordes en segunda inversión consecutivos
 (defrule comprobar_segundas_inversiones_consecutivas
 
-        (acorde (inversion segunda) (indice ?i))
-        (acorde (inversion segunda) (indice ?j))
+        (acorde (grado ?g1) (inversion segunda) (indice ?i))
+        (acorde (grado ?g2) (inversion segunda) (indice ?j))
         (test(eq ?j (+ ?i 1)))
+        (test(neq ?g1 ?g2))
         =>
         (assert (fallo (tipo segundas_inversiones_consecutivas) (tiempo ?i)))
 )
@@ -1024,8 +1128,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open "./tfg_web/fallos/fallos_mod3" data "w")
-        (printout data "En la " ?parte " parte del compas " ?compas " hay dos acordes en segunda inversión consecutivos.")
+        (open "./tfg_web/fallos/fallos_mod3" data "a")
+        (printout data "En la " ?parte " parte del compas " ?compas " hay dos acordes en segunda inversión consecutivos.." )
         (close data)
 )
 
@@ -1036,8 +1140,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open "./tfg_web/fallos/fallos_mod3" data "w")
-        (printout data "En la " ?parte " parte del compas " ?compas " se da la sucesión de acordes I-II en estado fundamental, la cual es incorrecta.")
+        (open "./tfg_web/fallos/fallos_mod3" data "a")
+        (printout data "En la " ?parte " parte del compas " ?compas " se da la sucesión de acordes I-II en estado fundamental, la cual es incorrecta.." )
         (close data)
 )
 
@@ -1048,8 +1152,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open "./tfg_web/fallos/fallos_mod3" data "w")
-        (printout data "En la " ?parte " parte del compas " ?compas " se da la sucesión de acordes II-III en estado fundamental, la cual es incorrecta.")
+        (open "./tfg_web/fallos/fallos_mod3" data "a")
+        (printout data "En la " ?parte " parte del compas " ?compas " se da la sucesión de acordes II-III en estado fundamental, la cual es incorrecta.." )
         (close data)
 )
 
@@ -1060,8 +1164,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open "./tfg_web/fallos/fallos_mod3" data "w")
-        (printout data "En la " ?parte " parte del compas " ?compas " se da la sucesión de acordes III-Iv en estado fundamental, la cual es incorrecta.")
+        (open "./tfg_web/fallos/fallos_mod3" data "a")
+        (printout data "En la " ?parte " parte del compas " ?compas " se da la sucesión de acordes III-Iv en estado fundamental, la cual es incorrecta.." )
         (close data)
 )
 
@@ -1072,7 +1176,7 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open "./tfg_web/fallos/fallos_mod3" data "w")
-        (printout data "En la " ?parte " parte del " ?compas " hay un acorde incompleto.")
+        (open "./tfg_web/fallos/fallos_mod3" data "a")
+        (printout data "En la " ?parte " parte del " ?compas " hay un acorde incompleto.." )
         (close data)
 )
