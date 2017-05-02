@@ -37,14 +37,32 @@
 						{% endfor %}
 					</div>
 				{% endif %}
-				{% if r_mod2 %}
+				{% if r_mod1 and r_mod2 %}
 					<div class="tab-pane fade in" id="mod2">
 						{%for r in r_mod2 %}
 							<li>{{r}}</li>
 						{% endfor %}
 					</div>
+				{% elif not r_mod1 and r_mod2 %}
+					<div class="tab-pane fade in active" id="mod2">
+						{%for r in r_mod2 %}
+							<li>{{r}}</li>
+						{% endfor %}
+					</div>
 				{% endif %}
-				{% if r_mod3 %}
+				{% if r_mod3 and not r_mod2 and not r_mod1 %}
+					<div class="tab-pane fade in active" id="mod3">
+						{%for r in r_mod3 %}
+							<li>{{r}}</li>
+						{% endfor %}
+					</div>
+				{% elif r_mod3 and r_mod2 %}
+					<div class="tab-pane fade in" id="mod3">
+						{%for r in r_mod3 %}
+							<li>{{r}}</li>
+						{% endfor %}
+					</div>
+				{% elif r_mod3 and r_mod1 %}
 					<div class="tab-pane fade in" id="mod3">
 						{%for r in r_mod3 %}
 							<li>{{r}}</li>

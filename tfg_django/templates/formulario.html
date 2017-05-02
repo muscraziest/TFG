@@ -26,13 +26,14 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-
-	$('#enviar').click(function(){
-    	$(".contenido").animate({top: '150px'});
-    	$(".footer").css({display:'none'});
-    	$(".cargando").css({top: 50, left: 53, position:'absolute'});
-    	$(".cargando").fadeIn("slow");
-    });
+		if($('#id_partitura').val() != ""){
+			$('#enviar').click(function(){
+		    	$(".contenido").animate({top: '150px'});
+		    	$(".footer").css({display:'none'});
+		    	$(".cargando").css({top: 50, left: 53, position:'absolute'});
+		    	$(".cargando").fadeIn("slow");
+	   		});	
+		}
 	</script>
 	<script type="text/javascript">
 		$(document).ajaxStart(function(){

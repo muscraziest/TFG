@@ -18,7 +18,7 @@ def enviarDatos(request):
 		if form.is_valid():
 
 			#Eliminamos archivos
-			#limpiarArchivos()
+			limpiarArchivos()
 
 			data = form.cleaned_data
 			opciones = data['opciones']
@@ -36,15 +36,16 @@ def enviarDatos(request):
 
 			#Subimos el archivo
 			subirArchivo(request.FILES['partitura'])
+
 			#Ejecutamos los modulos del sistema experto
 			if not os.path.exists("./tfg_web/datos"):
 				os.makedirs("./tfg_web/datos")
-			#modulos(opciones,settings.MEDIA_ROOT+'.xml')
+
+			modulos(opciones,settings.MEDIA_ROOT+'.xml')
+
 			#Mostramos los resultados
 			r_mod1,r_mod2,r_mod3 = mostrarResultados(opciones)
 			return render(request,'resultados.html',{'r_mod1':r_mod1, 'r_mod2':r_mod2, 'r_mod3':r_mod3})
-
-			#return HttpResponse(json.dumps({'r_mod1':r_mod1, 'r_mod2':r_mod2, 'r_mod3':r_mod3}), content_type="application/json")
 
 		else:
 			return HttpResponse('No es valido')
@@ -53,12 +54,15 @@ def enviarDatos(request):
 
 	return render(request,'formulario.html',{'form':form})
 
+
 #Funcion auxiliar para guardar el archivo seleccionado
 def subirArchivo(f):
+
 	dir_destino = open(settings.MEDIA_ROOT + '.xml', 'wb+')
 	for chunk in f.chunks():
 		dir_destino.write(chunk)
 	dir_destino.close()
+
 
 #Funcion para mostrar los resultados del sistema experto
 def mostrarResultados(opciones):
@@ -70,27 +74,57 @@ def mostrarResultados(opciones):
 	#Leemos los fallos de los modulos activados
 	if('opcion1' in opciones):
 		r_mod1=[]
-		with open('./tfg_web/fallos/fallos_mod1','r') as f1:
-			for l in f1:
-				aux = l.replace("..","\n")
-				r_mod1.append(aux.split("\n"))
-		f1.close()
+		f_aux = open('./tfg_web/fallos/aux','w')
+		with open('./tfg_web/fallos/fallos_mod1','r') as f:
+			for l in f:
+				aux = l.replace("..",".\n")
+				f_aux.write(aux)
+		f.close()
+		f_aux.close()
+
+		with open('./tfg_web/fallos/aux','r') as f:
+			for l in f:
+				r_mod1.append(l)
+		f.close()
+
+		os.remove('./tfg_web/fallos/aux')
 
 	if('opcion2' in opciones):
 		r_mod2=[]
-		with open('./tfg_web/fallos/fallos_mod2','r') as f2:
-			for l in f2:
-				r_mod2.append(l.split(".."))
-		f2.close()
+		f_aux = open('./tfg_web/fallos/aux','w')
+		with open('./tfg_web/fallos/fallos_mod2','r') as f:
+			for l in f:
+				aux = l.replace("..",".\n")
+				f_aux.write(aux)
+		f.close()
+		f_aux.close()
+
+		with open('./tfg_web/fallos/aux','r') as f:
+			for l in f:
+				r_mod2.append(l)
+		f.close()
+
+		os.remove('./tfg_web/fallos/aux')
 
 	if('opcion3' in opciones):
 		r_mod3=[]
-		with open('./tfg_web/fallos/fallos_mod3','r') as f3:
-			for l in f3:
-				r_mod3.append(l.split(".."))
-		f3.close()
+		f_aux = open('./tfg_web/fallos/aux','w')
+		with open('./tfg_web/fallos/fallos_mod3','r') as f:
+			for l in f:
+				aux = l.replace("..",".\n")
+				f_aux.write(aux)
+		f.close()
+		f_aux.close()
+
+		with open('./tfg_web/fallos/aux','r') as f:
+			for l in f:
+				r_mod3.append(l)
+		f.close()
+
+		os.remove('./tfg_web/fallos/aux')
 
 	return r_mod1,r_mod2,r_mod3
+
 
 #Funcion auxiliar para eliminar los archivos generados en el analisis
 def limpiarArchivos():
