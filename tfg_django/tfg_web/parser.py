@@ -679,12 +679,6 @@ def parserMelodias(partitura):
 			#Buscamos la altura de la nota, duracion y voz
 			octave = note.find('pitch').find('octave').text
 			type = note.find('type').text
-			dot = note.find('dot')
-
-			if dot is not None:
-				dot = '.'
-			else:
-				dot = ''
 
 			voice = note.find('voice').text
 
@@ -720,8 +714,9 @@ def parserMelodias(partitura):
 				tenor.append(' ')
 
 			elif voice == '4':
-
 				if rest=='$':
+					tenor.append(rest)
+				else:
 					bajo.append(step)
 					bajo.append(accidental)
 					bajo.append(' ')

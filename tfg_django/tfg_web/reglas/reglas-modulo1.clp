@@ -486,8 +486,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open "./tfg_web/fallos/fallos_mod1" data "a")
-        (printout data "Hay quintas paralelas en las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas "..")
+        (open "./tfg_web/fallos/fallos_mod1" data "a") 
+        (printout data "Hay quintas paralelas en las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas "..") 
         (close data)
 )
 
@@ -498,8 +498,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open "./tfg_web/fallos/fallos_mod1" data "a")
-        (printout data "Hay octavas paralelas en las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas ".." )
+        (open "./tfg_web/fallos/fallos_mod1" data "a") 
+        (printout data "Hay octavas paralelas en las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas "..")
         (close data)
 )
 
@@ -510,8 +510,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open "./tfg_web/fallos/fallos_mod1" data "a")
-        (printout data "Hay quintas directas en voces extremas en la " ?parte " parte del compas " ?compas ".." )
+        (open "./tfg_web/fallos/fallos_mod1" data "a") 
+        (printout data "Hay quintas directas en voces extremas en la " ?parte " parte del compas " ?compas "..")
         (close data)
 )
 
@@ -522,8 +522,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open "./tfg_web/fallos/fallos_mod1" data "a")
-        (printout data "Hay octavas directas en voces extremas en la " ?parte " parte del compas " ?compas ".." )
+        (open "./tfg_web/fallos/fallos_mod1" data "a") 
+        (printout data "Hay octavas directas en voces extremas en la " ?parte " parte del compas " ?compas "..")
         (close data)
 )
 
@@ -534,8 +534,8 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open "./tfg_web/fallos/fallos_mod1" data "a")
-        (printout data "Hay un tritono entre las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas ".." )
+        (open "./tfg_web/fallos/fallos_mod1" data "a") 
+        (printout data "Hay un tritono entre las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas "..")
         (close data)
 )
 
@@ -546,7 +546,7 @@
         =>
         (bind ?compas (/ ?i 16))
         (bind ?parte (/ (mod ?i 16) 4))
-        (open "./tfg_web/fallos/fallos_mod1" data "a")
-        (printout data "Las voces " ?v1 " y " ?v2 " duplican la sensible de la tonalidad en la " ?parte " del compas " ?compas ".." )
+        (open "./tfg_web/fallos/fallos_mod1" data "a") 
+        (printout data "Las voces " ?v1 " y " ?v2 " duplican la sensible de la tonalidad en la " ?parte " del compas " ?compas "..")
         (close data)
 )

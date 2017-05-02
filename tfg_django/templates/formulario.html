@@ -1,35 +1,45 @@
-{% load static %}
-<html>
-	<head>
-		<title> SEAM </title>	
-		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-		<link rel="stylesheet" type = "text/css" href="{% static 'tfg_web.css' %}">
-	</head>
-	<body>
-		<div class="page-header">
-			<h1><a href="/tfg/"> Sistema Experto de Análisis Musical </a></h1>
-		</div>
-		<div class="explication">
-			<p> Bienvenido al Sistema Experto de Análisis de Partituras de coro.</p> 
-			<p> Selecciona de las siguientes opciones lo que quieres analizar y adjunta el archivo correspondiente. </p>
-		</div>
+{% extends 'base.html' %}
+
+{% block content %}
+	<div class="contenido col-md-6" style="position: relative;">
+		{% if messages %}
+		    {% for message in messages %}
+				<div class="alert alert-danger alert-dismissable">
+					<a href='/tfg/indice' class='close' data-dismiss="alert" aria-label="close">&times;</a> 
+						<strong><span class="glyphicon glyphicon-warning-sign"></span> Error:</strong> {{message}}
+				</div>	
+		    {% endfor %}
+		{% endif %}
 		<div class="post">
-			<form action="" method="post" enctype="multipart/form-data">
+			<form action="{% url 'resultados' %}" method="post" id="formulario" enctype="multipart/form-data">
 				{% csrf_token %}
 				{{ form.as_p }}
-				<input type="submit" value="Enviar" class="btn btn-success"/>
+				<input type= "submit" id="enviar" value="Enviar" class="btn btn-primary btn-md btn-custom pull-right"/>
 			</form>
 		</div>
-		{% if messages %}
-            {% for message in messages %}
-                <div class="container">
-					<div class="alert alert-danger alert-dismissable">
-						<a href='/tfg/' class='close' data-dismiss="alert" aria-label="close">&times;</a> 
-							<strong><span class="glyphicon glyphicon-warning-sign"></span> Error:</strong> {{message}}
-					</div>
-			</div>		
-            {% endfor %}
-        {% endif %}
-	</body>
-</html>
+	</div>
+	<div class="cargando" style="display:none;">
+		<div class="contenido">
+			<div id="loading">
+  				<p><img src="http://i.stack.imgur.com/FhHRx.gif" /> Por favor, espere mientras se procesa su partitura</p>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+
+	$('#enviar').click(function(){
+    	$(".contenido").animate({top: '150px'});
+    	$(".footer").css({display:'none'});
+    	$(".cargando").css({top: 50, left: 53, position:'absolute'});
+    	$(".cargando").fadeIn("slow");
+    });
+	</script>
+	<script type="text/javascript">
+		$(document).ajaxStart(function(){
+    		$('#loading').show();
+ 		}).ajaxStop(function(){
+    		$('#loading').hide();
+ 		});
+	</script>
+{% endblock %}
+

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.shortcuts import render, HttpResponse, render_to_response
 from . forms import Formulario
 from . lanzarModulos import modulos
@@ -5,6 +6,8 @@ from django.conf import settings
 from django.contrib import messages
 import os
 import shutil
+import HTMLParser
+import json
 
 #Funcion para procesar las opciones elegidas por el usuario y lanzar el sistema experto
 def enviarDatos(request):
@@ -14,7 +17,8 @@ def enviarDatos(request):
 
 		if form.is_valid():
 
-			limpiarArchivos()
+			#Eliminamos archivos
+			#limpiarArchivos()
 
 			data = form.cleaned_data
 			opciones = data['opciones']
@@ -22,12 +26,12 @@ def enviarDatos(request):
 
 			#Comprobamos que se ha seleccionado al menos una opcion
 			if not opciones:
-				messages.error(request, " debes seleccionar al menos una opcion.")
+				messages.error(request, " debes seleccionar al menos una opción.")
 				return render(request,'formulario.html',{'form':form})
 
 			#Comprobamos que la extension de la partitura es correcta
 			if not partitura.name.endswith('.xml'):
-				messages.error(request, " formato no valido. El archivo debe tener extension xml.")
+				messages.error(request, " formato no válido. El archivo debe tener extensión xml.")
 				return render(request,'formulario.html',{'form':form})
 
 			#Subimos el archivo
@@ -35,10 +39,12 @@ def enviarDatos(request):
 			#Ejecutamos los modulos del sistema experto
 			if not os.path.exists("./tfg_web/datos"):
 				os.makedirs("./tfg_web/datos")
-			modulos(opciones,settings.MEDIA_ROOT+'.xml')
+			#modulos(opciones,settings.MEDIA_ROOT+'.xml')
 			#Mostramos los resultados
 			r_mod1,r_mod2,r_mod3 = mostrarResultados(opciones)
 			return render(request,'resultados.html',{'r_mod1':r_mod1, 'r_mod2':r_mod2, 'r_mod3':r_mod3})
+
+			#return HttpResponse(json.dumps({'r_mod1':r_mod1, 'r_mod2':r_mod2, 'r_mod3':r_mod3}), content_type="application/json")
 
 		else:
 			return HttpResponse('No es valido')
@@ -66,24 +72,22 @@ def mostrarResultados(opciones):
 		r_mod1=[]
 		with open('./tfg_web/fallos/fallos_mod1','r') as f1:
 			for l in f1:
-				l.replace("..",".\n")
-				r_mod1.append(l.split(".\n"))
+				aux = l.replace("..","\n")
+				r_mod1.append(aux.split("\n"))
 		f1.close()
 
 	if('opcion2' in opciones):
 		r_mod2=[]
 		with open('./tfg_web/fallos/fallos_mod2','r') as f2:
 			for l in f2:
-				l.replace("..",".\n")
-				r_mod2.append(l.split(".\n"))
+				r_mod2.append(l.split(".."))
 		f2.close()
 
 	if('opcion3' in opciones):
 		r_mod3=[]
 		with open('./tfg_web/fallos/fallos_mod3','r') as f3:
 			for l in f3:
-				l.replace("..",".\n")
-				r_mod3.append(l.split(".\n"))
+				r_mod3.append(l.split(".."))
 		f3.close()
 
 	return r_mod1,r_mod2,r_mod3

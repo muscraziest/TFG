@@ -1,0 +1,26 @@
+{% load static %}
+<html>
+	<head>
+		<title> SEAM </title>	
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" type = "text/css" href="{% static 'tfg_web.css' %}">
+		<link href="https://fonts.googleapis.com/css?family=Baloo|Lobster|Slabo+27px|Titillium+Web" rel="stylesheet">	
+		</head>
+	<body>
+		<div class="page-header">
+			<h1><a href="/tfg/indice"> <span class="resalt">S</span>istema <span class="resalt">E</span>xperto de <span class="resalt">A</span>nálisis <span class="resalt">M</span>usical </a></h1>
+		</div>
+		{% block content %}
+		{% endblock %}
+
+	<footer class="footer">
+	      <div class="container">
+	        <p class="text-center">Made with <span class="glyphicon glyphicon-heart"></span></p>
+	      </div>
+    </footer>
+    
+	</body>
+</html>
