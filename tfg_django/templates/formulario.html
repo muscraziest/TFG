@@ -19,21 +19,22 @@
 		</div>
 	</div>
 	<div class="cargando" style="display:none;">
-		<div class="contenido">
+		<div class="contenido-loading">
 			<div id="loading">
-  				<p><img src="http://i.stack.imgur.com/FhHRx.gif" /> Por favor, espere mientras se procesa su partitura</p>
+  				<p><img src="http://www.encore-eas.com/wp-content/themes/piper%20tema/piper/assets/images/loading.GIF" /> Por favor, espere mientras se procesa su partitura</p>
 			</div>
 		</div>
 	</div>
 	<script type="text/javascript">
-		if($('#id_partitura').val() != ""){
-			$('#enviar').click(function(){
-		    	$(".contenido").animate({top: '150px'});
+		$('#enviar').click(function(){
+			if($('#id_partitura').val() != ""){
+		    	$(".contenido").animate({top: '100px'});
 		    	$(".footer").css({display:'none'});
 		    	$(".cargando").css({top: 50, left: 53, position:'absolute'});
 		    	$(".cargando").fadeIn("slow");
-	   		});	
-		}
+	    	}
+   		});	
+		
 	</script>
 	<script type="text/javascript">
 		$(document).ajaxStart(function(){
