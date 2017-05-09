@@ -44,6 +44,11 @@ def parserAcordes(partitura):
 	tenor = []
 	bajo = []
 
+	s = 0
+	c = 0
+	t = 0
+	b = 0
+
 	total_semicorcheas = 0
 	contador_s = 0
 	contador_c = 0
@@ -74,6 +79,7 @@ def parserAcordes(partitura):
 	
 		rest = ''
 		accidental = ''
+		alter = ''
 
 		#Buscamos la nota
 		pitch = note.find('pitch')	
@@ -88,511 +94,749 @@ def parserAcordes(partitura):
 			if step is not None:
 				step = note.find('pitch').find('step').text
 				rest = ''
-			else:
-				rest = '$'
-			
-			#Buscamos alteraciones accidentales
-			accidental = note.find('accidental')
-	
-			#Si hay alteracion accidental comprobamos el tipo de alteracion
-			if accidental is not None:
-				if note.find('accidental').text == 'sharp':
-					accidental = 's'
-				elif note.find('accidental').text == 'flat':
-					accidental = 'b'
-				else:
-					accidental = ''
-	
-			#Si no, comprobamos si esta alterada por la armadura
-			elif note.find('pitch').find('alter') is not None:
-				accidental = ''
-				if int(tonalidad[0]) > 0:
-					accidental = 's'
-				else:
-					accidental = 'b'
-	
-			#La nota no tiene ningun tipo de alteracion
-			else:
-				accidental = ''
 
-			#Buscamos la altura de la nota, duracion y voz
+			#Comprobamos si esta alterada por la armadura
+			if note.find('pitch').find('alter') is not None:
+				if int(tonalidad[0]) < 0:
+					alter = 's'
+				else:
+					alter = 'b'
+
+			#Buscamos la altura de la nota
 			octave = note.find('pitch').find('octave').text
-			type = note.find('type').text
-			dot = note.find('dot')
 
-			#Comprobamos si tiene puntillo
-			if dot is not None:
-				dot = '.'
-			else:
-				dot = ''
+		else:
+			rest = 'R'
+			octave = '0'
+			
+		#Buscamos alteraciones accidentales
+		#Si hay alteracion accidental comprobamos el tipo de alteracion
+		if note.find('accidental') is not None:
+			alter = ''
+			if note.find('accidental').text == 'sharp':
+				accidental = 's'
+			elif note.find('accidental').text == 'flat':
+				accidental = 'b'
+			else: 
+				accidental = ''
 
-			voice = note.find('voice').text
-	
-			#Voz soprano
-			if voice == '1':
+		#La nota no tiene ningun tipo de alteracion
+		else:
+			accidental = ''
 
-				#Duracion redonda
-				if type == 'whole':
-					#Redonda con puntillo
-					if dot == '.':
-						for i in range(0,24):
-							if rest=='$':
-								soprano.append(rest)
-							else:
-								soprano.append(step)
-								soprano.append(accidental)
-								soprano.append(' ')
-								soprano.append(octave)
+		#Duracion y voz
+		type = note.find('type').text
+		dot = note.find('dot')
+
+		#Comprobamos si tiene puntillo
+		if dot is not None:
+			dot = '.'
+		else:
+			dot = ''
+
+		voice = note.find('voice').text
+
+		#Voz soprano
+		if voice == '1':
+
+			#Duracion redonda
+			if type == 'whole':
+				#Redonda con puntillo
+				if dot == '.':
+					for i in range(0,24):
+						if rest=='R':
+							soprano.append(rest)
 							soprano.append(' ')
-						contador_s = contador_s + 24
-
-					#Redonda
-					else:
-
-						for i in range(0,16):
-							if rest=='$':
-								soprano.append(rest)
-							else:
-								soprano.append(step)
-								soprano.append(accidental)
-								soprano.append(' ')
-								soprano.append(octave)
+							soprano.append(octave)
+						else:
+							soprano.append(step)
+							soprano.append(alter)
+							soprano.append(accidental)
 							soprano.append(' ')
-						contador_s = contador_s + 16
+							soprano.append(octave)
+						soprano.append(' ')
+					contador_s = contador_s + 24
 
-				#Duracionn blanca
-				if type == 'half':
-					#Blanca con puntillo
-					if dot == '.':
-						for i in range(0,12):
-							if rest=='$':
-								soprano.append(rest)
-							else:
-								soprano.append(step)
-								soprano.append(accidental)
-								soprano.append(' ')
-								soprano.append(octave)
+				#Redonda
+				else:
+
+					for i in range(0,16):
+						if rest=='R':
+							soprano.append(rest)
 							soprano.append(' ')
-						contador_s = contador_s + 12
-					
-					#Blanca
-					else:
-
-						for i in range(0,8):
-							if rest=='$':
-								soprano.append(rest)
-							else:
-								soprano.append(step)
-								soprano.append(accidental)
-								soprano.append(' ')
-								soprano.append(octave)
+							soprano.append(octave)
+						else:
+							soprano.append(step)
+							soprano.append(alter)
+							soprano.append(accidental)
 							soprano.append(' ')
-						contador_s = contador_s + 8
+							soprano.append(octave)
+						soprano.append(' ')
+					contador_s = contador_s + 16
 
-				#Duracion negra
-				if type == 'quarter':
-					#Negra con puntillo
-					if dot == '.':
-						for i in range(0,6):
-							if rest=='$':
-								soprano.append(rest)
-							else:
-								soprano.append(step)
-								soprano.append(accidental)
-								soprano.append(' ')
-								soprano.append(octave)
+			#Duracionn blanca
+			if type == 'half':
+				#Blanca con puntillo
+				if dot == '.':
+					for i in range(0,12):
+						if rest=='R':
+							soprano.append(rest)
 							soprano.append(' ')
-						contador_s = contador_s + 6
-
-					#Negra
-					else:
-
-						for i in range(0,4):
-							if rest=='$':
-								soprano.append(rest)
-							else:
-								soprano.append(step)
-								soprano.append(accidental)
-								soprano.append(' ')
-								soprano.append(octave)
+							soprano.append(octave)
+						else:
+							soprano.append(step)
+							soprano.append(alter)
+							soprano.append(accidental)
 							soprano.append(' ')
-						contador_s = contador_s + 4
+							soprano.append(octave)
+						soprano.append(' ')
+					contador_s = contador_s + 12
+				
+				#Blanca
+				else:
 
-				#Duracion corchea
-				if type == 'eighth':
-					#Corchea con puntillo
-					if dot == '.':
-						for i in range(0,3):
-							if rest=='$':
-								soprano.append(rest)
-							else:
-								soprano.append(step)
-								soprano.append(' ')
-								soprano.append(accidental)
-								soprano.append(octave)
+					for i in range(0,8):
+						if rest=='R':
+							soprano.append(rest)
 							soprano.append(' ')
-						contador_s = contador_s + 3
-
-					#Corchea
-					else:
-
-						for i in range(0,2):
-							if rest=='$':
-								soprano.append(rest)
-							else:
-								soprano.append(step)
-								soprano.append(accidental)
-								soprano.append(' ')
-								soprano.append(octave)
+							soprano.append(octave)
+						else:
+							soprano.append(step)
+							soprano.append(alter)
+							soprano.append(accidental)
 							soprano.append(' ')
-						contador_s = contador_s + 2
+							soprano.append(octave)
+						soprano.append(' ')
+					contador_s = contador_s + 8
 
-				if contador_s == total_semicorcheas:
-					contador_s = 0
+			#Duracion negra
+			if type == 'quarter':
+				#Negra con puntillo
+				if dot == '.':
+					for i in range(0,6):
+						if rest=='R':
+							soprano.append(rest)
+							soprano.append(' ')
+							soprano.append(octave)
+						else:
+							soprano.append(step)
+							soprano.append(alter)
+							soprano.append(accidental)
+							soprano.append(' ')
+							soprano.append(octave)
+						soprano.append(' ')
+					contador_s = contador_s + 6
 
-				elif contador_s > total_semicorcheas:
-					contador_s = contador_s % total_semicorcheas
+				#Negra
+				else:
 
-			#Contraalto
-			elif voice == '2':
+					for i in range(0,4):
+						if rest=='R':
+							soprano.append(rest)
+							soprano.append(' ')
+							soprano.append(octave)
+						else:
+							soprano.append(step)
+							soprano.append(alter)
+							soprano.append(accidental)
+							soprano.append(' ')
+							soprano.append(octave)
+						soprano.append(' ')
+					contador_s = contador_s + 4
 
-				if type == 'whole':
-					if dot == '.':
-						for i in range(0,24):
-							if rest=='$':
-								contraalto.append(rest)
-							else:
-								contraalto.append(step)
-								contraalto.append(accidental)
-								contraalto.append(' ')
-								contraalto.append(octave)
+			#Duracion corchea
+			if type == 'eighth':
+				#Corchea con puntillo
+				if dot == '.':
+					for i in range(0,3):
+						if rest=='R':
+							soprano.append(rest)
+							soprano.append(' ')
+							soprano.append(octave)
+						else:
+							soprano.append(step)
+							soprano.append(alter)
+							soprano.append(accidental)
+							soprano.append(' ')
+							soprano.append(octave)
+						soprano.append(' ')
+					contador_s = contador_s + 3
+
+				#Corchea
+				else:
+
+					for i in range(0,2):
+						if rest=='R':
+							soprano.append(rest)
+							soprano.append(' ')
+							soprano.append(octave)
+						else:
+							soprano.append(step)
+							soprano.append(alter)
+							soprano.append(accidental)
+							soprano.append(' ')
+							soprano.append(octave)
+						soprano.append(' ')
+					contador_s = contador_s + 2
+
+			#Duracion semicorchea
+			if type == '16th':
+				#Semicorchea con puntillo
+				if dot == '.':
+					for i in range(0,2):
+						if rest=='R':
+							soprano.append(rest)
+							soprano.append(' ')
+							soprano.append(octave)
+						else:
+							soprano.append(step)
+							soprano.append(alter)
+							soprano.append(accidental)
+							soprano.append(' ')
+							soprano.append(octave)
+						soprano.append(' ')
+					contador_s = contador_s + 2
+
+				#Semicorchea
+				else:
+
+					if rest=='R':
+						soprano.append(rest)
+						soprano.append(' ')
+						soprano.append(octave)
+					else:
+						soprano.append(step)
+						soprano.append(alter)
+						soprano.append(accidental)
+						soprano.append(' ')
+						soprano.append(octave)
+					soprano.append(' ')
+				contador_s = contador_s + 1
+
+			if contador_s == total_semicorcheas:
+				contador_s = 0
+
+			elif contador_s > total_semicorcheas:
+				contador_s = contador_s % total_semicorcheas
+
+		#Contraalto
+		elif voice == '2':
+
+			if type == 'whole':
+				if dot == '.':
+					for i in range(0,24):
+						if rest=='R':
+							contraalto.append(rest)
 							contraalto.append(' ')
-						contador_c = contador_c + 24
-
-					else:
-
-						for i in range(0,16):
-							if rest=='$':
-								contraalto.append(rest)
-							else:
-								contraalto.append(step)
-								contraalto.append(accidental)
-								contraalto.append(' ')
-								contraalto.append(octave)
+							contraalto.append(octave)
+						else:
+							contraalto.append(step)
+							contraalto.append(alter)
+							contraalto.append(accidental)
 							contraalto.append(' ')
-						contador_c = contador_c + 16
+							contraalto.append(octave)
+						contraalto.append(' ')
+					contador_c = contador_c + 24
 
+				else:
 
-				if type == 'half':
-					if dot == '.':
-						for i in range(0,12):
-							if rest=='$':
-								contraalto.append(rest)
-							else:
-								contraalto.append(step)
-								contraalto.append(accidental)
-								contraalto.append(' ')
-								contraalto.append(octave)
+					for i in range(0,16):
+						if rest=='R':
+							contraalto.append(rest)
 							contraalto.append(' ')
-						contador_c = contador_c + 12
-
-					else:
-
-						for i in range(0,8):
-							if rest=='$':
-								contraalto.append(rest)
-							else:
-								contraalto.append(step)
-								contraalto.append(accidental)
-								contraalto.append(' ')
-								contraalto.append(octave)
+							contraalto.append(octave)
+						else:
+							contraalto.append(step)
+							contraalto.append(alter)
+							contraalto.append(accidental)
 							contraalto.append(' ')
-						contador_c = contador_c + 8
+							contraalto.append(octave)
+						contraalto.append(' ')
+					contador_c = contador_c + 16
 
-				if type == 'quarter':
-					if dot == '.':
-						for i in range(0,6):
-							if rest=='$':
-								contraalto.append(rest)
-							else:
-								contraalto.append(step)
-								contraalto.append(accidental)
-								contraalto.append(' ')
-								contraalto.append(octave)
+
+			if type == 'half':
+				if dot == '.':
+					for i in range(0,12):
+						if rest=='R':
+							contraalto.append(rest)
 							contraalto.append(' ')
-						contador_c = contador_c + 6
-
-					else:
-
-						for i in range(0,4):
-							if rest=='$':
-								contraalto.append(rest)
-							else:
-								contraalto.append(step)
-								contraalto.append(accidental)
-								contraalto.append(' ')
-								contraalto.append(octave)
+							contraalto.append(octave)
+						else:
+							contraalto.append(step)
+							contraalto.append(alter)
+							contraalto.append(accidental)
 							contraalto.append(' ')
-						contador_c = contador_c + 4
+							contraalto.append(octave)
+						contraalto.append(' ')
+					contador_c = contador_c + 12
 
-				if type == 'eighth':
-					if dot == '.':
-						for i in range(0,3):
-							if rest=='$':
-								contraalto.append(rest)
-							else:
-								contraalto.append(step)
-								contraalto.append(accidental)
-								contraalto.append(' ')
-								contraalto.append(octave)
+				else:
+
+					for i in range(0,8):
+						if rest=='R':
+							contraalto.append(rest)
 							contraalto.append(' ')
-						contador_c = contador_c + 3
-
-					else:
-
-						for i in range(0,2):
-							if rest=='$':
-								contraalto.append(rest)
-							else:
-								contraalto.append(step)
-								contraalto.append(accidental)
-								contraalto.append(' ')
-								contraalto.append(octave)
+							contraalto.append(octave)
+						else:
+							contraalto.append(step)
+							contraalto.append(alter)
+							contraalto.append(accidental)
 							contraalto.append(' ')
-						contador_c = contador_c + 2
+							contraalto.append(octave)
+						contraalto.append(' ')
+					contador_c = contador_c + 8
 
-				if contador_c == total_semicorcheas:
-					contador_c = 0
+			if type == 'quarter':
+				if dot == '.':
+					for i in range(0,6):
+						if rest=='R':
+							contraalto.append(rest)
+							contraalto.append(' ')
+							contraalto.append(octave)
+						else:
+							contraalto.append(step)
+							contraalto.append(alter)
+							contraalto.append(accidental)
+							contraalto.append(' ')
+							contraalto.append(octave)
+						contraalto.append(' ')
+					contador_c = contador_c + 6
 
-				elif contador_c > total_semicorcheas:
-					contador_c = contador_c % total_semicorcheas
+				else:
 
-			#Tenor
-			elif voice == '3':
-				if type == 'whole':
-					if dot == '.':
-						for i in range(0,24):
-							if rest=='$':
-								tenor.append(rest)
-							else:
-								tenor.append(step)
-								tenor.append(accidental)
-								tenor.append(' ')
-								tenor.append(octave)
-							tenor.append(' ')
-						contador_t = contador_t + 24
+					for i in range(0,4):
+						if rest=='R':
+							contraalto.append(rest)
+							contraalto.append(' ')
+							contraalto.append(octave)
+						else:
+							contraalto.append(step)
+							contraalto.append(alter)
+							contraalto.append(accidental)
+							contraalto.append(' ')
+							contraalto.append(octave)
+						contraalto.append(' ')
+					contador_c = contador_c + 4
 
+			if type == 'eighth':
+				if dot == '.':
+					for i in range(0,3):
+						if rest=='R':
+							contraalto.append(rest)
+							contraalto.append(' ')
+							contraalto.append(octave)
+						else:
+							contraalto.append(step)
+							contraalto.append(alter)
+							contraalto.append(accidental)
+							contraalto.append(' ')
+							contraalto.append(octave)
+						contraalto.append(' ')
+					contador_c = contador_c + 3
+
+				else:
+
+					for i in range(0,2):
+						if rest=='R':
+							contraalto.append(rest)
+							contraalto.append(' ')
+							contraalto.append(octave)
+						else:
+							contraalto.append(step)
+							contraalto.append(alter)
+							contraalto.append(accidental)
+							contraalto.append(' ')
+							contraalto.append(octave)
+						contraalto.append(' ')
+					contador_c = contador_c + 2
+
+			#Duracion semicorchea
+			if type == '16th':
+				#Semicorchea con puntillo
+				if dot == '.':
+					for i in range(0,2):
+						if rest=='R':
+							contraalto.append(rest)
+							contraalto.append(' ')
+							contraalto.append(octave)
+						else:
+							contraalto.append(step)
+							contraalto.append(alter)
+							contraalto.append(accidental)
+							contraalto.append(' ')
+							contraalto.append(octave)
+						contraalto.append(' ')
+					contador_c = contador_c + 2
+
+				#Semicorchea
+				else:
+
+					if rest=='R':
+						contraalto.append(rest)
+						contraalto.append(' ')
+						contraalto.append(octave)
 					else:
+						contraalto.append(step)
+						contraalto.append(alter)
+						contraalto.append(accidental)
+						contraalto.append(' ')
+						contraalto.append(octave)
+					contraalto.append(' ')
+				contador_c = contador_c + 1
 
-						for i in range(0,16):
-							if rest=='$':
-								tenor.append(rest)
-							else:
-								tenor.append(step)
-								tenor.append(accidental)
-								tenor.append(' ')
-								tenor.append(octave)
+			if contador_c == total_semicorcheas:
+				contador_c = 0
+
+			elif contador_c > total_semicorcheas:
+				contador_c = contador_c % total_semicorcheas
+			
+
+		#Tenor
+		elif voice == '3':
+			if type == 'whole':
+				if dot == '.':
+					for i in range(0,24):
+						if rest=='R':
+							tenor.append(rest)
 							tenor.append(' ')
-						contador_t = contador_t + 16
-
-
-				if type == 'half':
-					if dot == '.':
-						for i in range(0,12):
-							if rest=='$':
-								tenor.append(rest)
-							else:
-								tenor.append(step)
-								tenor.append(accidental)
-								tenor.append(' ')
-								tenor.append(octave)
+							tenor.append(octave)
+						else:
+							tenor.append(step)
+							tenor.append(alter)
+							tenor.append(accidental)
 							tenor.append(' ')
-						contador_t = contador_t + 12
+							tenor.append(octave)
+						tenor.append(' ')
+					contador_t = contador_t + 24
 
-					else:
+				else:
 
-						for i in range(0,8):
-							if rest=='$':
-								tenor.append(rest)
-							else:
-								tenor.append(step)
-								tenor.append(accidental)
-								tenor.append(' ')
-								tenor.append(octave)
+					for i in range(0,16):
+						if rest=='R':
+							tenor.append(rest)
 							tenor.append(' ')
-						contador_t = contador_t + 8
-
-				if type == 'quarter':
-					if dot == '.':
-						for i in range(0,6):
-							if rest=='$':
-								tenor.append(rest)
-							else:
-								tenor.append(step)
-								tenor.append(accidental)
-								tenor.append(' ')
-								tenor.append(octave)
+							tenor.append(octave)
+						else:
+							tenor.append(step)
+							tenor.append(alter)
+							tenor.append(accidental)
 							tenor.append(' ')
-						contador_t = contador_t + 6
+							tenor.append(octave)
+						tenor.append(' ')
+					contador_t = contador_t + 16
 
-					else:
 
-						for i in range(0,4):
-							if rest=='$':
-								tenor.append(rest)
-							else:
-								tenor.append(step)
-								tenor.append(accidental)
-								tenor.append(' ')
-								tenor.append(octave)
+			if type == 'half':
+				if dot == '.':
+					for i in range(0,12):
+						if rest=='R':
+							tenor.append(rest)
 							tenor.append(' ')
-						contador_t = contador_t + 4
-
-				if type == 'eighth':
-					if dot == '.':
-						for i in range(0,3):
-							if rest=='$':
-								tenor.append(rest)
-							else:
-								tenor.append(step)
-								tenor.append(accidental)
-								tenor.append(' ')
-								tenor.append(octave)
+							tenor.append(octave)
+						else:
+							tenor.append(step)
+							tenor.append(alter)
+							tenor.append(accidental)
 							tenor.append(' ')
-						contador_t = contador_t + 3
+							tenor.append(octave)
+						tenor.append(' ')
+					contador_t = contador_t + 12
 
-					else:
+				else:
 
-						for i in range(0,2):
-							if rest=='$':
-								tenor.append(rest)
-							else:
-								tenor.append(step)
-								tenor.append(accidental)
-								tenor.append(' ')
-								tenor.append(octave)
+					for i in range(0,8):
+						if rest=='R':
+							tenor.append(rest)
 							tenor.append(' ')
-						contador_t = contador_t + 2
+							tenor.append(octave)
+						else:
+							tenor.append(step)
+							tenor.append(alter)
+							tenor.append(accidental)
+							tenor.append(' ')
+							tenor.append(octave)
+						tenor.append(' ')
+					contador_t = contador_t + 8
 
-				if contador_t == total_semicorcheas:
-					contador_t = 0
+			if type == 'quarter':
+				if dot == '.':
+					for i in range(0,6):
+						if rest=='R':
+							tenor.append(rest)
+							tenor.append(' ')
+							tenor.append(octave)
+						else:
+							tenor.append(step)
+							tenor.append(alter)
+							tenor.append(accidental)
+							tenor.append(' ')
+							tenor.append(octave)
+						tenor.append(' ')
+					contador_t = contador_t + 6
 
-				elif contador_t > total_semicorcheas:
-					contador_t = contador_t % total_semicorcheas
+				else:
 
-			#Bajo
-			elif voice == '4':
+					for i in range(0,4):
+						if rest=='R':
+							tenor.append(rest)
+							tenor.append(' ')
+							tenor.append(octave)
+						else:
+							tenor.append(step)
+							tenor.append(alter)
+							tenor.append(accidental)
+							tenor.append(' ')
+							tenor.append(octave)
+						tenor.append(' ')
+					contador_t = contador_t + 4
 
-				if type == 'whole':
-					if dot == '.':
-						for i in range(0,24):
-							if rest=='$':
-								bajo.append(rest)
-							else:
-								bajo.append(step)
-								bajo.append(accidental)
-								bajo.append(' ')
-								bajo.append(octave)
-							bajo.append(' ')
-						contador_b = contador_b + 24
+			if type == 'eighth':
+				if dot == '.':
+					for i in range(0,3):
+						if rest=='R':
+							tenor.append(rest)
+							tenor.append(' ')
+							tenor.append(octave)
+						else:
+							tenor.append(step)
+							tenor.append(alter)
+							tenor.append(accidental)
+							tenor.append(' ')
+							tenor.append(octave)
+						tenor.append(' ')
+					contador_t = contador_t + 3
 
+				else:
+
+					for i in range(0,2):
+						if rest=='R':
+							tenor.append(rest)
+							tenor.append(' ')
+							tenor.append(octave)
+						else:
+							tenor.append(step)
+							tenor.append(alter)
+							tenor.append(accidental)
+							tenor.append(' ')
+							tenor.append(octave)
+						tenor.append(' ')
+					contador_t = contador_t + 2
+
+			#Duracion semicorchea
+			if type == '16th':
+				#Semicorchea con puntillo
+				if dot == '.':
+					for i in range(0,2):
+						if rest=='R':
+							tenor.append(rest)
+							tenor.append(' ')
+							tenor.append(octave)
+						else:
+							tenor.append(step)
+							tenor.append(alter)
+							tenor.append(accidental)
+							tenor.append(' ')
+							tenor.append(octave)
+						tenor.append(' ')
+					contador_t = contador_t + 2
+
+				#Semicorchea
+				else:
+
+					if rest=='R':
+						tenor.append(rest)
+						tenor.append(' ')
+						tenor.append(octave)
 					else:
+						tenor.append(step)
+						tenor.append(alter)
+						tenor.append(accidental)
+						tenor.append(' ')
+						tenor.append(octave)
+					tenor.append(' ')
+				contador_t = contador_t + 1
 
-						for i in range(0,16):
-							if rest=='$':
-								bajo.append(rest)
-							else:
-								bajo.append(step)
-								bajo.append(accidental)
-								bajo.append(' ')
-								bajo.append(octave)
+			if contador_t == total_semicorcheas:
+				contador_t = 0
+
+			elif contador_t > total_semicorcheas:
+				contador_t = contador_t % total_semicorcheas
+
+			
+		#Bajo
+		elif voice == '4':
+
+			if type == 'whole':
+				if dot == '.':
+					for i in range(0,24):
+						if rest=='R':
+							bajo.append(rest)
 							bajo.append(' ')
-						contador_b = contador_b + 16
-
-
-				if type == 'half':
-					if dot == '.':
-						for i in range(0,12):
-							if rest=='$':
-								bajo.append(rest)
-							else:
-								bajo.append(step)
-								bajo.append(accidental)
-								bajo.append(' ')
-								bajo.append(octave)
+							bajo.append(octave)
+						else:
+							bajo.append(step)
+							bajo.append(alter)
+							bajo.append(accidental)
 							bajo.append(' ')
-						contador_b = contador_b + 12
+							bajo.append(octave)
+						bajo.append(' ')
+					contador_b = contador_b + 24
 
+				else:
+
+					for i in range(0,16):
+						if rest=='R':
+							bajo.append(rest)
+							bajo.append(' ')
+							bajo.append(octave)
+						else:
+							bajo.append(step)
+							bajo.append(alter)
+							bajo.append(accidental)
+							bajo.append(' ')
+							bajo.append(octave)
+						bajo.append(' ')
+					contador_b = contador_b + 16
+
+
+			if type == 'half':
+				if dot == '.':
+					for i in range(0,12):
+						if rest=='R':
+							bajo.append(rest)
+							bajo.append(' ')
+							bajo.append(octave)
+						else:
+							bajo.append(step)
+							bajo.append(alter)
+							bajo.append(accidental)
+							bajo.append(' ')
+							bajo.append(octave)
+						bajo.append(' ')
+					contador_b = contador_b + 12
+
+				else:
+
+					for i in range(0,8):
+						if rest=='R':
+							bajo.append(rest)
+							bajo.append(' ')
+							bajo.append(octave)
+						else:
+							bajo.append(step)
+							bajo.append(alter)
+							bajo.append(accidental)
+							bajo.append(' ')
+							bajo.append(octave)
+						bajo.append(' ')
+					contador_b = contador_b + 8
+
+			if type == 'quarter':
+				if dot == '.':
+					for i in range(0,6):
+						if rest=='R':
+							bajo.append(rest)
+							bajo.append(' ')
+							bajo.append(octave)
+						else:
+							bajo.append(step)
+							bajo.append(alter)
+							bajo.append(accidental)
+							bajo.append(' ')
+							bajo.append(octave)
+						bajo.append(' ')
+					contador_b = contador_b + 6
+
+				else:
+
+					for i in range(0,4):
+						if rest=='R':
+							bajo.append(rest)
+							bajo.append(' ')
+							bajo.append(octave)
+						else:
+							bajo.append(step)
+							bajo.append(alter)
+							bajo.append(accidental)
+							bajo.append(' ')
+							bajo.append(octave)
+						bajo.append(' ')
+					contador_b = contador_b + 4
+
+			if type == 'eighth':
+				if dot == '.':
+					for i in range(0,3):
+						if rest=='R':
+							bajo.append(rest)
+							bajo.append(' ')
+							bajo.append(octave)
+						else:
+							bajo.append(step)
+							bajo.append(alter)
+							bajo.append(accidental)
+							bajo.append(' ')
+							bajo.append(octave)
+						bajo.append(' ')
+					contador_b = contador_b + 3
+
+				else:
+
+					for i in range(0,2):
+						if rest=='R':
+							bajo.append(rest)
+							bajo.append(' ')
+							bajo.append(octave)
+						else:
+							bajo.append(step)
+							bajo.append(alter)
+							bajo.append(accidental)
+							bajo.append(' ')
+							bajo.append(octave)
+						bajo.append(' ')
+					contador_b = contador_b + 2
+
+			#Duracion semicorchea
+			if type == '16th':
+				#Semicorchea con puntillo
+				if dot == '.':
+					for i in range(0,2):
+						if rest=='R':
+							bajo.append(rest)
+							bajo.append(' ')
+							bajo.append(octave)
+						else:
+							bajo.append(step)
+							bajo.append(alter)
+							bajo.append(accidental)
+							bajo.append(' ')
+							bajo.append(octave)
+						bajo.append(' ')
+					contador_b = contador_b + 2
+
+				#Semicorchea
+				else:
+
+					if rest=='R':
+						bajo.append(rest)
+						bajo.append(' ')
+						bajo.append(octave)
 					else:
+						bajo.append(step)
+						bajo.append(alter)
+						bajo.append(accidental)
+						bajo.append(' ')
+						bajo.append(octave)
+					bajo.append(' ')
+				contador_b = contador_b + 1
 
-						for i in range(0,8):
-							if rest=='$':
-								bajo.append(rest)
-							else:
-								bajo.append(step)
-								bajo.append(accidental)
-								bajo.append(' ')
-								bajo.append(octave)
-							bajo.append(' ')
-						contador_b = contador_b + 8
 
-				if type == 'quarter':
-					if dot == '.':
-						for i in range(0,6):
-							if rest=='$':
-								bajo.append(rest)
-							else:
-								bajo.append(step)
-								bajo.append(accidental)
-								bajo.append(' ')
-								bajo.append(octave)
-							bajo.append(' ')
-						contador_b = contador_b + 6
+			if contador_b == total_semicorcheas:
+				contador_b = 0
 
-					else:
-
-						for i in range(0,4):
-							if rest=='$':
-								bajo.append(rest)
-							else:
-								bajo.append(step)
-								bajo.append(accidental)
-								bajo.append(' ')
-								bajo.append(octave)
-							bajo.append(' ')
-						contador_b = contador_b + 4
-
-				if type == 'eighth':
-					if dot == '.':
-						for i in range(0,3):
-							if rest=='$':
-								bajo.append(rest)
-							else:
-								bajo.append(step)
-								bajo.append(accidental)
-								bajo.append(' ')
-								bajo.append(octave)
-							bajo.append(' ')
-						contador_b = contador_b + 3
-
-					else:
-
-						for i in range(0,2):
-							if rest=='$':
-								bajo.append(rest)
-							else:
-								bajo.append(step)
-								bajo.append(accidental)
-								bajo.append(' ')
-								bajo.append(octave)
-							bajo.append(' ')
-						contador_b = contador_b + 2
-
-				if contador_b == total_semicorcheas:
-					contador_b = 0
-
-				elif contador_b > total_semicorcheas:
-					contador_b = contador_b % total_semicorcheas
+			elif contador_b > total_semicorcheas:
+				contador_b = contador_b % total_semicorcheas
+				
 
 	#Creamos un fichero y escribimos los datos extraidos del xml
 	f = open('./tfg_web/datos/soprano_acordes','w')
@@ -632,96 +876,116 @@ def parserMelodias(partitura):
 
 	#Buscamos las notas para las distintas voces
 	for note in root.iter('note'):
-
+	
 		rest = ''
 		accidental = ''
+		alter = ''
 
 		#Buscamos la nota
-		pitch = note.find('pitch')
+		pitch = note.find('pitch')	
 
 		#Si no esta vacia tomamos sus atributos
 		if pitch is not None:
-
+	
 			#Buscamos el tono
 			step = note.find('pitch').find('step')
-
+	
 			#Comprobamos si hay nota o es un silencio
 			if step is not None:
 				step = note.find('pitch').find('step').text
 				rest = ''
-			else:
-				rest = '$'
-			
-			#Buscamos alteraciones accidentales
-			accidental = note.find('accidental')
 
-			#Si hay alteracion accidental comprobamos el tipo de alteracion
-			if accidental is not None:
-				if note.find('accidental').text == 'sharp':
-					accidental = 's'
-				elif note.find('accidental').text == 'flat':
-					accidental = 'b'
+			#Comprobamos si esta alterada por la armadura
+			if note.find('pitch').find('alter') is not None:
+				if int(tonalidad[0]) < 0:
+					alter = 's'
 				else:
-					accidental = ''
+					alter = 'b'
 
-			#Si no, comprobamos si esta alterada por la armadura
-			elif note.find('pitch').find('alter') is not None:
-				accidental = ''
-				if int(tonalidad[0]) > 0:
-					accidental = 's'
-				else:
-					accidental = 'b'
-
-			#La nota no tiene ningun tipo de alteracion
-			else:
-				accidental = ''
-
-			#Buscamos la altura de la nota, duracion y voz
+			#Buscamos la altura de la nota
 			octave = note.find('pitch').find('octave').text
-			type = note.find('type').text
 
-			voice = note.find('voice').text
+		else:
+			rest = 'R'
+			octave = '0'
+			
+		#Buscamos alteraciones accidentales
+		#Si hay alteracion accidental comprobamos el tipo de alteracion
+		if note.find('accidental') is not None:
+			alter = ''
+			if note.find('accidental').text == 'sharp':
+				accidental = 's'
+			elif note.find('accidental').text == 'flat':
+				accidental = 'b'
 
-			if voice == '1':
-				if rest=='$':
-					soprano.append(rest)
-				else:
-					soprano.append(step)
-					soprano.append(accidental)
-					soprano.append(' ')
-					soprano.append(octave)
+		#La nota no tiene ningun tipo de alteracion
+		else:
+			accidental = ''
+
+		#Duracion y voz
+		type = note.find('type').text
+		dot = note.find('dot')
+
+		#Comprobamos si tiene puntillo
+		if dot is not None:
+			dot = '.'
+		else:
+			dot = ''
+
+		voice = note.find('voice').text
+
+		if voice == '1':
+			if rest=='R':
+				soprano.append(rest)
 				soprano.append(' ')
+				soprano.append(octave)
+			else:
+				soprano.append(step)
+				soprano.append(alter)
+				soprano.append(accidental)
+				soprano.append(' ')
+				soprano.append(octave)
+			soprano.append(' ')
 
-			elif voice == '2':
+		elif voice == '2':
 
-				if rest=='$':
-					contraalto.append(rest)
-				else:
-					contraalto.append(step)
-					contraalto.append(accidental)
-					contraalto.append(' ')
-					contraalto.append(octave)
+			if rest=='R':
+				contraalto.append(rest)
 				contraalto.append(' ')
+				contraalto.append(octave)
+			else:
+				contraalto.append(step)
+				contraalto.append(alter)
+				contraalto.append(accidental)
+				contraalto.append(' ')
+				contraalto.append(octave)
+			contraalto.append(' ')
 
-			elif voice == '3':
-				if rest=='$':
-					tenor.append(rest)
-				else:
-					tenor.append(step)
-					tenor.append(accidental)
-					tenor.append(' ')
-					tenor.append(octave)
+		elif voice == '3':
+			if rest=='R':
+				tenor.append(rest)
 				tenor.append(' ')
+				tenor.append(octave)
+			else:
+				tenor.append(step)
+				tenor.append(alter)
+				tenor.append(accidental)
+				tenor.append(' ')
+				tenor.append(octave)
+			tenor.append(' ')
 
-			elif voice == '4':
-				if rest=='$':
-					tenor.append(rest)
-				else:
-					bajo.append(step)
-					bajo.append(accidental)
-					bajo.append(' ')
-					bajo.append(octave)
+		elif voice == '4':
+			if rest=='R':
+				tenor.append(rest)
 				bajo.append(' ')
+				bajo.append(octave)
+			else:
+				bajo.append(step)
+				bajo.append(alter)
+				bajo.append(accidental)
+				bajo.append(' ')
+				bajo.append(octave)
+			bajo.append(' ')
 
 	#Creamos un fichero y escribimos los datos extraidos del xml
 	f = open('./tfg_web/datos/soprano_melodia','w')
@@ -762,7 +1026,7 @@ def movimientosVoz(file):
 	orden = {'Cb':0.5,'C':1,'C#':1.5,'Db':1.55,'D':2,'D#':2.5,'Eb':2.55,'E':3,'E#':3.5,'Fb':3.55,'F':4,'F#':4.5,'Gb':4.55,'G':5,'G#':5.5,'Ab':5.55,'A':6,'A#':6.5,'Bb':6.55,'B':7,'B#':7.5};
  
 	#Vamos comparando las notas de dos en dos
-	for i in range(0,len(notas)-2):
+	for i in range(0,len(notas)-3):
 
 		#Si las notas son distintas
 		if(notas[i] != notas[i+2] and notas[i+1] != notas[i+3]):

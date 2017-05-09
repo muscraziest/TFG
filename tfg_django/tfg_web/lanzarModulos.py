@@ -4,6 +4,18 @@ from . parser import *
 
 def modulos(opciones,partitura):
 
+	if not os.path.exists("./tfg_web/fallos/soprano"):
+			open("./tfg_web/fallos/soprano", "a").close()
+
+	if not os.path.exists("./tfg_web/fallos/contra"):
+			open("./tfg_web/fallos/contra", "a").close()
+
+	if not os.path.exists("./tfg_web/fallos/tenor"):
+			open("./tfg_web/fallos/tenor", "a").close()
+
+	if not os.path.exists("./tfg_web/fallos/bajo"):
+		open("./tfg_web/fallos/bajo", "a").close()
+
 	#Lanzamos el modulo 1
 	if('opcion1' in opciones):
 
@@ -68,7 +80,6 @@ def modulo1():
 
 	#Ejecutamos
 	clips.Run()
-
 
 #Funcion para ejecutar las reglas de clips del modulo 2
 def modulo2(opciones):

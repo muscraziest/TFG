@@ -3,6 +3,11 @@
 {% block content %}
 	<div class="contenido col-md-6" style="position: relative;">
 		{% if messages %}
+			<script type="text/javascript">
+			$(document).ready(function() {
+				$(".contenido").effect('bounce', {times:2}, 400);
+			});
+			</script>
 		    {% for message in messages %}
 				<div class="alert alert-danger alert-dismissable">
 					<a href='/tfg/indice' class='close' data-dismiss="alert" aria-label="close">&times;</a> 
@@ -32,6 +37,8 @@
 		    	$(".footer").css({display:'none'});
 		    	$(".cargando").css({top: 50, left: 53, position:'absolute'});
 		    	$(".cargando").fadeIn("slow");
+	    	}else{
+	    		$(".contenido").effect('bounce', {times:2}, 400);
 	    	}
    		});	
 		
