@@ -1,0 +1,92 @@
+\chapter*{1. Especificación de requisitos}
+\addcontentsline{toc}{chapter}{1. Especificación de requisitos}
+
+La espeficićación de requisitos de un sistema experto comprende la determinación de requerimientos de información, funcionales y de entrada de datos. En esta fase del desarrollo debemos determinar qué datos de entrada, proporcionados por el usuario, necesita el sistema para funcionar, las operaciones que llevará a cabo sobre dichos datos y los resultados que espera el usuario obtener del sistema.  
+
+Para poder realizar esta fase del desarrollo, necesitamos extraer esta serie de requisitos de los que serán los usuarios finales del sistema.
+
+Como se menciona en la introducción, este sistema está dirigido a compositores o estudiantes de composición y armonía que desean mejorar sus obras o comprobar si éstas no contienen errores armónicos y/o melódicos. Estos serían nuestros usuarios finales y a los que he consultado qué respuesta esperarían del sistema, es decir, que información debería analizarse en la partitura y cómo mostrar los posibles errores encontrados, así como qué información sería necesaria proporcionar para poder llevar a cabo el análisis deseado. 
+
+\section*{1.1 Requisitos de información}
+\addcontentsline{toc}{section}{1.1 Requisitos de información}
+
+
+El sistema, una vez finalizado el análisis, mostrará una lista seriada de los diferentes errores y faltas encontrados. Éstos estarán debidamente explicados y señalizados en la partitura, indicando las voces implicadas y el compás en el que aparecen. 
+
+Dado que estos errores pueden ser de origen diverso, armónico o melódico, se crearán listados específicos para cada tipo de análisis, a fin de facilitar el entendimiento de los resultados y la experiencia del usuario.   
+
+\section*{1.2 Requisitos funcionales}
+\addcontentsline{toc}{section}{1.2 Requisitos funcionales}
+
+
+El eje principal de este sistema radica en dos funciones principales: análisis armónico y análisis melódico.
+
+La realización del análisis armónico implica la comprobación de los siguientes hechos:
+
+\begin{itemize}
+
+	\item Quintas paralelas: dadas dos voces, éstas no pueden producir dos intervalos de quinta consecutivos. No obstante si el segundo intervalo de quinta es de tipo aumentado o disminuido y no se encuentra en voces extremas no se considerará falta.
+
+	\item Quintas directas: dadas dos voces, éstas no pueden producir un intervalo de quinta por movimiento directo.
+
+	\item Octavas paralelas: dadas dos voces, éstas no pueden producir dos intervalos de octava consecutivos. 
+
+	\item Octavas directas: dadas dos voces, éstas no pueden producir un intervalo de octava por movimiento directo.
+
+	\item Tritono: dadas dos voces, éstas no pueden producir un intervalo de cuarta aumentada o tritono. No obstante si éste viene preparado por movimiento conjunto u oblicuo de las voces no se considerará falta.
+
+	\item Duplicación de sensible: en ningún caso se podrá duplicar la sensible de la tonalidad. 
+
+	\item Búsqueda de acordes incompletos: todos los acordes deberán de tener la fundamental, la tercera y la quinta del acorde en al menos una voz, especialmente si están invertidos. No obstante, se puede dar la situación de que el acorde de tónica quede incompleto, con la ausencia de la quinta, en la cadencia.
+
+	\item Segunda inverión consecutiva: en ningún caso podrá haber dos acordes en segunda inversión consecutivos.
+
+	\item Lógica tonal: la armonía de la obra deberá seguir, en la medida de lo posible, el esquema indicado en la figura .
+
+		\begin{itemize}
+
+			\item La tónica o primer grado (I) podrá moverse hacia cualquier otro grado de la escala.
+			\item La supertónica o segundo grado (II) podrá moverse hacia la tónica, cuarto, quinto o séptimo grado.
+			\item La mediante, modal o tercer grado (III) podrá moverse hacia sexto grado.
+			\item La subdominante o cuarto grado (IV) podrá moverse hacia el primer, segundo, quinto o séptimo grado.
+			\item La dominante o quinto grado (V) podrá moverse hacia el primer, sexto o séptimo grado.
+			\item La superdominante o sexto grado (VI) podrá moverse hacia el segundo o cuarto grado.
+			\item La subtónica o séptimo grado (VII podrá moverse hacia el primer, tercer o quinto grado.
+		\end{itemize}
+
+		Por otra parte, no podrán darse en ningún caso las siguientes sucesiones de acordes:
+
+		\begin{itemize}
+			\item I-II en estado fundamental.
+			\item II-III en estado fundamental,
+			\item III-IV en estado fundamental.
+		\end{itemize}
+
+\end{itemize}
+
+La realización del análisis melódico implica la comprobación de los siguientes hechos:
+
+\begin{itemize}
+
+	\item Resolución de sensibles: la sensible de la tonalidad deberá resolver siempre en la tónica.
+
+	\item Resolución de séptimas: la séptima de dominante deberá resolver siempre por movimiento por grado conjunto descendente y deberá estar preparada.
+
+	\item Segunda aumentada: en ningún caso podrá haber un intervalo de segunda aumentada entre dos notas consecutivas en una misma voz.
+
+	\item Tritono melódico: en ningún caso podrá haber un intervalo de cuarta aumentada o tritono entre dos notas consecutivas en una misma voz.
+
+	\item Contrapunto en voces extremas: deberá predominar el movimiento contrario en las voces extremas sobre el movimiento oblicuo y, especialmente, directo.
+
+	\item Contrapunto del salto: si hay dos movimientos (saltos) en la misma dirección, ascendente o descendente, la primera y la última nota no pueden ser disonantes.
+
+	\item Melodía incoherente: deberá predominar el movimiento por grados conjuntos en las melodías, evitando hacer demasiados saltos.
+
+\end{itemize}
+
+
+\section*{1.3 Requisitos de entrada de datos}
+\addcontentsline{toc}{section}{1.3 Requisitos de entrada de datos}
+
+
+Los datos de entrada necesarios para el funcionamiento del sistema son las opciones de los distintos tipos de análisis posibles y la partitura en la que se van a realizar. 

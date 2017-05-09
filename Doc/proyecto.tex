@@ -1,0 +1,379 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Short Sectioned Assignment LaTeX Template Version 1.0 (5/5/12)
+% This template has been downloaded from: http://www.LaTeXTemplates.com
+% Original author:  Frits Wenneker (http://www.howtotex.com)
+% License: CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[a4paper, 12pt]{report} % A4 paper and 11pt font size
+
+% ---- Entrada y salida de texto -----
+
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage[utf8]{inputenc}
+\usepackage{ascii}
+%\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+
+% ---- Idioma --------
+
+\usepackage[spanish, es-tabla]{babel} % Selecciona el español para palabras introducidas automáticamente, p.ej. "septiembre" en la fecha y especifica que se use la palabra Tabla en vez de Cuadro
+
+% ---- Otros paquetes ----
+
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+%\usepackage{graphics,graphicx, floatrow} %para incluir imágenes y notas en las imágenes
+\usepackage{graphics,graphicx, float} %para incluir imágenes y colocarlas
+\usepackage{epstopdf} 
+\usepackage[bookmarks = true, colorlinks=true, linkcolor = black, citecolor = magenta, menucolor = black, urlcolor = blue]{hyperref} 
+\usepackage{url}
+\usepackage{color}
+\definecolor{gray97}{gray}{.97}
+\definecolor{gray75}{gray}{.75}
+\definecolor{gray45}{gray}{.45}
+
+\usepackage{listings}
+\lstset{ frame=Ltb,
+	framerule=0pt,
+	aboveskip=0.5cm,
+	framextopmargin=3pt,
+	framexbottommargin=3pt,
+	framexleftmargin=0.4cm,
+	framesep=0pt,
+	rulesep=.4pt,
+	backgroundcolor=\color{gray97},
+	rulesepcolor=\color{black},
+	%
+	stringstyle=\ttfamily,
+	showstringspaces = false,
+	basicstyle=\small\ttfamily,
+	commentstyle=\color{gray45},
+	keywordstyle=\bfseries,
+	%
+	numbers=left,
+	numbersep=15pt,
+	numberstyle=\tiny,
+	numberfirstline = false,
+	breaklines=true,
+}
+
+% minimizar fragmentado de listados
+\lstnewenvironment{listing}[1][]
+{\lstset{#1}\pagebreak[0]}{\pagebreak[0]}
+
+\lstdefinestyle{consola}
+{basicstyle=\scriptsize\bf\ttfamily,
+	backgroundcolor=\color{gray75},
+}
+
+\lstdefinestyle{C}
+{language=C,
+}
+
+\usepackage{parskip}
+
+% Para hacer tablas comlejas
+%\usepackage{multirow}
+%\usepackage{threeparttable}
+
+%\usepackage{sectsty} % Allows customizing section commands
+%\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Remov%Para conseguir que en las páginas en blanco no ponga cabecerass
+
+\makeatletter
+\def\clearpage{%
+  \ifvmode
+    \ifnum \@dbltopnum =\m@ne
+      \ifdim \pagetotal <\topskip
+        \hbox{}
+      \fi
+    \fi
+  \fi
+  \newpage
+  \thispagestyle{empty}
+  \write\m@ne{}
+  \vbox{}
+  \penalty -\@Mi
+}
+%\makeatotheres all indentation from paragraphs - comment this line for an assignment with lots of text
+
+\makeatletter
+
+\newcommand\frontmatter{%
+    \cleardoublepage
+  %\@mainmatterfalse
+  \pagenumbering{roman}}
+
+\newcommand\mainmatter{%
+    \cleardoublepage
+ % \@mainmattertrue
+  \pagenumbering{arabic}}
+
+\newcommand\backmatter{%
+  \if@openright
+    \cleardoublepage
+  \else
+    \clearpage
+  \fi
+ % \@mainmatterfalse
+   }
+
+\makeatother
+
+\usepackage{titlesec}
+\titleformat{\chapter}[display]   
+{\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}   
+\titlespacing*{\chapter}{0pt}{-50pt}{40pt}
+
+\usepackage{geometry}% http://ctan.org/pkg/geometry
+\newcommand{\mygeometry}[1]{%
+  \geometry{right=#1,left=\dimexpr#1\relax}% Set new geometry
+}
+\mygeometry{30mm}% 25mm left/right margins
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+%----------------------------------------------------------------------------------------
+%	TÍTULO Y DATOS DEL ALUMNO
+%----------------------------------------------------------------------------------------
+\begin{document}
+
+\begin{titlepage}
+ 
+ 
+\newlength{\centeroffset}
+\setlength{\centeroffset}{-0.5\oddsidemargin}
+\addtolength{\centeroffset}{0.5\evensidemargin}
+\thispagestyle{empty}
+
+\noindent\hspace*{\centeroffset}
+\begin{minipage}{\textwidth}
+
+\centering
+\includegraphics[width=0.9\textwidth]{imagenes/logo_ugr.jpg}\\[1.4cm]
+
+\textsc{ \Large TRABAJO FIN DE GRADO\\[0.2cm]}
+\textsc{ INGENIERÍA INFORMÁTICA}\\[1cm]
+% Upper part of the page
+% 
+% Title
+{\Huge\bfseries Desarrollo de un Sistema Experto de Análisis Musical\\
+}
+\noindent\rule[-1ex]{\textwidth}{3pt}\\[3.5ex]
+{\large\bfseries }
+\end{minipage}
+
+\vspace{2.5cm}
+\noindent\hspace*{\centeroffset}
+\begin{minipage}{\textwidth}
+\centering
+
+\textbf{Autor}\\ {Laura Olga Tirado López}\\[2.5ex]
+\textbf{Directores}\\
+{Juan Luis Castro Peña}\\[2.5ex]
+\includegraphics[width=0.3\textwidth]{imagenes/etsiit_logo.png}\\[0.1cm]
+\textsc{Escuela Técnica Superior de Ingenierías Informática y de Telecomunicación}\\
+\textsc{---}\\
+Granada, Junio de 2017
+\end{minipage}
+%\addtolength{\textwidth}{\centeroffset}
+%\vspace{\stretch{2}}
+\end{titlepage}
+
+%----------------------------------------------------------------------------------------
+% DOCUMENTO
+%----------------------------------------------------------------------------------------
+
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	Prefacio
+%----------------------------------------------------------------------------------------
+
+\frontmatter
+
+\thispagestyle{empty}
+
+\begin{center}
+{\large\bfseries Desarrollo de un Sistema Experto de Análisis Musical}\\
+\end{center}
+\begin{center}
+Laura Olga Tirado López\\
+\end{center}
+
+%\vspace{0.7cm}
+\noindent{\textbf{Palabras clave}: sistema, experto, análisis, analizar, música, musical, coro, coral, quintas, octavas, armonía, armónico, melodía, melódico, contrapunto, voces, partitura}\\
+
+\vspace{0.7cm}
+\noindent{\textbf{Resumen}}\\
+
+Se pretende desarrollar una aplicación basada en reglas para poder analizar \textit{corales} o partituras de coro.
+
+\bigskip
+
+El objetivo es implementar un sistema experto que permita a los usuarios analizar partituras de coro a cuatro voces para su posterior corrección, pudiendo así mejorarlas tanto a nivel armónico como a nivel melódico y de contrapunto.
+
+\bigskip
+
+El sistema se basará en conocimiento experto sobre lenguaje musical, composición y armonía clásica proporcionado por varios profesores de armonía y composición del Conservatorio Profesional Ángel Barrios, músicos titulados y otras fuentes tales como libros y tratados. 
+
+\bigskip
+
+Las funcionalidades que proporcionará este sistema se dividirán en dos clases:
+
+\begin{itemize}
+	\item \textbf{Análisis armónico}: consistente en la búsqueda de errores que comprendan, al menos dos de las voces, tales como acordes incompletos, secuencias armónicas incorrectas y búsqueda de disonancias.
+	\item  \textbf{Análisis melódico}: consistente en la búsqueda de errores referidos a las melodías de las voces, tales como conducción incorrecta de las mismas, falta de coherencia y saltos o movimientos disonantes. 
+\end{itemize}
+
+\bigskip
+
+El interés principal de este proyecto es poder desarrollar una herramienta para compositores o estudiantes de composición que haga una función análoga a la de un corrector ortográfico y gramatical de un editor de textos, aplicada a la composición y edición de partituras.
+
+\cleardoublepage
+
+
+\thispagestyle{empty}
+
+
+\begin{center}
+{\large\bfseries Development of an Expert System for Musical Analysis}\\
+\end{center}
+\begin{center}
+Laura Olga Tirado López\\
+\end{center}
+
+%\vspace{0.7cm}
+\noindent{\textbf{Keywords}: system, expert, analysis, analize, music, musical, choir, fifths, eights, harmony, harmonic, melody, melodic, voices, sheet, counterpoint}\\
+
+\vspace{0.7cm}
+\noindent{\textbf{Abstract}}\\
+
+My intention is develop an app that implements an expert system to analysis \textit{choir} sheets.
+
+\bigskip
+
+This development aims to create a rule bases engine that allows users analize choir sheet musics for later correction, being able to improve their harmonies, melodies and counterpoint.
+
+\bigskip
+
+The system will be based on expert knwoledge about music notation, composing and classic harmony provided by many harmony and composition teachers of Conservatorio Profesional Ángel Barrios, musicians and another sources such as books and musical tratrises.
+
+\bigskip
+
+Features provided by this system will be of two grades:
+
+\begin{itemize}
+	\item \textbf{Harmonic analysis}: consisting on search for errors involving, at least, two of the voices, such as incomplete chords, incorrect harmonic sequences and  dissonances.
+	\item  \textbf{Melodic analysis}: consisting on search for errors involving melodies, such as incorrect voice guidance, lack of coherence and dissonant movements. 
+\end{itemize}
+
+\bigskip
+
+The main interest of this project is being able of develop a tool for composers or music students that performs a function analogous to an spelling and grammar checker, applied to composing and writing music. 
+
+\newpage
+\thispagestyle{empty}
+
+\noindent\rule[-1ex]{\textwidth}{2pt}\\[4.5ex]
+
+D. \textbf{Juan Luis Castro Peña}, Profesor del Área de XXXX del Departamento de Ciencias de la Computación e Inteligencia Artificial de la Universidad de Granada.
+
+\vspace{0.5cm}
+
+\textbf{Informa:}
+
+\vspace{0.5cm}
+
+Que el presente trabajo, titulado \textit{\textbf{Desarrollo de un Sistema Experto de Análisis Musical}},
+ha sido realizado bajo su supervisión por \textbf{Laura Olga Tirado López}, y autorizamos la defensa de dicho trabajo ante el tribunal que corresponda.
+
+\vspace{0.5cm}
+
+Y para que conste, expiden y firman el presente informe en Granada a X de mes de 2017.
+
+\vspace{1cm}
+
+\textbf{El director:}
+
+\vspace{5cm}
+
+\noindent \textbf{Juan Luis Castro Peña}
+
+\chapter*{Agradecimientos}
+\thispagestyle{empty}
+
+       \vspace{1cm}
+
+\bigskip
+A mi familia, por apoyarme y hacer posible que esté donde estoy hoy.
+
+\bigskip
+A mis amigos, por estar siempre ahí y animarme a seguir cuando las cosas se tuercen.
+
+\bigskip
+A mis compañeros de informátoca, porque sin ellos esta etapa que es la vida universitaria no habría tenido tantas risas.
+
+\bigskip
+A mis compañeros de la DEIIT, siempre dispuestos a escuchar mis quejas y ayudarme con mis problemas.
+
+%----------------------------------------------------------------------------------------
+%	Índices
+%----------------------------------------------------------------------------------------
+
+\newpage %inserta un salto de página
+
+\tableofcontents % para generar el índice de contenidos
+
+\listoffigures
+
+\listoftables
+
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	Capítulos
+%----------------------------------------------------------------------------------------
+
+
+\mainmatter
+\input{capitulos/00_Introduccion}
+\input{capitulos/01_Requisitos}
+\input{capitulos/02_Adquisicion}
+%\input{capitulos/03_Analisis}
+%\input{capitulos/04_Diseno}
+%\input{capitulos/05_Implementacion}
+%\input{capitulos/06_Pruebas}
+%\input{capitulos/07_Conclusiones}
+
+%----------------------------------------------------------------------------------------
+%	Glosario
+%----------------------------------------------------------------------------------------
+
+
+%----------------------------------------------------------------------------------------
+%	Referencias
+%----------------------------------------------------------------------------------------
+
+\bibliography{bibliografia} %archivo bibliografia.bib que contiene las entradas 
+\bibliographystyle{plain} 
+
+\end{document}
