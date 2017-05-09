@@ -469,7 +469,7 @@
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;              MOSTRAR FALLOS               ;;;
+;;;                    MOSTRAR FALLOS                         ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Reglas para mostrar los tipos de fallos
 (defrule mostrar_quintas
@@ -480,7 +480,7 @@
     (bind ?compas (/ ?i 12))
     (bind ?parte (/ (mod ?i 12) 2))
     (open "./tfg_web/fallos/fallos_mod1" data "a") 
-    (printout data "Hay quintas paralelas en las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas "..") 
+    (printout data "Hay quintas paralelas en las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas ". Las quintas paralelas provocan una sonoridad dura y arcaica, lo cual está completamente fuera de estilo..") 
     (close data)
 )
 
@@ -492,7 +492,7 @@
     (bind ?compas (/ ?i 12))
     (bind ?parte (/ (mod ?i 12) 2))
     (open "./tfg_web/fallos/fallos_mod1" data "a") 
-    (printout data "Hay octavas paralelas en las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas "..")
+    (printout data "Hay octavas paralelas en las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas ". Las octavas paralelas generan pobreza armónica y sonoridad hueca..")
     (close data)
 )
 
@@ -504,7 +504,7 @@
     (bind ?compas (/ ?i 12))
     (bind ?parte (/ (mod ?i 12) 2))
     (open "./tfg_web/fallos/fallos_mod1" data "a") 
-    (printout data "Hay quintas directas en voces extremas en la " ?parte " parte del compas " ?compas "..")
+    (printout data "Hay quintas directas en las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas ". Las quintas directas provocan que se pierda la independencia de las partes y un contrapunto pobre..")
     (close data)
 )
 
@@ -516,7 +516,7 @@
     (bind ?compas (/ ?i 12))
     (bind ?parte (/ (mod ?i 12) 2))
     (open "./tfg_web/fallos/fallos_mod1" data "a") 
-    (printout data "Hay octavas directas en voces extremas en la " ?parte " parte del compas " ?compas "..")
+    (printout data "Hay octavas directas en voces extremas en la " ?parte " parte del compas " ?compas ". Las octavas directas provocan que se pierda la independencia de las partes y un contrapunto pobre..")
     (close data)
 )
 
@@ -528,7 +528,7 @@
     (bind ?compas (/ ?i 12))
     (bind ?parte (/ (mod ?i 12) 2))
     (open "./tfg_web/fallos/fallos_mod1" data "a") 
-    (printout data "Hay un tritono entre las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas "..")
+    (printout data "Hay un tritono entre las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas ". El intervalo de cuarta aumentada o tritono es un intervalo disonante que crea mucha tensión, por lo cual es un intervalo prohibido dentro de este estilo de obras.")
     (close data)
 )
 
@@ -540,6 +540,6 @@
     (bind ?compas (/ ?i 12))
     (bind ?parte (/ (mod ?i 12) 2))
     (open "./tfg_web/fallos/fallos_mod1" data "a") 
-    (printout data "Las voces " ?v1 " y " ?v2 " duplican la sensible de la tonalidad en la " ?parte " del compas " ?compas "..")
+    (printout data "Las voces " ?v1 " y " ?v2 " duplican la sensible de la tonalidad en la " ?parte " del compas " ?compas ". La sensible es una nota que provoca inestabilidad y que se siente atraída por resolver en la tónica de la tonalidad. Al duplicar la sensible generaremos octavas paralelas, lo cual es una falta que no se puede dar en este estilo de obras..")
     (close data)
 )

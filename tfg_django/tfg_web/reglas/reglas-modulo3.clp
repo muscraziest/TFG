@@ -1115,9 +1115,14 @@
 
     (acorde (grado ?g) (indice ?i))
     (not(exists(acordeCompleto ?i)))
+    (neq ?g VII)
     =>
     (assert(fallo (tipo acorde_incompleto) (tiempo ?i)))
 )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;                    MOSTRAR FALLOS                         ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Reglas para mostrar los tipos de fallos
 (defrule mostrar_segundas_inv_consecutivas
@@ -1140,7 +1145,7 @@
     (bind ?compas (/ ?i 16))
     (bind ?parte (/ (mod ?i 16) 4))
     (open "./tfg_web/fallos/fallos_mod3" data "a")
-    (printout data "En la " ?parte " parte del compas " ?compas " se da la sucesión de acordes I-II en estado fundamental, la cual es incorrecta.." )
+    (printout data "En la " ?parte " parte del compas " ?compas " se da la sucesión de acordes I-II en estado fundamental. El enlace de estos dos acordes en estado fundamental genera movimientos de quintas u octavas, además de dificultar la conducción de las voces para crear un buen contrapunto.." )
     (close data)
 )
 
@@ -1152,7 +1157,7 @@
     (bind ?compas (/ ?i 16))
     (bind ?parte (/ (mod ?i 16) 4))
     (open "./tfg_web/fallos/fallos_mod3" data "a")
-    (printout data "En la " ?parte " parte del compas " ?compas " se da la sucesión de acordes II-III en estado fundamental, la cual es incorrecta.." )
+    (printout data "En la " ?parte " parte del compas " ?compas " se da la sucesión de acordes II-III en estado fundamental, la cual es incorrecta. El enlace de estos dos acordes en estado fundamental genera movimientos de quintas u octavas, además de dificultar la conducción de las voces para crear un buen contrapunto. También añadir que está sucesión de acordes da una sonoridad algo extraña dado que la función de subdominante del II grado tiende a moverse hacia una dominante y no al III grado." )
     (close data)
 )
 
@@ -1164,7 +1169,7 @@
     (bind ?compas (/ ?i 16))
     (bind ?parte (/ (mod ?i 16) 4))
     (open "./tfg_web/fallos/fallos_mod3" data "a")
-    (printout data "En la " ?parte " parte del compas " ?compas " se da la sucesión de acordes III-Iv en estado fundamental, la cual es incorrecta.." )
+    (printout data "En la " ?parte " parte del compas " ?compas " se da la sucesión de acordes III-IV en estado fundamental, la cual es incorrecta. El enlace de estos dos acordes en estado fundamental genera movimientos de quintas u octavas, además de dificultar la conducción de las voces para crear un buen contrapunto.También añadir que está sucesión de acordes da una sonoridad algo extraña dado que el III grado tiende a moverse hacia el VI grado y no hacia una subdominante.")
     (close data)
 )
 
@@ -1176,6 +1181,6 @@
     (bind ?compas (/ ?i 16))
     (bind ?parte (/ (mod ?i 16) 4))
     (open "./tfg_web/fallos/fallos_mod3" data "a")
-    (printout data "En la " ?parte " parte del " ?compas " hay un acorde incompleto.." )
+    (printout data "En la " ?parte " parte del " ?compas " hay un acorde incompleto. Los acordes no pueden estar incompletos bajo ningún concepto, ya que provocan una pérdida del soporte armónico y una sonoridad pobre.." )
     (close data)
 )

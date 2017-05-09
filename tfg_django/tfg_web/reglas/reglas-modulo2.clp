@@ -416,19 +416,19 @@
 )
 
 ; Regla para comprobar que las séptimas resuelven
-;(defrule comprobar_septimas_resueltas
+(defrule comprobar_septimas_resueltas
 
-;    (acorde (grado V) (septima si) (indice ?i))
-;    (tonalidad_obra (nombre ?n) (modo ?m))
-;    (acorde_4 (grado V) (nombre_tonalidad ?n) (modo_tonalidad ?m) (septima ?septima))
-;    (acorde_3 (grado I) (nombre_tonalidad ?n) (modo_tonalidad ?m) (tercera ?tercera))
-;    (nota_melodia (tono ?septima) (voz ?v) (indice ?i))
-;    (nota_melodia (tono ?t) (voz ?v) (indice ?j))
-;    (test(eq ?j (+ ?i 1)))
-;    (test(neq ?tercera ?t))
-;    =>
-;    (assert(fallo (tipo resolucion_septima) (voz1 ?v) (voz2 ?v) (tiempo ?i)))
-;)
+    (acorde (grado V) (septima si) (indice ?i))
+    (tonalidad_obra (nombre ?n) (modo ?m))
+    (acorde_4 (grado V) (nombre_tonalidad ?n) (modo_tonalidad ?m) (septima ?septima))
+    (acorde_3 (grado I) (nombre_tonalidad ?n) (modo_tonalidad ?m) (tercera ?tercera))
+    (nota_melodia (tono ?septima) (voz ?v) (indice ?i))
+    (nota_melodia (tono ?t) (voz ?v) (indice ?j))
+    (test(eq ?j (+ ?i 1)))
+    (test(neq ?tercera ?t))
+    =>
+    (assert(fallo (tipo resolucion_septima) (voz1 ?v) (voz2 ?v) (tiempo ?i)))
+)
 
 ; Regla para si hay segundas aumentadas meódicas
 (defrule comprobar_segundas_aumentadas_melodicas
@@ -894,7 +894,7 @@
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;         MODULO 3: MOSTRAR FALLOS              ;;;
+;;;                    MOSTRAR FALLOS                         ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defrule mostrar_resolucion_sensible
@@ -905,7 +905,7 @@
     (bind ?compas (/ ?i 16))
     (bind ?parte (/ (mod ?i 16) 4))
     (open " ./tfg/web/fallos/fallos_mod2" data "a")
-    (printout data "En la " ?parte " parte del compas " ?compas " la sensible en la voz " ?v1 " no resuelve.." )
+    (printout data "En la " ?parte " parte del compas " ?compas " la sensible en la voz " ?v1 " no resuelve. La sensible es una nota que provoca inestabilidad y que se siente atraída por resolver en la tónica de la tonalidad. Al no estar resuelta, esa inestabilidad se mantiene provocando una falta de coherencia en la línea melódica." )
     (close data)
 )
 
@@ -917,7 +917,7 @@
     (bind ?compas (/ ?i 16))
     (bind ?parte (/ (mod ?i 16) 4))
     (open " ./tfg/web/fallos/fallos_mod2" data "a")
-    (printout data "En la " ?parte " parte del compas " ?compas " la septima en la voz " ?v1 " no resuelve.." )
+    (printout data "En la " ?parte " parte del compas " ?compas " la septima en la voz " ?v1 " no resuelve. La séptima es una nota que provoca inestabilidad y tensión, por lo que se siente atraída por resolver en la tercera de la tónica de la tonalidad para eliminar esa tensión. Al no resolver esta inestabilidad se mantiene provocando una falta de coherencia en la línea melódica..")
     (close data)
 )
 
@@ -929,7 +929,7 @@
     (bind ?compas (/ ?i 16))
     (bind ?parte (/ (mod ?i 16) 4))
     (open " ./tfg/web/fallos/fallos_mod2" data "a")
-    (printout data "En la " ?parte " parte del compas " ?compas " en melodía de la voz " ?v1 " hay una intervalo de 2 aumentada.." )
+    (printout data "En la " ?parte " parte del compas " ?compas " en melodía de la voz " ?v1 " hay una intervalo de segunda aumentada. El intervalo de segunda aumentada provoca una sonoridad extraña y tensión, sobre todo en modo mayor, por lo que debe ser evitada para cuidar la línea melódica.." )
     (close data)
 )
 
@@ -941,7 +941,7 @@
     (bind ?compas (/ ?i 16))
     (bind ?parte (/ (mod ?i 16) 4))
     (open " ./tfg/web/fallos/fallos_mod2" data "a")
-    (printout data "En la " ?parte " parte del compas " ?compas " en melodía de la voz " ?v1 " hay una intervalo de tritono.." )
+    (printout data "En la " ?parte " parte del compas " ?compas " en melodía de la voz " ?v1 " hay una intervalo de tritono. El intervalo de cuarta aumentada o tritono es un intervalo disonante que crea mucha tensión, por lo cual es un intervalo prohibido dentro de este estilo de obras.." )
     (close data)
 )
 
@@ -953,7 +953,7 @@
     (bind ?compas (/ ?i 16))
     (bind ?parte (/ (mod ?i 16) 4))
     (open " ./tfg/web/fallos/fallos_mod2" data "a")
-    (printout data "No hay un buen contrapunto entre las voces extremas. Hay demasiados movimientos directos u oblicuos en comparación con el movimiento contrario que debería predominar.." )
+    (printout data "No hay un buen contrapunto entre las voces extremas. Hay demasiados movimientos directos u oblicuos en comparación con el movimiento contrario que debería predominar para que las líneas melódicas queden cuidadas y \equilibradas.." )
     (close data)
 )
 
@@ -965,7 +965,7 @@
     (bind ?compas (/ ?i 16))
     (bind ?parte (/ (mod ?i 16) 4))
     (open " ./tfg/web/fallos/fallos_mod2" data "a")
-    (printout data "En el compas " ?compas " hay disonancias entre notas con saltos ascendetes en la melodía de la voz " ?v1 ". Hay dos saltos consecutivos en los cuales la primera nota y la última son disonantes.." )
+    (printout data "En el compas " ?compas " hay disonancias entre notas con saltos ascendetes en la melodía de la voz " ?v1 ". Hay dos saltos consecutivos en los cuales la primera nota y la última son disonantes, lo cual provoca inestabilidad en la melodía.." )
     (close data)
 )
 
@@ -977,7 +977,7 @@
     (bind ?compas (/ ?i 16))
     (bind ?parte (/ (mod ?i 16) 4))
     (open " ./tfg/web/fallos/fallos_mod2" data "a")
-    (printout data "En el compas " ?compas " hay disonancias entre notas con saltos descendentes en la melodía de la voz " ?v1 ". Hay dos saltos consecutivos en los cuales la primera nota y la última son disonantes.." )
+    (printout data "En el compas " ?compas " hay disonancias entre notas con saltos descendentes en la melodía de la voz " ?v1 ". Hay dos saltos consecutivos en los cuales la primera nota y la última son disonantes, lo cual provoca inestabilidad en la melodía.." )
     (close data)
 )
 
@@ -989,7 +989,7 @@
     (bind ?compas (/ ?i 16))
     (bind ?parte (/ (mod ?i 16) 4))
     (open " ./tfg/web/fallos/fallos_mod2" data "a")
-    (printout data "La melodía de la voz " ?v1 " es bastante incoherente. Se producen demasiados saltos.." )
+    (printout data "La melodía de la voz " ?v1 " es bastante incoherente. Se producen demasiados saltos en la línea melódica, lo que hace que el discurso musical pierda fluidez y coherencia.." )
     (close data)
 )
 
@@ -1001,6 +1001,6 @@
     (bind ?compas (/ ?i 16))
     (bind ?parte (/ (mod ?i 16) 4))
     (open " ./tfg/web/fallos/fallos_mod2" data "a")
-    (printout data "La melodía de la voz " ?v1 " es bastante incoherente en el compás " ?compas " al producirse dos saltos grandes consecutivos.." )
+    (printout data "La melodía de la voz " ?v1 " es bastante incoherente en el compás " ?compas " al producirse dos saltos grandes consecutivos. Al producirse demasiados saltos consecutivos la meĺodía pierde fluidez, naturalidad y se desequilibra el discurso musical.." )
     (close data)
 )
