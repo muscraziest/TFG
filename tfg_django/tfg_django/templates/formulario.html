@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<div class="contenido col-md-6" style="position: relative;">
+		{% if messages %}
+			<script type="text/javascript">
+			$(document).ready(function() {
+				$(".contenido").effect('bounce', {times:2}, 400);
+			});
+			</script>
+		    {% for message in messages %}
+				<div class="alert alert-danger alert-dismissable">
+					<a href='/tfg/indice' class='close' data-dismiss="alert" aria-label="close">&times;</a> 
+						<strong><span class="glyphicon glyphicon-warning-sign"></span> Error:</strong> {{message}}
+				</div>	
+		    {% endfor %}
+		{% endif %}
+		<div class="post">
+			<form action="{% url 'resultados' %}" method="post" id="formulario" enctype="multipart/form-data">
+				{% csrf_token %}
+				{{ form.as_p }}
+				<input type= "submit" id="enviar" value="Enviar" class="btn btn-primary btn-md btn-custom pull-right"/>
+			</form>
+		</div>
+	</div>
+	<div class="cargando" style="display:none;">
+		<div class="contenido-loading">
+			<div id="loading">
+  				<p><img src="http://www.encore-eas.com/wp-content/themes/piper%20tema/piper/assets/images/loading.GIF" /> Por favor, espere mientras se procesa su partitura</p>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$('#enviar').click(function(){
+			if($('#id_partitura').val() != ""){
+		    	$(".contenido").animate({top: '100px'});
+		    	$(".footer").css({display:'none'});
+		    	$(".cargando").css({top: 50, left: 53, position:'absolute'});
+		    	$(".cargando").fadeIn("slow");
+	    	}else{
+	    		$(".contenido").effect('bounce', {times:2}, 400);
+	    	}
+   		});	
+		
+	</script>
+	<script type="text/javascript">
+		$(document).ajaxStart(function(){
+    		$('#loading').show();
+ 		}).ajaxStop(function(){
+    		$('#loading').hide();
+ 		});
+	</script>
+{% endblock %}
+
