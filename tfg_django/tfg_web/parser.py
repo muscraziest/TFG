@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Codigo para extraer las lineas melodicas de las voces y los acordes
 import xml.etree.ElementTree as ET
 
@@ -31,6 +32,29 @@ def parserTonalidad(partitura):
 
 	return tono_modo
 
+#Función para sacar el compás
+def parserCompas(partitura):
+	tree = ET.parse(partitura)
+	root = tree.getroot()
+
+	#Listas para extraer los datos
+	beats_beat_type = ['','']
+
+	#Buscamos el compas
+	for time in root.iter('time'):
+		beats_beat_type[0] = time.find('beats').text
+		beats_beat_type[1] = time.find('beat-type').text
+
+	#Guardamos el compas
+	compas = beats_beat_type[0]
+	compas += ' '
+	compas += beats_beat_type[1]
+
+	#Creamos un fichero y escribimos el compas extraido del xml
+	f = open('./tfg_web/datos/compas','w')
+	f.write(compas)
+	f.close()
+
 #Funcion para sacar las notas de todas las voces para analizar los acordes
 def parserAcordes(partitura):
 
@@ -62,11 +86,6 @@ def parserAcordes(partitura):
 	for time in root.iter('time'):
 		compas[0] = time.find('beats').text
 		compas[1] = time.find('beat-type').text
-	
-	#Guardamos el compas
-	#compas = beats_beat_type[0]
-	#compas += ' por '
-	#compas += beats_beat_type[1]
 	
 	#Calculamos el numero de semicorcheas por compas
 	if int(compas[1]) == 4:

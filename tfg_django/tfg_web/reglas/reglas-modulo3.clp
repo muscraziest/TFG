@@ -159,6 +159,27 @@
     )
 )
 
+; Regla para abrir el fichero del compas
+(defrule abrir_compas
+    (declare (salience 20))
+    =>
+    (open "./tfg_web/datos/compas" mydata_compas)
+    (assert (SeguirLeyendoCompas))
+)
+
+;Regla para leer el compas
+(defrule leer_compas
+    ?f <- (SeguirLeyendoCompas)
+    =>
+    (bind ?parte (read mydata_compas))
+    (retract ?f)
+    (if (neq ?parte EOF) then
+        (bind ?tipo (read mydata_compas))
+        (assert (compas (parte ?parte) (tipo ?tipo)))
+        (assert (SeguirLeyendoCompas))
+    )
+)
+
 ; Regla para abrir el fichero de la soprano
 (defrule abrir_soprano
     (declare (salience 10))
@@ -264,6 +285,7 @@
     (declare (salience -10))
     =>
     (close mydata_tonalidad)
+    (close mydata_compas)
     (close mydata_soprano)
     (close mydata_contraalto)
     (close mydata_tenor)
@@ -1123,17 +1145,33 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;                    MOSTRAR FALLOS                         ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Regla auxiliar para comprobar el numero de partes del compas
+(defrule partesCompas
+    (compas (parte ?p) (tipo ?t))
+    =>
+    (if (= ?t 4) then
+        (bind ?a (* ?p ?t))
+        (assert(semicorcheas ?a))
+    )
+
+    (if (= ?t 8) then
+        (bind ?a (* ?p 2))
+        (assert(semicorcheas ?a))
+    )
+)
 
 ; Reglas para mostrar los tipos de fallos
 (defrule mostrar_segundas_inv_consecutivas
 
     (declare (salience -10000))
     (fallo (tipo segundas_inversiones_consecutivas) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+    (semicorcheas ?a)
+    (compas (parte ?p))
     =>
-    (bind ?compas (/ ?i 16))
-    (bind ?parte (/ (mod ?i 16) 4))
+    (bind ?compas (+ (+ (div ?i ?a) 1) 1))
+    (bind ?parte (+ (div (mod ?i ?a) ?p) 1))
     (open "./tfg_web/fallos/fallos_mod3" data "a")
-    (printout data "En la " ?parte " parte del compas " ?compas " hay dos acordes en segunda inversión consecutivos.." )
+    (printout data "En el compás " ?compas " en la parte " ?parte " hay dos acordes en segunda inversión consecutivos.." )
     (close data)
 )
 
@@ -1141,11 +1179,13 @@
 
     (declare (salience -10000))
     (fallo (tipo sucesion_acordes_erronea_1) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+    (semicorcheas ?a)
+    (compas (parte ?p))
     =>
-    (bind ?compas (/ ?i 16))
-    (bind ?parte (/ (mod ?i 16) 4))
+    (bind ?compas (+ (+ (div ?i ?a) 1) 1))
+    (bind ?parte (+ (div (mod ?i ?a) ?p) 1))
     (open "./tfg_web/fallos/fallos_mod3" data "a")
-    (printout data "En la " ?parte " parte del compas " ?compas " se da la sucesión de acordes I-II en estado fundamental. El enlace de estos dos acordes en estado fundamental genera movimientos de quintas u octavas, además de dificultar la conducción de las voces para crear un buen contrapunto.." )
+    (printout data "En el compás " ?compas " en la parte " ?parte " se da la sucesión de acordes I-II en estado fundamental. El enlace de estos dos acordes en estado fundamental genera movimientos de quintas u octavas, además de dificultar la conducción de las voces para crear un buen contrapunto.." )
     (close data)
 )
 
@@ -1153,11 +1193,13 @@
 
     (declare (salience -10000))
     (fallo (tipo sucesion_acordes_erronea_2) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+    (semicorcheas ?a)
+    (compas (parte ?p))
     =>
-    (bind ?compas (/ ?i 16))
-    (bind ?parte (/ (mod ?i 16) 4))
+    (bind ?compas (+ (+ (div ?i ?a) 1) 1))
+    (bind ?parte (+ (div (mod ?i ?a) ?p) 1))
     (open "./tfg_web/fallos/fallos_mod3" data "a")
-    (printout data "En la " ?parte " parte del compas " ?compas " se da la sucesión de acordes II-III en estado fundamental, la cual es incorrecta. El enlace de estos dos acordes en estado fundamental genera movimientos de quintas u octavas, además de dificultar la conducción de las voces para crear un buen contrapunto. También añadir que está sucesión de acordes da una sonoridad algo extraña dado que la función de subdominante del II grado tiende a moverse hacia una dominante y no al III grado." )
+    (printout data "En el compás " ?compas " en la parte " ?parte " se da la sucesión de acordes II-III en estado fundamental, la cual es incorrecta. El enlace de estos dos acordes en estado fundamental genera movimientos de quintas u octavas, además de dificultar la conducción de las voces para crear un buen contrapunto. También añadir que está sucesión de acordes da una sonoridad algo extraña dado que la función de subdominante del II grado tiende a moverse hacia una dominante y no al III grado." )
     (close data)
 )
 
@@ -1165,11 +1207,13 @@
 
     (declare (salience -10000))
     (fallo (tipo sucesion_acordes_erronea_3) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+    (semicorcheas ?a)
+    (compas (parte ?p))
     =>
-    (bind ?compas (/ ?i 16))
-    (bind ?parte (/ (mod ?i 16) 4))
+    (bind ?compas (+ (+ (div ?i ?a) 1) 1))
+    (bind ?parte (+ (div (mod ?i ?a) ?p) 1))
     (open "./tfg_web/fallos/fallos_mod3" data "a")
-    (printout data "En la " ?parte " parte del compas " ?compas " se da la sucesión de acordes III-IV en estado fundamental, la cual es incorrecta. El enlace de estos dos acordes en estado fundamental genera movimientos de quintas u octavas, además de dificultar la conducción de las voces para crear un buen contrapunto.También añadir que está sucesión de acordes da una sonoridad algo extraña dado que el III grado tiende a moverse hacia el VI grado y no hacia una subdominante.")
+    (printout data "En el compás " ?compas " en la parte " ?parte " se da la sucesión de acordes III-IV en estado fundamental, la cual es incorrecta. El enlace de estos dos acordes en estado fundamental genera movimientos de quintas u octavas, además de dificultar la conducción de las voces para crear un buen contrapunto.También añadir que está sucesión de acordes da una sonoridad algo extraña dado que el III grado tiende a moverse hacia el VI grado y no hacia una subdominante.")
     (close data)
 )
 
@@ -1177,10 +1221,12 @@
 
     (declare (salience -10000))
     (fallo (tipo acordes_incompletos) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+    (semicorcheas ?a)
+    (compas (parte ?p))
     =>
-    (bind ?compas (/ ?i 16))
-    (bind ?parte (/ (mod ?i 16) 4))
+    (bind ?compas (+ (+ (div ?i ?a) 1) 1))
+    (bind ?parte (+ (div (mod ?i ?a) ?p) 1))
     (open "./tfg_web/fallos/fallos_mod3" data "a")
-    (printout data "En la " ?parte " parte del " ?compas " hay un acorde incompleto. Los acordes no pueden estar incompletos bajo ningún concepto, ya que provocan una pérdida del soporte armónico y una sonoridad pobre.." )
+    (printout data "En el compás " ?compas " en la parte " ?parte " hay un acorde incompleto. Los acordes no pueden estar incompletos bajo ningún concepto, ya que provocan una pérdida del soporte armónico y una sonoridad pobre.." )
     (close data)
 )

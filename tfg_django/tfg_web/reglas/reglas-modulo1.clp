@@ -78,6 +78,27 @@
     )
 )
 
+; Regla para abrir el fichero del compas
+(defrule abrir_compas
+    (declare (salience 20))
+    =>
+    (open "./tfg_web/datos/compas" mydata_compas)
+    (assert (SeguirLeyendoCompas))
+)
+
+;Regla para leer el compas
+(defrule leer_compas
+    ?f <- (SeguirLeyendoCompas)
+    =>
+    (bind ?parte (read mydata_compas))
+    (retract ?f)
+    (if (neq ?parte EOF) then
+        (bind ?tipo (read mydata_compas))
+        (assert (compas (parte ?parte) (tipo ?tipo)))
+        (assert (SeguirLeyendoCompas))
+    )
+)
+
 ; Regla para abrir el fichero de la soprano
 (defrule abrir_soprano
     (declare (salience 10))
@@ -283,6 +304,7 @@
     (declare (salience -10))
     =>
     (close mydata_tonalidad)
+    (close mydata_compas)
     (close mydata_soprano)
     (close mydata_contraalto)
     (close mydata_tenor)
@@ -471,28 +493,96 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;                    MOSTRAR FALLOS                         ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Regla auxiliar para comprobar el numero de partes del compas
+(defrule partesCompas
+    (compas (parte ?p) (tipo ?t))
+    =>
+    (if (= ?t 4) then
+        (bind ?a (* ?p ?t))
+        (assert(semicorcheas ?a))
+    )
+
+    (if (= ?t 8) then
+        (bind ?a (* ?p 2))
+        (assert(semicorcheas ?a))
+    )
+)
+
 ; Reglas para mostrar los tipos de fallos
 (defrule mostrar_quintas
 
     (declare (salience -10000))
     (fallo (tipo quintas) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+    (semicorcheas ?a)
+    (compas (parte ?p))
     =>
-    (bind ?compas (/ ?i 12))
-    (bind ?parte (/ (mod ?i 12) 2))
+    (bind ?compas (+ (+ (div ?i ?a) 1) 1))
+    (bind ?parte (+ (div (mod ?i ?a) ?p) 1))
+    (if (= ?v1 1) then
+        (bind ?voz1 "soprano")
+    )
+    (if (= ?v1 2) then
+        (bind ?voz1 "contraalto")
+    )
+    (if (= ?v1 3) then
+        (bind ?voz1 "tenor")
+    )
+    (if (= ?v1 4) then
+        (bind ?voz1 "bajo")
+    )
+    (if (= ?v2 1) then
+        (bind ?voz2 "soprano")
+    )
+    (if (= ?v2 2) then
+        (bind ?voz2 "contraalto")
+    )
+    (if (= ?v2 3) then
+        (bind ?voz2 "tenor")
+    )
+    (if (= ?v2 4) then
+        (bind ?voz2 "bajo")
+    )
     (open "./tfg_web/fallos/fallos_mod1" data "a") 
-    (printout data "Hay quintas paralelas en las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas ". Las quintas paralelas provocan una sonoridad dura y arcaica, lo cual está completamente fuera de estilo..") 
+    (printout data "En el compás " ?compas " en la parte " ?parte " hay quintas paralelas en las voces " ?voz1 " y " ?voz2 ". Las quintas paralelas provocan una sonoridad dura y arcaica, lo cual está completamente fuera de estilo..") 
     (close data)
 )
+
 
 (defrule mostrar_octavas
 
     (declare (salience -10000))
     (fallo (tipo octavas) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+    (semicorcheas ?a)
+    (compas (parte ?p))
     =>
-    (bind ?compas (/ ?i 12))
-    (bind ?parte (/ (mod ?i 12) 2))
+    (bind ?compas (+ (div ?i ?a) 1))
+    (bind ?parte (+ (div (mod ?i ?a) ?p) 1))
+    (if (= ?v1 1) then
+        (bind ?voz1 "soprano")
+    )
+    (if (= ?v1 2) then
+        (bind ?voz1 "contraalto")
+    )
+    (if (= ?v1 3) then
+        (bind ?voz1 "tenor")
+    )
+    (if (= ?v1 4) then
+        (bind ?voz1 "bajo")
+    )
+    (if (= ?v2 1) then
+        (bind ?voz2 "soprano")
+    )
+    (if (= ?v2 2) then
+        (bind ?voz2 "contraalto")
+    )
+    (if (= ?v2 3) then
+        (bind ?voz2 "tenor")
+    )
+    (if (= ?v2 4) then
+        (bind ?voz2 "bajo")
+    )
     (open "./tfg_web/fallos/fallos_mod1" data "a") 
-    (printout data "Hay octavas paralelas en las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas ". Las octavas paralelas generan pobreza armónica y sonoridad hueca..")
+    (printout data "En el compás " ?compas " en la parte " ?parte " hay octavas paralelas en las voces " ?voz1 " y " ?voz2 ". Las octavas paralelas generan pobreza armónica y sonoridad hueca..")
     (close data)
 )
 
@@ -500,11 +590,37 @@
 
     (declare (salience -10000))
     (fallo (tipo quintas_directas) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+    (semicorcheas ?a)
+    (compas (parte ?p))
     =>
-    (bind ?compas (/ ?i 12))
-    (bind ?parte (/ (mod ?i 12) 2))
+    (bind ?compas (+ (div ?i ?a) 1))
+    (bind ?parte (+ (div (mod ?i ?a) ?p) 1))
+    (if (= ?v1 1) then
+        (bind ?voz1 "soprano")
+    )
+    (if (= ?v1 2) then
+        (bind ?voz1 "contraalto")
+    )
+    (if (= ?v1 3) then
+        (bind ?voz1 "tenor")
+    )
+    (if (= ?v1 4) then
+        (bind ?voz1 "bajo")
+    )
+    (if (= ?v2 1) then
+        (bind ?voz2 "soprano")
+    )
+    (if (= ?v2 2) then
+        (bind ?voz2 "contraalto")
+    )
+    (if (= ?v2 3) then
+        (bind ?voz2 "tenor")
+    )
+    (if (= ?v2 4) then
+        (bind ?voz2 "bajo")
+    )
     (open "./tfg_web/fallos/fallos_mod1" data "a") 
-    (printout data "Hay quintas directas en las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas ". Las quintas directas provocan que se pierda la independencia de las partes y un contrapunto pobre..")
+    (printout data "En el compás " ?compas " en la parte " ?parte " hay quintas directas en las voces " ?voz1 " y " ?voz2 ". Las quintas directas provocan que se pierda la independencia de las partes y un contrapunto pobre..")
     (close data)
 )
 
@@ -512,11 +628,37 @@
 
     (declare (salience -10000))
     (fallo (tipo octavas_directas) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+    (semicorcheas ?a)
+    (compas (parte ?p))
     =>
-    (bind ?compas (/ ?i 12))
-    (bind ?parte (/ (mod ?i 12) 2))
+    (bind ?compas (+ (div ?i ?a) 1))
+    (bind ?parte (+ (div (mod ?i ?a) ?p) 1))
+    (if (= ?v1 1) then
+        (bind ?voz1 "soprano")
+    )
+    (if (= ?v1 2) then
+        (bind ?voz1 "contraalto")
+    )
+    (if (= ?v1 3) then
+        (bind ?voz1 "tenor")
+    )
+    (if (= ?v1 4) then
+        (bind ?voz1 "bajo")
+    )
+    (if (= ?v2 1) then
+        (bind ?voz2 "soprano")
+    )
+    (if (= ?v2 2) then
+        (bind ?voz2 "contraalto")
+    )
+    (if (= ?v2 3) then
+        (bind ?voz2 "tenor")
+    )
+    (if (= ?v2 4) then
+        (bind ?voz2 "bajo")
+    )
     (open "./tfg_web/fallos/fallos_mod1" data "a") 
-    (printout data "Hay octavas directas en voces extremas en la " ?parte " parte del compas " ?compas ". Las octavas directas provocan que se pierda la independencia de las partes y un contrapunto pobre..")
+    (printout data "En el compás " ?compas " en la parte " ?parte " hay octavas directas en las voces " ?voz1 " y " ?voz2 ". Las octavas directas provocan que se pierda la independencia de las partes y un contrapunto pobre..")
     (close data)
 )
 
@@ -524,11 +666,37 @@
 
     (declare (salience -10000))
     (fallo (tipo tritono) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+    (semicorcheas ?a)
+    (compas (parte ?p))
     =>
-    (bind ?compas (/ ?i 12))
-    (bind ?parte (/ (mod ?i 12) 2))
+    (bind ?compas (+ (div ?i ?a) 1))
+    (bind ?parte (+ (div (mod ?i ?a) ?p) 1))
+    (if (= ?v1 1) then
+        (bind ?voz1 "soprano")
+    )
+    (if (= ?v1 2) then
+        (bind ?voz1 "contraalto")
+    )
+    (if (= ?v1 3) then
+        (bind ?voz1 "tenor")
+    )
+    (if (= ?v1 4) then
+        (bind ?voz1 "bajo")
+    )
+    (if (= ?v2 1) then
+        (bind ?voz2 "soprano")
+    )
+    (if (= ?v2 2) then
+        (bind ?voz2 "contraalto")
+    )
+    (if (= ?v2 3) then
+        (bind ?voz2 "tenor")
+    )
+    (if (= ?v2 4) then
+        (bind ?voz2 "bajo")
+    )
     (open "./tfg_web/fallos/fallos_mod1" data "a") 
-    (printout data "Hay un tritono entre las voces " ?v1 " y " ?v2 " en la " ?parte " parte del compas " ?compas ". El intervalo de cuarta aumentada o tritono es un intervalo disonante que crea mucha tensión, por lo cual es un intervalo prohibido dentro de este estilo de obras.")
+    (printout data "En el compás " ?compas " en la parte " ?parte " hay un tritono entre las voces " ?voz1 " y " ?voz2 ". El intervalo de cuarta aumentada o tritono es un intervalo disonante que crea mucha tensión, por lo cual es un intervalo prohibido dentro de este estilo de obras..")
     (close data)
 )
 
@@ -536,10 +704,36 @@
 
     (declare (salience -10000))
     (fallo (tipo duplicacion_sensible) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+    (semicorcheas ?a)
+    (compas (parte ?p))
     =>
-    (bind ?compas (/ ?i 12))
-    (bind ?parte (/ (mod ?i 12) 2))
+    (bind ?compas (+ (div ?i ?a) 1))
+    (bind ?parte (+ (div (mod ?i ?a) ?p) 1))
+    (if (= ?v1 1) then
+        (bind ?voz1 "soprano")
+    )
+    (if (= ?v1 2) then
+        (bind ?voz1 "contraalto")
+    )
+    (if (= ?v1 3) then
+        (bind ?voz1 "tenor")
+    )
+    (if (= ?v1 4) then
+        (bind ?voz1 "bajo")
+    )
+    (if (= ?v2 1) then
+        (bind ?voz2 "soprano")
+    )
+    (if (= ?v2 2) then
+        (bind ?voz2 "contraalto")
+    )
+    (if (= ?v2 3) then
+        (bind ?voz2 "tenor")
+    )
+    (if (= ?v2 4) then
+        (bind ?voz2 "bajo")
+    )
     (open "./tfg_web/fallos/fallos_mod1" data "a") 
-    (printout data "Las voces " ?v1 " y " ?v2 " duplican la sensible de la tonalidad en la " ?parte " del compas " ?compas ". La sensible es una nota que provoca inestabilidad y que se siente atraída por resolver en la tónica de la tonalidad. Al duplicar la sensible generaremos octavas paralelas, lo cual es una falta que no se puede dar en este estilo de obras..")
+    (printout data "En el compás " ?compas " en la parte " ?parte " las voces " ?voz1 " y " ?voz2 " duplican la sensible de la tonalidad. La sensible es una nota que provoca inestabilidad y que se siente atraída por resolver en la tónica de la tonalidad. Al duplicar la sensible generaremos octavas paralelas, lo cual es una falta que no se puede dar en este estilo de obras..")
     (close data)
 )

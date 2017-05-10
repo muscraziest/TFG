@@ -182,6 +182,27 @@
     )
 )
 
+; Regla para abrir el fichero del compas
+(defrule abrir_compas
+    (declare (salience 20))
+    =>
+    (open "./tfg_web/datos/compas" mydata_compas)
+    (assert (SeguirLeyendoCompas))
+)
+
+;Regla para leer el compas
+(defrule leer_compas
+    ?f <- (SeguirLeyendoCompas)
+    =>
+    (bind ?parte (read mydata_compas))
+    (retract ?f)
+    (if (neq ?parte EOF) then
+        (bind ?tipo (read mydata_compas))
+        (assert (compas (parte ?parte) (tipo ?tipo)))
+        (assert (SeguirLeyendoCompas))
+    )
+)
+
 ; Regla para abrir el fichero de la melodía de la soprano
 (defrule abrir_melodia_soprano
     (declare (salience 10))
@@ -384,6 +405,7 @@
     (declare (salience -10))
     =>
     (close mydata_tonalidad)
+    (close mydata_compas)
     (close mydata_melodia_soprano)
     (close mydata_melodia_contraalto)
     (close mydata_melodia_tenor)
@@ -464,90 +486,96 @@
 ; Reglas para contar los tipos de movimientos: contrario, directo y oblicuos
 (defrule contar_mov_contrarios_1
 
-    ?f <- (movContrariosExtremos ?c)
     (movimiento (tipo ascendente) (voz 1) (indice ?i))
     (movimiento (tipo descendente) (voz 4) (indice ?i))
     =>
-    (retract ?f)
-    (bind ?c (+ ?c 1))
-    (assert(movContrariosExtremos ?c))
+    (assert (sumarContrarios))
 )
 
 (defrule contar_mov_contrarios_2
 
-    ?f <- (movContrariosExtremos ?c)
     (movimiento (tipo descendente) (voz 1) (indice ?i))
     (movimiento (tipo ascendente) (voz 4) (indice ?i))
     =>
-    (retract ?f)
-    (bind ?c (+ ?c 1))
-    (assert(movContrariosExtremos ?c))
+    (assert(sumarContrarios))
 )
 
 (defrule contar_mov_directos_1
 
-    ?f <- (movDirectosExtremos ?c)
     (movimiento (tipo ascendente) (voz 1) (indice ?i))
     (movimiento (tipo ascendente) (voz 4) (indice ?i))
     =>
-    (retract ?f)
-    (bind ?c (+ ?c 1))
-    (assert(movDirectosExtremos ?c))
+    (assert (sumarDirectos))
 )
 
 (defrule contar_mov_directos_2
 
-    ?f <- (movDirectosExtremos ?c)
     (movimiento (tipo descendente) (voz 1) (indice ?i))
     (movimiento (tipo descendente) (voz 4) (indice ?i))
     =>
-    (retract ?f)
-    (bind ?c (+ ?c 1))
-    (assert(movDirectosExtremos ?c))
+    (assert (sumarDirectos))
 )
 
 (defrule contar_mov_oblicuos_1
 
-    ?f <- (movOblicuosExtremos ?c)
     (movimiento (tipo mantiene) (voz 1) (indice ?i))
     (movimiento (tipo descendente) (voz 4) (indice ?i))
     =>
-    (retract ?f)
-    (bind ?c (+ ?c 1))
-    (assert(movOblicuosExtremos ?c))
+    (assert (sumarOblicuos))
 )
 
 (defrule contar_mov_oblicuos_2
 
-    ?f <- (movOblicuosExtremos ?c)
     (movimiento (tipo mantiene) (voz 1) (indice ?i))
     (movimiento (tipo ascendente) (voz 4) (indice ?i))
     =>
-    (retract ?f)
-    (bind ?c (+ ?c 1))
-    (assert(movOblicuosExtremos ?c))
+    (assert (sumarOblicuos))
 )
 
 (defrule contar_mov_oblicuos_3
 
-    ?f <- (movOblicuosExtremos ?c)
     (movimiento (tipo descendente) (voz 1) (indice ?i))
     (movimiento (tipo mantiene) (voz 4) (indice ?i))
     =>
-    (retract ?f)
-    (bind ?c (+ ?c 1))
-    (assert(movOblicuosExtremos ?c))
+    (assert (sumarOblicuos))
 )
 
 (defrule contar_mov_oblicuos_4
 
-    ?f <- (movOblicuosExtremos ?c)
     (movimiento (tipo ascendente) (voz 1) (indice ?i))
     (movimiento (tipo mantiene) (voz 4) (indice ?i))
     =>
-    (retract ?f)
-    (bind ?c (+ ?c 1))
-    (assert(movOblicuosExtremos ?c))
+    (assert (sumarOblicuos))
+)
+
+(defrule sumarContadorContrarios
+        ?a <-(sumarContrarios)
+        ?f <- (movContrariosExtremos ?c)
+        =>
+        (retract ?a)
+        (retract ?f)
+        (bind ?c (+ ?c 1))
+        (assert(movContrariosExtremos ?c))
+)
+
+(defrule sumarContadorDirectos
+        ?a <-(sumarDirectos)
+        ?f <- (movDirectosExtremos ?c)
+        =>
+        (retract ?a)
+        (retract ?f)
+        (bind ?c (+ ?c 1))
+        (assert(movDirectosExtremos ?c ))
+)
+
+(defrule sumarContadorOblicuos
+        ?a <-(sumarOblicuos)
+        ?f <- (movOblicuosExtremos ?c)
+        =>
+        (retract ?a)
+        (retract ?f)
+        (bind ?c (+ ?c 1))
+        (assert(movOblicuosExtremos  ?c ))
 )
 
 ; Regla para comprobar el contrapunto BAJO-SOPRANO
@@ -613,7 +641,6 @@
 ; SOPRANO
 (defrule contar_saltos_pekenos_ascendentes_soprano
 
-    ?f <- (saltosPekenosSoprano ?c)
     (nota_melodia (tono ?t1) (voz 1) (indice ?i))
     (nota_melodia (tono ?t2) (voz 1) (indice ?j))
     (test(eq ?j (+ ?i 1)))
@@ -621,14 +648,11 @@
     (intervalo (distancia ?d) (nota1 ?t1) (nota2 ?t2))
     (test(<= ?d 4))
     =>
-    (retract ?f)
-    (bind ?c (+ ?c 1))
-    (assert(saltosPekenosSoprano ?c))
+    (assert (sumarSaltosPSoprano))
 )
 
 (defrule contar_saltos_pekenos_descendentes_soprano
 
-    ?f <- (saltosPekenosSoprano ?c)
     (nota_melodia (tono ?t1) (voz 1) (indice ?i))
     (nota_melodia (tono ?t2) (voz 1) (indice ?j))
     (test(eq ?j (+ ?i 1)))
@@ -636,14 +660,11 @@
     (intervalo (distancia ?d) (nota1 ?t2) (nota2 ?t1))
     (test(<= ?d 4))
     =>
-    (retract ?f)
-    (bind ?c (+ ?c 1))
-    (assert(saltosPekenosSoprano ?c))
+    (assert (sumarSaltosPSoprano))
 )
 
 (defrule contar_saltos_grandes_ascendentes_soprano
 
-    ?f <- (saltosGrandesSoprano ?c)
     (nota_melodia (tono ?t1) (voz 1) (indice ?i))
     (nota_melodia (tono ?t2) (voz 1) (indice ?j))
     (test(eq ?j (+ ?i 1)))
@@ -651,14 +672,11 @@
     (intervalo (distancia ?d) (nota1 ?t1) (nota2 ?t2))
     (test(> ?d 4))
     =>
-    (retract ?f)
-    (bind ?c (+ ?c 1))
-    (assert(saltosGrandesSoprano ?c))
+    (assert (sumarSaltosGSoprano))
 )
 
 (defrule contar_saltos_grandes_descendentes_soprano
 
-    ?f <- (saltosGrandesSoprano ?c)
     (nota_melodia (tono ?t1) (voz 1) (indice ?i))
     (nota_melodia (tono ?t2) (voz 1) (indice ?j))
     (test(eq ?j (+ ?i 1)))
@@ -666,15 +684,33 @@
     (intervalo (distancia ?d) (nota1 ?t2) (nota2 ?t1))
     (test(> ?d 4))
     =>
-    (retract ?f)
-    (bind ?c (+ ?c 1))
-    (assert(saltosGrandesSoprano ?c))
+    (assert (sumarSaltosGSoprano))
+)
+
+(defrule sumarSaltosPSoprano
+        ?a <-(sumarSaltosPSoprano)
+        ?f <- (saltosPekenosSoprano ?c)
+        =>
+        (retract ?a)
+        (retract ?f)
+        (bind ?c (+ ?c 1))
+        (assert(saltosPekenosSoprano ?c))
+)
+
+(defrule sumarSaltosGSoprano
+        ?a <-(sumarSaltosGSoprano)
+        ?f <- (saltosGrandesSoprano ?c)
+        =>
+        (retract ?a)
+        (retract ?f)
+        (bind ?c (+ ?c 1))
+        (assert(saltosGrandesSoprano ?c))
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; CONTRAALTO
 (defrule contar_saltos_pekenos_ascendentes_contraalto
-    ?f <- (saltosPekenosContraalto ?c)
+
     (nota_melodia (tono ?t1) (voz 2) (indice ?i))
     (nota_melodia (tono ?t2) (voz 2) (indice ?j))
     (test(eq ?j (+ ?i 1)))
@@ -682,14 +718,11 @@
     (intervalo (distancia ?d) (nota1 ?t1) (nota2 ?t2))
     (test(<= ?d 4))
     =>
-    (retract ?f)
-    (bind ?c (+ ?c 1))
-    (assert(saltosPekenosContraalto ?c))
+    (assert (sumarSaltosPContraalto))
 )
 
 (defrule contar_saltos_pekenos_descendentes_contraalto
 
-    ?f <- (saltosPekenosContraalto ?c)
     (nota_melodia (tono ?t1) (voz 2) (indice ?i))
     (nota_melodia (tono ?t2) (voz 2) (indice ?j))
     (test(eq ?j (+ ?i 1)))
@@ -697,14 +730,11 @@
     (intervalo (distancia ?d) (nota1 ?t2) (nota2 ?t1))
     (test(<= ?d 4))
     =>
-    (retract ?f)
-    (bind ?c (+ ?c 1))
-    (assert(saltosPekenosContraalto ?c))
+    (assert (sumarSaltosPContraalto))
 )
 
 (defrule contar_saltos_grandes_ascendentes_contraalto
 
-    ?f <- (saltosGrandesContraalto ?c)
     (nota_melodia (tono ?t1) (voz 2) (indice ?i))
     (nota_melodia (tono ?t2) (voz 2) (indice ?j))
     (test(eq ?j (+ ?i 1)))
@@ -712,14 +742,11 @@
     (intervalo (distancia ?d) (nota1 ?t1) (nota2 ?t2))
     (test(> ?d 4))
     =>
-    (retract ?f)
-    (bind ?c (+ ?c 1))
-    (assert(saltosGrandesContraalto ?c))
+    (assert (sumarSaltosGContraalto))
 )
 
 (defrule contar_saltos_grandes_descendentes_contraalto
 
-    ?f <- (saltosGrandesContraalto ?c)
     (nota_melodia (tono ?t1) (voz 2) (indice ?i))
     (nota_melodia (tono ?t2) (voz 2) (indice ?j))
     (test(eq ?j (+ ?i 1)))
@@ -727,16 +754,34 @@
     (intervalo (distancia ?d) (nota1 ?t2) (nota2 ?t1))
     (test(> ?d 4))
     =>
-    (retract ?f)
-    (bind ?c (+ ?c 1))
-    (assert(saltosGrandesContraalto ?c))
+    (assert (sumarSaltosGContraalto))
+)
+
+(defrule sumarSaltosPContraalto
+        ?a <-(sumarSaltosPContraalto)
+        ?f <- (saltosPekenosContraalto ?c)
+        =>
+        (retract ?a)
+        (retract ?f)
+        (bind ?c (+ ?c 1))
+        (assert(saltosPekenosContraalto ?c))
+)
+
+
+(defrule sumarSaltosGContraalto
+        ?a <-(sumarSaltosGContraalto)
+        ?f <- (saltosGrandesContraalto ?c)
+        =>
+        (retract ?a)
+        (retract ?f)
+        (bind ?c (+ ?c 1))
+        (assert(saltosGrandesContraalto ?c))
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; TENOR
 (defrule contar_saltos_pekenos_ascendentes_tenor
 
-    ?f <- (saltosPekenosTenor ?c)
     (nota_melodia (tono ?t1) (voz 3) (indice ?i))
     (nota_melodia (tono ?t2) (voz 3) (indice ?j))
     (test(eq ?j (+ ?i 1)))
@@ -744,14 +789,11 @@
     (intervalo (distancia ?d) (nota1 ?t1) (nota2 ?t2))
     (test(<= ?d 4))
     =>
-    (retract ?f)
-    (bind ?c (+ ?c 1))
-    (assert(saltosPekenosTenor ?c))
+    (assert (sumarSaltosPTenor))
 )
 
 (defrule contar_saltos_pekenos_descendentes_tenor
 
-    ?f <- (saltosPekenosTenor ?c)
     (nota_melodia (tono ?t1) (voz 3) (indice ?i))
     (nota_melodia (tono ?t2) (voz 3) (indice ?j))
     (test(eq ?j (+ ?i 1)))
@@ -759,14 +801,11 @@
     (intervalo (distancia ?d) (nota1 ?t2) (nota2 ?t1))
     (test(<= ?d 4))
     =>
-    (retract ?f)
-    (bind ?c (+ ?c 1))
-    (assert(saltosPekenosTenor ?c))
+    (assert (sumarSaltosPTenor))
 )
 
 (defrule contar_saltos_grandes_ascendentes_tenor
 
-    ?f <- (saltosGrandesTenor ?c)
     (nota_melodia (tono ?t1) (voz 3) (indice ?i))
     (nota_melodia (tono ?t2) (voz 3) (indice ?j))
     (test(eq ?j (+ ?i 1)))
@@ -774,13 +813,11 @@
     (intervalo (distancia ?d) (nota1 ?t1) (nota2 ?t2))
     (test(> ?d 4))
     =>
-    (retract ?f)
-    (bind ?c (+ ?c 1))
-    (assert(saltosGrandesTenor ?c))
+    (assert (sumarSaltosGTenor))
 )
 
 (defrule contar_saltos_grandes_descendentes_tenor
-    ?f <- (saltosGrandesTenor ?c)
+
     (nota_melodia (tono ?t1) (voz 3) (indice ?i))
     (nota_melodia (tono ?t2) (voz 3) (indice ?j))
     (test(eq ?j (+ ?i 1)))
@@ -788,9 +825,27 @@
     (intervalo (distancia ?d) (nota1 ?t2) (nota2 ?t1))
     (test(> ?d 4))
     =>
-    (retract ?f)
-    (bind ?c (+ ?c 1))
-    (assert(saltosGrandesTenor ?c))
+    (assert (sumarSaltosGTenor))
+)
+
+(defrule sumarSaltosPTenor
+        ?a <-(sumarSaltosPTenor)
+        ?f <- (saltosPekenosTenor ?c)
+        =>
+        (retract ?a)
+        (retract ?f)
+        (bind ?c (+ ?c 1))
+        (assert(saltosPekenosTenor ?c))
+)
+
+(defrule sumarSaltosGTenor
+        ?a <-(sumarSaltosGTenor)
+        ?f <- (saltosGrandesTenor ?c)
+        =>
+        (retract ?a)
+        (retract ?f)
+        (bind ?c (+ ?c 1))
+        (assert(saltosGrandesTenor ?c))
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -893,19 +948,49 @@
     (assert(fallo (tipo melodia_incoherente_saltos_grandes) (voz1 ?v) (voz2 ?v) (tiempo ?i)))
 )
 
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;                    MOSTRAR FALLOS                         ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Regla auxiliar para comprobar el numero de partes del compas
+(defrule partesCompas
+    (compas (parte ?p) (tipo ?t))
+    =>
+    (if (= ?t 4) then
+        (bind ?a (* ?p ?t))
+        (assert(semicorcheas ?a))
+    )
+
+    (if (= ?t 8) then
+        (bind ?a (* ?p 2))
+        (assert(semicorcheas ?a))
+    )
+)
 
 (defrule mostrar_resolucion_sensible
 
     (declare (salience -10000))
     (fallo (tipo resolucion_sensible) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+    (semicorcheas ?a)
+    (compas (parte ?p))
     =>
-    (bind ?compas (/ ?i 16))
-    (bind ?parte (/ (mod ?i 16) 4))
+    (bind ?compas (+ (+ (div ?i ?a) 1) 1))
+    (bind ?parte (+ (div (mod ?i ?a) ?p) 1))
+    (if (= ?v1 1) then
+        (bind ?voz1 "soprano")
+    )
+    (if (= ?v1 2) then
+        (bind ?voz1 "contraalto")
+    )
+    (if (= ?v1 3) then
+        (bind ?voz1 "tenor")
+    )
+    (if (= ?v1 4) then
+        (bind ?voz1 "bajo")
+    )
     (open " ./tfg/web/fallos/fallos_mod2" data "a")
-    (printout data "En la " ?parte " parte del compas " ?compas " la sensible en la voz " ?v1 " no resuelve. La sensible es una nota que provoca inestabilidad y que se siente atraída por resolver en la tónica de la tonalidad. Al no estar resuelta, esa inestabilidad se mantiene provocando una falta de coherencia en la línea melódica." )
+    (printout data "En el compás " ?compas " en la parte " ?parte " la sensible en la voz " ?voz1 " no resuelve. La sensible es una nota que provoca inestabilidad y que se siente atraída por resolver en la tónica de la tonalidad. Al no estar resuelta, esa inestabilidad se mantiene provocando una falta de coherencia en la línea melódica.." )
     (close data)
 )
 
@@ -913,11 +998,25 @@
 
     (declare (salience -10000))
     (fallo (tipo resolucion_septima) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+    (semicorcheas ?a)
+    (compas (parte ?p))
     =>
-    (bind ?compas (/ ?i 16))
-    (bind ?parte (/ (mod ?i 16) 4))
+    (bind ?compas (+ (+ (div ?i ?a) 1) 1))
+    (bind ?parte (+ (div (mod ?i ?a) ?p) 1))
+    (if (= ?v1 1) then
+        (bind ?voz1 "soprano")
+    )
+    (if (= ?v1 2) then
+        (bind ?voz1 "contraalto")
+    )
+    (if (= ?v1 3) then
+        (bind ?voz1 "tenor")
+    )
+    (if (= ?v1 4) then
+        (bind ?voz1 "bajo")
+    )
     (open " ./tfg/web/fallos/fallos_mod2" data "a")
-    (printout data "En la " ?parte " parte del compas " ?compas " la septima en la voz " ?v1 " no resuelve. La séptima es una nota que provoca inestabilidad y tensión, por lo que se siente atraída por resolver en la tercera de la tónica de la tonalidad para eliminar esa tensión. Al no resolver esta inestabilidad se mantiene provocando una falta de coherencia en la línea melódica..")
+    (printout data "En el compás " ?compas " en la parte " ?parte " la voz " ?voz1 " no resuelve. La séptima es una nota que provoca inestabilidad y tensión, por lo que se siente atraída por resolver en la tercera de la tónica de la tonalidad para eliminar esa tensión. Al no resolver esta inestabilidad se mantiene provocando una falta de coherencia en la línea melódica..")
     (close data)
 )
 
@@ -925,11 +1024,25 @@
 
     (declare (salience -10000))
     (fallo (tipo segunda_aumentada_melodica) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+    (semicorcheas ?a)
+    (compas (parte ?p))
     =>
-    (bind ?compas (/ ?i 16))
-    (bind ?parte (/ (mod ?i 16) 4))
+    (bind ?compas (+ (+ (div ?i ?a) 1) 1))
+    (bind ?parte (+ (div (mod ?i ?a) ?p) 1))
+    (if (= ?v1 1) then
+        (bind ?voz1 "soprano")
+    )
+    (if (= ?v1 2) then
+        (bind ?voz1 "contraalto")
+    )
+    (if (= ?v1 3) then
+        (bind ?voz1 "tenor")
+    )
+    (if (= ?v1 4) then
+        (bind ?voz1 "bajo")
+    )
     (open " ./tfg/web/fallos/fallos_mod2" data "a")
-    (printout data "En la " ?parte " parte del compas " ?compas " en melodía de la voz " ?v1 " hay una intervalo de segunda aumentada. El intervalo de segunda aumentada provoca una sonoridad extraña y tensión, sobre todo en modo mayor, por lo que debe ser evitada para cuidar la línea melódica.." )
+    (printout data "En el compás " ?compas " en la parte " ?parte " en melodía de la voz " ?voz1 " hay una intervalo de segunda aumentada. El intervalo de segunda aumentada provoca una sonoridad extraña y tensión, sobre todo en modo mayor, por lo que debe ser evitada para cuidar la línea melódica.." )
     (close data)
 )
 
@@ -937,11 +1050,25 @@
 
     (declare (salience -10000))
     (fallo (tipo tritono_melodico) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+    (semicorcheas ?a)
+    (compas (parte ?p))
     =>
-    (bind ?compas (/ ?i 16))
-    (bind ?parte (/ (mod ?i 16) 4))
+    (bind ?compas (+ (+ (div ?i ?a) 1) 1))
+    (bind ?parte (+ (div (mod ?i ?a) ?p) 1))
+    (if (= ?v1 1) then
+        (bind ?voz1 "soprano")
+    )
+    (if (= ?v1 2) then
+        (bind ?voz1 "contraalto")
+    )
+    (if (= ?v1 3) then
+        (bind ?voz1 "tenor")
+    )
+    (if (= ?v1 4) then
+        (bind ?voz1 "bajo")
+    )
     (open " ./tfg/web/fallos/fallos_mod2" data "a")
-    (printout data "En la " ?parte " parte del compas " ?compas " en melodía de la voz " ?v1 " hay una intervalo de tritono. El intervalo de cuarta aumentada o tritono es un intervalo disonante que crea mucha tensión, por lo cual es un intervalo prohibido dentro de este estilo de obras.." )
+    (printout data "En el compás " ?compas " en la parte " ?parte " en la melodía de la voz " ?voz1 " hay una intervalo de tritono. El intervalo de cuarta aumentada o tritono es un intervalo disonante que crea mucha tensión, por lo cual es un intervalo prohibido dentro de este estilo de obras.." )
     (close data)
 )
 
@@ -949,11 +1076,25 @@
 
     (declare (salience -10000))
     (fallo (tipo contrapunto_voces_extremas) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+    (semicorcheas ?a)
+    (compas (parte ?p))
     =>
-    (bind ?compas (/ ?i 16))
-    (bind ?parte (/ (mod ?i 16) 4))
+    (bind ?compas (+ (+ (div ?i ?a) 1) 1))
+    (bind ?parte (+ (div (mod ?i ?a) ?p) 1))
+    (if (= ?v1 1) then
+        (bind ?voz1 "soprano")
+    )
+    (if (= ?v1 2) then
+        (bind ?voz1 "contraalto")
+    )
+    (if (= ?v1 3) then
+        (bind ?voz1 "tenor")
+    )
+    (if (= ?v1 4) then
+        (bind ?voz1 "bajo")
+    )
     (open " ./tfg/web/fallos/fallos_mod2" data "a")
-    (printout data "No hay un buen contrapunto entre las voces extremas. Hay demasiados movimientos directos u oblicuos en comparación con el movimiento contrario que debería predominar para que las líneas melódicas queden cuidadas y \equilibradas.." )
+    (printout data "En general, en la obra no hay un buen contrapunto entre las voces extremas. Hay demasiados movimientos directos u oblicuos en comparación con el movimiento contrario que debería predominar para que las líneas melódicas queden cuidadas y \equilibradas.." )
     (close data)
 )
 
@@ -961,11 +1102,23 @@
 
     (declare (salience -10000))
     (fallo (tipo contrapunto_salto_ascendente) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+    (semicorcheas ?a)
     =>
-    (bind ?compas (/ ?i 16))
-    (bind ?parte (/ (mod ?i 16) 4))
+    (bind ?compas (+ (+ (div ?i ?a) 1) 1))
+    (if (= ?v1 1) then
+        (bind ?voz1 "soprano")
+    )
+    (if (= ?v1 2) then
+        (bind ?voz1 "contraalto")
+    )
+    (if (= ?v1 3) then
+        (bind ?voz1 "tenor")
+    )
+    (if (= ?v1 4) then
+        (bind ?voz1 "bajo")
+    )
     (open " ./tfg/web/fallos/fallos_mod2" data "a")
-    (printout data "En el compas " ?compas " hay disonancias entre notas con saltos ascendetes en la melodía de la voz " ?v1 ". Hay dos saltos consecutivos en los cuales la primera nota y la última son disonantes, lo cual provoca inestabilidad en la melodía.." )
+    (printout data "En el compas " ?compas " hay disonancias entre notas con saltos ascendetes en la melodía de la voz " ?voz1 ". Hay dos saltos consecutivos en los cuales la primera nota y la última son disonantes, lo cual provoca inestabilidad en la melodía.." )
     (close data)
 )
 
@@ -973,11 +1126,23 @@
 
     (declare (salience -10000))
     (fallo (tipo contrapunto_salto_descendente) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+    (semicorcheas ?a)
     =>
-    (bind ?compas (/ ?i 16))
-    (bind ?parte (/ (mod ?i 16) 4))
+    (bind ?compas (+ (+ (div ?i ?a) 1) 1))
+    (if (= ?v1 1) then
+        (bind ?voz1 "soprano")
+    )
+    (if (= ?v1 2) then
+        (bind ?voz1 "contraalto")
+    )
+    (if (= ?v1 3) then
+        (bind ?voz1 "tenor")
+    )
+    (if (= ?v1 4) then
+        (bind ?voz1 "bajo")
+    )
     (open " ./tfg/web/fallos/fallos_mod2" data "a")
-    (printout data "En el compas " ?compas " hay disonancias entre notas con saltos descendentes en la melodía de la voz " ?v1 ". Hay dos saltos consecutivos en los cuales la primera nota y la última son disonantes, lo cual provoca inestabilidad en la melodía.." )
+    (printout data "En el compas " ?compas " hay disonancias entre notas con saltos descendentes en la melodía de la voz " ?voz1 ". Hay dos saltos consecutivos en los cuales la primera nota y la última son disonantes, lo cual provoca inestabilidad en la melodía.." )
     (close data)
 )
 
@@ -986,10 +1151,20 @@
     (declare (salience -10000))
     (fallo (tipo melodia_incoherente) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
     =>
-    (bind ?compas (/ ?i 16))
-    (bind ?parte (/ (mod ?i 16) 4))
+    (if (= ?v1 1) then
+        (bind ?voz1 "soprano")
+    )
+    (if (= ?v1 2) then
+        (bind ?voz1 "contraalto")
+    )
+    (if (= ?v1 3) then
+        (bind ?voz1 "tenor")
+    )
+    (if (= ?v1 4) then
+        (bind ?voz1 "bajo")
+    )
     (open " ./tfg/web/fallos/fallos_mod2" data "a")
-    (printout data "La melodía de la voz " ?v1 " es bastante incoherente. Se producen demasiados saltos en la línea melódica, lo que hace que el discurso musical pierda fluidez y coherencia.." )
+    (printout data "La melodía de la voz " ?voz1 " es bastante incoherente. Se producen demasiados saltos en la línea melódica, lo que hace que el discurso musical pierda fluidez y coherencia.." )
     (close data)
 )
 
@@ -997,10 +1172,22 @@
 
     (declare (salience -10000))
     (fallo (tipo melodia_incoherente) (voz1 ?v1) (voz2 ?v2) (tiempo ?i))
+    (semicorcheas ?a)
     =>
-    (bind ?compas (/ ?i 16))
-    (bind ?parte (/ (mod ?i 16) 4))
+    (bind ?compas (+ (+ (div ?i ?a) 1) 1))
+    (if (= ?v1 1) then
+        (bind ?voz1 "soprano")
+    )
+    (if (= ?v1 2) then
+        (bind ?voz1 "contraalto")
+    )
+    (if (= ?v1 3) then
+        (bind ?voz1 "tenor")
+    )
+    (if (= ?v1 4) then
+        (bind ?voz1 "bajo")
+    )
     (open " ./tfg/web/fallos/fallos_mod2" data "a")
-    (printout data "La melodía de la voz " ?v1 " es bastante incoherente en el compás " ?compas " al producirse dos saltos grandes consecutivos. Al producirse demasiados saltos consecutivos la meĺodía pierde fluidez, naturalidad y se desequilibra el discurso musical.." )
+    (printout data "La melodía de la voz " ?voz1 " es bastante incoherente en el compás " ?compas " al producirse dos saltos grandes consecutivos. Al producirse demasiados saltos consecutivos la meĺodía pierde fluidez, naturalidad y se desequilibra el discurso musical.." )
     (close data)
 )

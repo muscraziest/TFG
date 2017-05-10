@@ -13,6 +13,7 @@ def modulos(opciones,partitura):
 
 		#Parseamos la partitura
 		parserTonalidad(partitura)
+		parserCompas(partitura)
 		parserAcordes(partitura)
 		parserMovimientosAcordes()
 
@@ -27,6 +28,7 @@ def modulos(opciones,partitura):
 
 		#Parseamos la partitura
 		parserTonalidad(partitura)
+		parserCompas(partitura)
 		parserMelodias(partitura)
 		parserMovimientosMelodias()
 
@@ -41,6 +43,7 @@ def modulos(opciones,partitura):
 
 		#Parseamos la partitura
 		parserTonalidad(partitura)
+		parserCompas(partitura)
 		parserAcordes(partitura)
 
 		#Ejecutamos las reglas de clips

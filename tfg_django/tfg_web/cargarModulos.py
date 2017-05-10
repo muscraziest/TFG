@@ -4,6 +4,7 @@ def crearPlantillas():
 
 	#Creamos plantillas
 	clips.BuildTemplate("tonalidad", "(slot nombre) (slot modo) (slot armadura) (slot sensible)")
+	clips.BuildTemplate("compas", "(slot parte) (slot tipo)")
 	clips.BuildTemplate("intervalo", "(slot distancia) (slot tipo) (slot nota1) (slot nota2)")
 	clips.BuildTemplate("posibleFallo", "(slot tipo) (slot voz1) (slot voz2) (slot tiempo)")
 	clips.BuildTemplate("fallo", "(slot tipo) (slot voz1) (slot voz2) (slot tiempo)")
