@@ -1,0 +1,77 @@
+\chapter{Adquisión de conocimiento}
+
+La adquisición y educción del conocimiento constituye una de las fases más importantes del desarrollo de este tipo de sistemas. En esta etapa es donde el Ingeniero del Conocimiento interactúa con el experto para obtener la información sobre la solución de los problemas, así como las estrategias utilizadas para la obtención de cada solución. Además de consultar con el experto, también se adquiere conocimiento de otras fuentes como libros, tratados, estudios, etc. Este proceso supone el ``cuello de botella'' del desarrollo.
+ 
+Esta tarea no es un paso concreto en la metodología de desarrollo, sino que se va produciendo en paralelo al resto de etapas de construcción del sistema.
+
+El proceso de adquisión de conocimiento se ha llevado a cabo en tres fases: 
+
+\begin{itemize}
+	\item Extracción de conocimientos
+	\item Educción de conocimientos
+	\item Estructuración de conocimientos
+\end{itemize}
+ 
+Para llevar a cabo estas tareas, he consultado a los expertos Alberto José Moreno Montes e Isabel Salado Ortega, ambos músicos titulados.  
+
+\section{Extracción de conocimientos}
+
+En la realización de esta tarea, se pretende aprender sobre el dominio tanto como sea posible antes de comenzar las sesiones con los expertos para facilitar la educción de conocimientos. 
+
+Al haber estudiado música en el conservatorio hace algunos años, esta fase supuso más bien un proceso de recordar que de aprender. No obstante, al ser un dominio tan extenso, es necesario consultar la documentación adecuada y más útil para la aplicación a nuestro problema. Por este motivo, pregunté a ambos expertos, Alberto e Isabel, sobre el material más importante a consultar, incluyendo libros, manuales y tratados. Las dos fuentes más relevantes y de las cuáles se extrajo la mayoría de conocimientos previos fueron el \textit{Tratado de Armonía} de Joaquín Zamacois \cite{ZAMACOIS} y \textit{Armonía} por Walter Piston \cite{PISTON}. Ambos se incluyen, junto con el resto de fuentes, en las referencias bibliográficas. 
+
+De estos libros se determinaron la mayoría de definiciones y conceptos generales sobre lenguaje musical y armonía.
+
+\section{Educción de conocimientos}
+
+Gracias a los conocimientos adquiridos en la fase anterior, realizamos una serie de entrevistas estructuradas con los expertos. En estas entrevistas se formularon cuestiones concretas y previamente planificadas con el fin de educir conocimiento de una forma más eficiente. Nos centramos en definir conceptos específicos y procedimientos necesarios a la hora de analizar partituras, haciendo especial énfasis en el análisis melódico, el cual tiende a ser más delicado de realizar y con un componente subjetivo más fuerte.
+
+La mayor dificultad de este proceso radicó en la cantidad de situaciones excepcionales que pueden darse y de la subjetividad que viene adherida a cualquier arte. Por ejemplo, las excepciones a la falta de \textit{quintas paralelas}. Las \textit{quintas paralelas} son una de las faltas más graves, dado que al darse se produce una sonoridad más dura y arcaica. Sin embargo, éstas pueden permitirse si la segunda quinta que se forma es una quinta disminuida, salvo que ésta se forme con el bajo o en voces extremas, en cuyo caso se considerará falta.
+
+Como podemos observar en este ejemplo, las reglas armónicas no son directrices sencillas de llevar a cabo o entender fácilmente. Con el fin de poder comprenderlas empleé con Alberto e Isabel lo que denominamos ``incidentes críticos''. 
+
+\subsection{Incidentes críticos}
+ 
+Con la técnica de ``incidentes críticos'', ambos expertos me describieron los casos excepcionales mencionados anterioremente y algunas de las dificultades más relevantes a la hora de realizar un análisis armónico y/o melódico. 
+
+Me explicaron todas las posibles excepciones para cada regla, ejemplificándome cada una de las situaciones. 
+
+En el caso de los problemas derivados por la subjetividad a la hora de analizar las melodías de un coral, Alberto sugirió ceñirse lo más posible al estilo de los corales compuestos durante la época barroca, ya que las restricciones a la hora de componer eran más fuertes y estaban mejor delimitadas.  
+
+\section{Estructuración de conocimientos} 
+
+Una vez hemos finalizado la extracción y la educción de conocimientos pasamos a analizar, organizar y estructurar todos los conocimientos obtenidos para crear nuestra base de conocimiento.
+
+En un primer paso, constrastamos toda la información que hemos adquirido junto con los requisitos del sistema para filtrar qué conocimientos son los necesarios y útiles para poder llevar a cabo los distintos análisis en el coral. Los tipos de análisis son independientes entre sí, por lo que se hizo una filtración de información para cada uno de ellos. Aunque el tener distintos análisis sobre la partitura podía suponer una dificultad para este proceso de selección, el hecho de ser independientes supuso una gran ventanja, facilitándolo en gran medida. 
+
+A continuación, organizamos y estructuramos el conocimiento diviéndolo en \textit{hechos} y \textit{reglas}. 
+
+\begin{itemize}
+
+	\item Los \textit{hechos} serán asertados en el sistema. Para definir la mayoría de estos hechos se hará uso de estructuras ``templates'' o plantillas.
+
+	\bigskip
+
+		\begin{lstlisting}
+
+			(intervalo (distancia d) (tipo t) (nota1 n1) (nota2 n2))
+
+		\end{lstlisting}
+
+	\bigskip
+
+	\item Las \textit{reglas} definirán los requisitos funcionales del sistema en forma de estructuras \textit{si <<antecedente>> entonces <<consecuente>>}. 
+
+	\bigskip
+
+		\begin{lstlisting}
+
+			if intervalo.distancia = 2 then intervalo.tipo = disonante
+
+		\end{lstlisting}
+
+	\bigskip
+
+\end{itemize} 
+
+Este conjunto de hechos y reglas constituirá la base de conocimiento del sistema experto. Estas reglas utilizarán los hechos almacenados en la base de conocimiento, junto con los hechos calculados a partir de los datos de entrada, para deducir nuevos hechos y conocimientos que permitan obtener conclusiones finales y así obtener resultados.

@@ -1,0 +1,45 @@
+\chapter{Resultados y conclusiones}
+
+\section{Resultados}
+
+Los resultados obtenidos tras la validación del sistema por Clara Luz han sido de entre un 85-90\% de acierto. Esto significa que de todos los errores señalados por Clara Luz, el sistema detecto el 85-90\% de todos ellos aproximadamente.
+
+En los casos de errores no detectados, se debía mayormente a que eran situaciones extremas o excepcionales que no había considerado para el desarrollo del sistema.
+
+Sin embargo, el sistema en muchos de los ejemplos, fue capaz de detectar errores que no habían sido encontrados por Clara Luz.
+
+\bigskip
+Respecto al tiempo empleado para analizar las partituras, si comparamos el tiempo empleado por el sistema con la interfaz web y sin ella, los resultados no son muy favorables. La ejecución del sistema experto en el entorno de CLIPS tarda unos pocos segundos, mientras que con la interfaz tarda entre 1 y 5 minutos. 
+
+\section{Conclusiones}
+
+En relación a los resultados referidos al porcentaje de errores encontrados, considero que dada la complejidad de la tarea, se han obtenido unos buenos resultados. 
+
+He de destacar el hecho de que el sistema encontró errores que no habían sido señalados por Clara Luz. Esto supone que el sistema, en algunas ocasiones, puede analizar partituras mejor o con más detalle que un experto. Obviamente en el caso del experto siempre está el factor humano y la garantía de cometer errores más fácilmente que una máquina. Aún así, este hecho fue una muy grata sorpresa.
+
+\bigskip
+En cuanto a los resultados sobre el tiempo de ejecución, el hecho de crear la interfaz web ha supuesto una pérdida de velocidad considerable. 
+
+Al haber embebido el sistema dentro de una aplicación web, se ha perdido una de las mejores características de CLIPS que es su velocidad de procesamiento. Esta ventaja de CLIPS se ha sacrificado por poder hacer un sistema más accesible y con una interfaz más afable, dado que es muy improbable que los usuarios finales tengan algún conocimiento sobre CLIPS o su existencia.
+
+Por otro lado, para un experto, estos análisis tan exhaustivos pueden llevar alrededor de 20 minutos para un coral de 24-32 compases, que suele ser la longitud media de este tipo de obras. Teniendo en cuenta esta comparación, el sistema tarda, como mínimo, cuatro veces menos que un experto, lo cual supone una ganancia en tiempo bastante aceptable.
+
+\bigskip
+Teniendo en cuenta todo lo anterior, podemos concluir que este sistema proporciona unos resultados bastante buenos en un tiempo bastante aceptable. 
+
+\section{Futuro desarrollo}
+
+Uno de los motivos principales por los que se escogió hacer un sistema experto es por su gran escalabilidad. Este proyecto puede ser ampliado en una gran cantidad formas:
+
+\begin{itemize}
+
+	\item Añadiendo nuevas reglas de armonía y/o excepciones a los módulos de análisis ya existentes.
+	\item Añadiendo nuevos módulos para analizar otros aspectos o estilos musicales.
+	\item Adaptando los módulos a otros tipos de obras y formas musicales, como obras para piano, orquesta, ...
+	\item Añadir nuevas funcionalidades a la aplicación como creación de usuarios, llevar un registro de las partituras analizadas, añadir estadísticas, ...
+\end{itemize}
+
+Además, está el hecho de que se puede intentar mejorar la eficiencia del sistema utilizando programación concurrente o mejorando el uso de la memoria.
+
+\bigskip
+En definitiva, este sistema aún tiene muchas posibilidades de mejorar y crecer, aunque como primera versión ha dado unos resultados más que satisfactorios.

@@ -1,0 +1,42 @@
+\chapter{Pruebas y validación}
+
+Con toda la implementación del sistema realizada, pasamos a la fase de verificación y validación del sistema. 
+
+\section{Verificación}
+
+Como describimos en el capítulo, la verificación del sistema experto consistió en comprobar que accedía y leía bien el contenido de los ficheros y añadía los hechos a la memoria de trabajo de manera correcta. 
+
+Como no podíamos comprobarlo visualmente como hicimos con el prototipo, se hicieron pruebas en las que el sistema experto, además de los errores, mostraba los hechos asertados, hechos calculados y hechos leídos. 
+
+Una vez se comprobó que el sistema experto se ejecutaba correctamente, pasamos a comprobar las funcionalidades de la interfaz.
+
+Primero se comprobó que las funciones de extracción de información del archivo XML, obtenían y guardaban correctamente los datos. Para ello, se ejecutaron todas las funciones con distintas partituras y se revisaron los ficheros resultantes para ver si coincidían con el formato escogido y no contenían fallos.
+
+También se verificó el funcionamiento del envío del formulario para que no se produjesen las siguientes situaciones:
+
+\begin{itemize}
+
+	\item No se puede enviar un formulario en blanco.
+	\item No se puede enviar un archivo sin seleccionar ninguna opción.
+	\item No se puede enviar la lista de opciones sin adjuntar un archivo.
+	\item El archivo a adjuntar debe ser de formato XML.
+
+\end{itemize}
+
+Por último, se examinó que los resultados se mostrasen de manera legible y ordenados en sus pestañas correspondientes. Las pestañas de los módulos deben mostrarse si se ha seleccionado dicho módulo y si se han obtenido errores. En caso contrario, no deberían de mostrarse.
+
+\section{Validación}
+
+La validación del sistema experto fue llevada a cabo por Clara Luz Fernández Vecino, profesora de armonía del Conservatorio Ángel Barrios de Granada.
+
+Para ello, el sistema analizó ejercicios realizados por los alumnos del conservatorio:
+
+\begin{itemize}
+
+	\item Alrededor de 100 ejercicios de armonía. Con estos ejercicios se validaron los módulos de errores provocados por los movimientos y algunos errores armónicos. 
+
+	\item 20 ejercicios de composición de corales. Con estas composiciones se validaron todos los módulos, especialmente el módulo de análisis melódico.
+
+\end{itemize}
+
+Tras ejecutar el sistema, Clara Luz revisó los resultados obtenidos por el sistema comparándolos con las correcciones que ella misma había llevado a cabo sobre todos los ejercicios.
