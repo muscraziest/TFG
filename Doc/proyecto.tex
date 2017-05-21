@@ -15,7 +15,9 @@
 
 \usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
 \usepackage[utf8]{inputenc}
-\usepackage{ascii}
+\usepackage{ascii}  
+\usepackage{lilyglyphs}
+\usepackage{fontspec}
 %\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
 
 % ---- Idioma --------
@@ -139,9 +141,10 @@ tabsize=3
   \titleformat{\subsubsection}[block]
   {\normalfont\normalsize\bfseries}{\thesubsubsection.}{1em}{\normalfont\normalsize\bfseries}
 
-\usepackage[table,xcdraw]{xcolor}
-
-%\usepackage[acronym,nonumberlist,shortcuts,xindy={language=spanish},sanitize=none]{glossaries}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{musixtex}
+\usepackage{enumitem}
 %----------------------------------------------------------------------------------------
 %	TÍTULO Y DATOS DEL ALUMNO
 %----------------------------------------------------------------------------------------
@@ -193,7 +196,14 @@ Granada, Junio de 2017
 %----------------------------------------------------------------------------------------
 
 \newpage
-
+\thispagestyle{empty}
+\
+\newpage
+\thispagestyle{empty}
+\
+\newpage
+\thispagestyle{empty}
+\
 %----------------------------------------------------------------------------------------
 %	Prefacio
 %----------------------------------------------------------------------------------------
@@ -239,10 +249,9 @@ Las funcionalidades que proporcionará este sistema se dividirán en dos clases:
 El interés principal de este proyecto es poder desarrollar una herramienta para compositores o estudiantes de composición que haga una función análoga a la de un corrector ortográfico y gramatical de un editor de textos, aplicada a la composición y edición de partituras.
 
 \cleardoublepage
-
-
+\newpage
 \thispagestyle{empty}
-
+\
 
 \begin{center}
 {\large\bfseries Development of an Expert System for Musical Analysis}\\
@@ -282,6 +291,7 @@ The main interest of this project is being able of develop a tool for composers 
 
 \newpage
 \thispagestyle{empty}
+\
 
 \noindent\rule[-1ex]{\textwidth}{2pt}\\[4.5ex]
 
@@ -308,6 +318,10 @@ Y para que conste, expiden y firman el presente informe en Granada a X de mes de
 
 \noindent \textbf{Juan Luis Castro Peña}
 
+\newpage
+\thispagestyle{empty}
+\
+
 \chapter*{Agradecimientos}
 \thispagestyle{empty}
 
@@ -331,22 +345,27 @@ A mis expertos, Alberto e Isa, por ayudarme a crear este sistema.
 \bigskip
 A Jesús, porque el resultado final de este proyecto no hubiera sido el mismo sin ti.
 
+\newpage
+\thispagestyle{empty}
+\
+
 %----------------------------------------------------------------------------------------
 %	Índices
 %----------------------------------------------------------------------------------------
+\begingroup
+\let\cleardoublepage\clearpage
 
-\newpage %inserta un salto de página
+	\tableofcontents % para generar el índice de contenidos
 
-\tableofcontents % para generar el índice de contenidos
+	\listoffigures
 
-\listoffigures
+	\listoftables
 
-\listoftables
-
-%\makeglossaries
-%\input{./bibliografia/Glosario.tex}
+\endgroup
 
 \newpage
+\thispagestyle{empty}
+\
 
 %----------------------------------------------------------------------------------------
 %	Capítulos
@@ -365,16 +384,17 @@ A Jesús, porque el resultado final de este proyecto no hubiera sido el mismo si
 %----------------------------------------------------------------------------------------
 %	Referencias
 %----------------------------------------------------------------------------------------
-
+\newpage
+\thispagestyle{empty}
+\
 \nocite{*}
+\addcontentsline{toc}{chapter}{Bibliografía}
 \bibliography{bibliografia} %archivo bibliografia.bib que contiene las entradas 
 \bibliographystyle{siam} 
 
 %----------------------------------------------------------------------------------------
 %	Glosario
 %----------------------------------------------------------------------------------------
-%\printglossaries
-
-
+\input{Glosario}
 
 \end{document}
