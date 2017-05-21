@@ -33,11 +33,11 @@ Los datos que teníamos que extraer de la partitura eran:
 
 \end{itemize}
 
-Para cada uno de estos datos se creo una plantilla con la instrucción ``deftemplate'', al igual que para el resto de hechos como se mencionó en el apartado de \textit{Adquisición de concimientos}. 
+Para cada uno de estos datos se creo una plantilla con la instrucción ``\texttt{deftemplate}'', al igual que para el resto de hechos como se mencionó en el capítulo \textit{Adquisición de conocimientos}. 
 
 \subsubsection{Estructura del archivo de notas}
 
-Una de las mayores dificultades fue decidir la estructura del archivo que contendría la información sobre las notas. Cada nota tiene una duración independiente, lo cual a la hora de realizar el análisis armónico resulta muy complejo. Al analizar la armonía de una obra tenemos que tener en cuenta todas las voces al mismo tiempo. Sin embargo, en una misma parte cada nota de cada voz puede tener una duración distinta y por ende puede formarse más de un acorde en dicha parte. Esto significa que no siempre va a haber el mismo número de acordes, ni de notas, en cada compás.
+Una de las mayores dificultades fue decidir la estructura del archivo que contendría la información sobre las notas. Cada nota tiene una duración independiente, lo cual a la hora de realizar el análisis armónico resulta muy complejo. Al analizar la armonía de una obra tenemos que tener en cuenta todas las voces al mismo tiempo, analizamos de forma vertical. Sin embargo, en una misma parte cada nota de cada voz puede tener una duración distinta y por ende puede formarse más de un acorde en dicha parte. Esto significa que no siempre va a haber el mismo número de acordes, ni de notas, en cada compás.
 
 En la práctica, a un experto este hecho no le resulta un problema, porque puede observar las voces gráficamente y poder determinar cuándo termina la duración de cada nota y el acorde. En cambio, para un sistema experto, al no saber dónde termina cada nota con respecto a las demás, no puede hacer esas deducciones de manera tan sencilla. 
 
@@ -55,7 +55,7 @@ En la siguiente figura, se muestra gráficamente lo que supone esta transformaci
 
 Como podemos ver, al realizar esta subdivisión podemos ir analizando en bloques equivalente en tiempo. Los resultados del análisis no se ven afectados, dado que únicamente hemos modificado la duración de las notas, la cual no interviene en los errores que vamos a detectar.
 
-En el caso del análisis melódico, no es necesario hacer esta subdivisión porque analizamos cada voz de manera independientede de las otras.
+En el caso del análisis melódico, no es necesario hacer esta subdivisión porque analizamos cada voz de manera independientede de las otras, analizamos la partitura horizontalmente.
 
 \subsubsection{Formatos finales}
 
@@ -171,7 +171,7 @@ Como resultado final, obtuve los tres módulos de análisis, cada uno con sus re
 
 \section{Aplicación web}
 
-La implementación de la aplicación web, como se comentó en el capítulo anterior, se ha hecho utilizando el framework de Python DJango.
+La implementación de la aplicación web, como se comentó en el capítulo anterior, se ha hecho utilizando el framework DJango de Python.
 
 La finalidad de implementar esta aplicación es proporcionar al sistema experto una interfaz agradable y sencilla de utilizar para el usuario. 
 
@@ -220,13 +220,15 @@ Gracias a esta última característica, en un principio se pensó que únicament
 
 El primer problema con el que me encontré fue que los archivos no podían cargarse. Tras buscar en la documentación de PyCLIPS \cite{PYCLIPS}, encontré la respuesta a este problema. PyCLIPS permite cargar archivos de CLIPS que contengan reglas o hechos, pero no ambas en un mismo fichero. Así pues, dividí los ficheros en ficheros con reglas y ficheros con hechos. 
 
-De nuevo, surgió otro problema, esta vez con los archivos de hechos. En este caso, no se aceptaban las definiciones de las estructuras ``deftemplate''. Para solucionarlo, decidí añadirlas utilizando explícitamente las funciones de PyCLIPS. A pesar de que parecía haberse solucionado, esto derivó en nuevos problemas asociados a dos funciones de CLIPS: las funciones \textit{clear} y \textit{reset}.
+De nuevo, surgió otro problema, esta vez con los archivos de hechos. En este caso, no se aceptaban las definiciones de las estructuras \texttt{deftemplate}. Para solucionarlo, decidí añadirlas utilizando explícitamente las funciones de PyCLIPS. A pesar de que parecía haberse solucionado, esto derivó en nuevos problemas asociados a dos funciones de CLIPS: las funciones \texttt{clear} y \texttt{reset}.
 
 \bigskip
-La función \textit{clear} borra todo el entorno de CLIPS, eliminando de la memoria de trabajo todos los hechos, reglas, plantillas y funciones que estuviesen definidos.
+La función \texttt{clear} borra todo el entorno de CLIPS, eliminando de la memoria de trabajo todos los hechos, reglas, plantillas y funciones que estuviesen definidos.
 
 \bigskip
-La función \textit{reset} reinicia el entorno, eliminando sólo los hechos y dejando en la memoria de trabajo todas las reglas, plantillas y funciones.
+La función \texttt{reset} reinicia el entorno, eliminando sólo los hechos y dejando en la memoria de trabajo todas las reglas, plantillas y funciones.
+
+\bigskip
 
 Antes de la ejecución de cada módulo se siguen los siguientes pasos:
 
@@ -239,16 +241,16 @@ Antes de la ejecución de cada módulo se siguen los siguientes pasos:
 	\item Se cargan las reglas del módulo.
 \end{itemize}
 
-Debido a algún problema con la librería PyCLIPS o el intérprete de Python, la función \textit{clear} no puede ejecutarse. Esto provoca que cada vez que se lancen los módulos del sistema, se redefinan las plantillas con las funciones de PyCLIPS. CLIPS no permite sobreescribir hechos o plantillas, por lo que nos daba un error de redefinición. 
+Debido a algún problema con la librería PyCLIPS o el intérprete de Python, la función \texttt{clear} no puede ejecutarse. Esto provoca que cada vez que se lancen los módulos del sistema, se redefinan las plantillas con las funciones de PyCLIPS. CLIPS no permite sobreescribir hechos o plantillas, por lo que nos daba un error de redefinición. 
 
-Para el correcto funcionamiento del sistema, las plantillas debían ser definidas una única vez al inicio del sistema. Tras consultar la documentación y el foro de la comunidad encontré la solución: había que definir las plantillas en el archivo \textit{urls.py}. Este archivo contiene las expresiones regulares de las ``urls'' en las que se visualizarán las secciones de la pagina web. Éste código se ejecuta una única vez al inicio de la aplicación, lo que nos permite evitar que las plantillas se creen una y otra vez.
+Para el correcto funcionamiento del sistema, las plantillas debían ser definidas una única vez al inicio del sistema. Tras consultar la documentación y el foro de la comunidad encontré la solución: había que definir las plantillas en el archivo \texttt{urls.py}. Este archivo contiene las expresiones regulares de las ``urls'' en las que se visualizarán las secciones de la pagina web. Éste código se ejecuta una única vez al inicio de la aplicación, lo que nos permite evitar que las plantillas se creen una y otra vez.
 
-Aunque se solucionó el problema de las plantillas, no se podía leer el archivo de hechos. Para asertar conjuntos de hechos en el entorno de CLIPS se utiliza la instrucción \textit{deffacts}. Esta instrucción no era reconocida por la función \textit{LoadFacts} de PyCLIPS, que es la encargada de cargar el archivo. Intenté modificar la sintaxis del archivo utilizando otras instrucciones como \textit{assert}, que ``aserta'' los hechos en la memoria de trabajo, o escribiendo directamente los hechos, sin éxito. Al igual que con la función \textit{clear}, no conseguía hacer que la función \textit{LoadFacts} se ejecutase correctamente. 
+Aunque se solucionó el problema de las plantillas, no se podía leer el archivo de hechos. Para asertar conjuntos de hechos en el entorno de CLIPS se utiliza la instrucción \texttt{deffacts}. Esta instrucción no era reconocida por la función \texttt{LoadFacts} de PyCLIPS, que es la encargada de cargar el archivo. Intenté modificar la sintaxis del archivo utilizando otras instrucciones como \texttt{assert}, que ``aserta'' los hechos en la memoria de trabajo, o escribiendo directamente los hechos, sin éxito. Al igual que con la función \texttt{clear}, no conseguía hacer que la función \texttt{LoadFacts} se ejecutase correctamente. 
 
-Finalmente, opté por almacenar el contenido de los hechos en archivos independientes - un archivo por tipo de template - y añadir nuevas reglas para la lectura de estos ficheros y la creación de los hechos correspondientes. 
+Finalmente, opté por almacenar el contenido de los hechos en archivos independientes - un archivo por tipo de \texttt{template} - y añadir nuevas reglas para la lectura de estos ficheros y la creación de los hechos correspondientes. 
 
 \bigskip
-Algunos de estos problemas referidos a funciones e instrucciones que no se ejecutan o dan errores de ejecución se deben principalmente a que PyCLIPS define los hechos, reglas y demás elementos de CLIPS como objetos. Esto hace que se den problemas de asignación y liberación de memoria, como en el caso de la instrucción \textit{clear}, entre otros. 
+Algunos de estos problemas referidos a funciones e instrucciones que no se ejecutan o dan errores de ejecución se deben principalmente a que PyCLIPS define los hechos, reglas y demás elementos de CLIPS como objetos. Esto hace que se den problemas de asignación y liberación de memoria, como en el caso de la instrucción \texttt{clear}, entre otros. 
 
 También comprobé que el uso de PyCLIPS mediante comandos en la consola no daba ninguno de estos problemas. Esto sugiere que quizá haya algún problema con el intérprete a la hora de ejecutar scripts que contengan código de esta librería.
 
@@ -264,6 +266,9 @@ Se contemplaron varias posibilidades para mostrar los errores:
 	\item Mostrar las listas completas de errores tras finalizar todo el proceso de análisis.
 	\item Mostrar gráficamente la sección de la partitura en la que se detecte un error, señalizando de alguna manera las notas implicadas.
 \end{itemize}
+
+\bigskip
+\bigskip
 
 De estas opciones, se decidió que la segunda cumplía mejor con los requisitos de los usuarios. Esto se debe al hecho de que los errores que detecta el sistema, aunque se encuentren localizados en un compás concreto de la partitura, el ámbito al que afecta el error no es local sino global. Esto quiere decir que un error puede afectar al resto de la partitura al ser corregido generando nuevos errores, agravando otros o incluso solucionando otros problemas posteriores. 
 

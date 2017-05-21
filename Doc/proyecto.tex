@@ -50,6 +50,8 @@ commentstyle=\color{dkgreen},
 stringstyle=\color{mauve},
 tabsize=3
  }
+
+\lstset{basicstyle=\footnotesize\ttfamily,breaklines=true}
 \usepackage{parskip}
 
 % Para hacer tablas comlejas
@@ -385,12 +387,15 @@ A Jesús, porque el resultado final de este proyecto no hubiera sido el mismo si
 %	Referencias
 %----------------------------------------------------------------------------------------
 \newpage
+\pagenumbering{gobble}
 \thispagestyle{empty}
 \
 \nocite{*}
+\cleardoublepage
+\phantomsection
 \addcontentsline{toc}{chapter}{Bibliografía}
 \bibliography{bibliografia} %archivo bibliografia.bib que contiene las entradas 
-\bibliographystyle{siam} 
+\bibliographystyle{apalike} 
 
 %----------------------------------------------------------------------------------------
 %	Glosario
