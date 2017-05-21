@@ -1,6 +1,6 @@
 \chapter{Implementación}
 
-La implementación de este proyecto se ha llevado a cabo en dos fases diferenciadas: la creación del sistema experto y el desarrollo de la aplicación web. utilizada como interfaz, en la que será embebido. 
+La implementación de este proyecto se ha llevado a cabo en dos fases diferenciadas: la creación del sistema experto y el desarrollo de la aplicación web,utilizada como interfaz, en la que será embebido. 
 
 Todo el código puede ser consultado en \cite{CODIGO}.
 
@@ -37,11 +37,11 @@ Para cada uno de estos datos se creo una plantilla con la instrucción ``deftemp
 
 \subsubsection{Estructura del archivo de notas}
 
-Una de las mayores dificultades fue decidir la estructura del archivo que contendría la información sobre las notas. Cada nota tiene una duración independiente, lo cual a la hora de realizar el análisis armónico resulta muy problemático. Al analizar la armonía de una obra tenemos que tener en cuenta todas las voces al mismo tiempo. Sin embargo, en una misma parte cada nota de cada voz puede tener una duración distinta y por ende puede formarse más de un acorde en dicha parte. Esto significa que no siempre va a haber el mismo número de acordes, ni de notas, en cada compás.
+Una de las mayores dificultades fue decidir la estructura del archivo que contendría la información sobre las notas. Cada nota tiene una duración independiente, lo cual a la hora de realizar el análisis armónico resulta muy complejo. Al analizar la armonía de una obra tenemos que tener en cuenta todas las voces al mismo tiempo. Sin embargo, en una misma parte cada nota de cada voz puede tener una duración distinta y por ende puede formarse más de un acorde en dicha parte. Esto significa que no siempre va a haber el mismo número de acordes, ni de notas, en cada compás.
 
-En la práctica, a un experto este hecho no le resulta un problema, porque puede observar las voces gráficamente y poder determinar cuando termina la duración de cada nota y el acorde. En cambio, para un sistema experto, al no saber dónde termina cada nota respecto a las demás, no puede hacer esas deducciones de manera tan sencilla. 
+En la práctica, a un experto este hecho no le resulta un problema, porque puede observar las voces gráficamente y poder determinar cuándo termina la duración de cada nota y el acorde. En cambio, para un sistema experto, al no saber dónde termina cada nota con respecto a las demás, no puede hacer esas deducciones de manera tan sencilla. 
 
-Para solucionar este problema, decidí subdividir todas las notas de todas las voces a semicorcheas, que es la unidad de medida más pequeña que se suele utilizar en los corales. De esta forma, conseguimos que en todos los compases halla el mismo número de notas en cada voz.
+Para solucionar este problema, decidí subdividir todas las notas de todas las voces a semicorcheas, que es la figura musical más pequeña que se suele utilizar en los corales. De esta forma, conseguimos que en todos los compases haya el mismo número de notas en cada voz.
 
 En la siguiente figura, se muestra gráficamente lo que supone esta transformación:
 
@@ -55,7 +55,7 @@ En la siguiente figura, se muestra gráficamente lo que supone esta transformaci
 
 Como podemos ver, al realizar esta subdivisión podemos ir analizando en bloques equivalente en tiempo. Los resultados del análisis no se ven afectados, dado que únicamente hemos modificado la duración de las notas, la cual no interviene en los errores que vamos a detectar.
 
-En el caso del análisis melódico no es necesario hacer esta subdivisión porque analizamos cada voz de manera independientede de las otras.
+En el caso del análisis melódico, no es necesario hacer esta subdivisión porque analizamos cada voz de manera independientede de las otras.
 
 \subsubsection{Formatos finales}
 
@@ -101,7 +101,7 @@ Las estructuras de los ficheros que leería el sistema experto quedarían de la 
 	
 		\begin{lstlisting}[frame=single]
 
-			Nombre1 Alteracion1 Altura1 Nombre1 Alteracion1 Altura1 ...
+			Nombre Alteracion Altura Nombre Alteracion Altura ...
 
 		\end{lstlisting} 
 
@@ -150,24 +150,24 @@ Los nombres de las notas se representarán con el cifrado americano, el empleado
 
 En el primer prototipo, no se modularizaron los hechos y reglas en función de los módulos descritos en los capítulos anteriores. Esto es porque aún no estaban definidas del todo las dependencias de las reglas respecto a los hechos ni la división del análisis armónico en dos partes realmente diferenciadas. 
 
-Aunque en el análisis y el diseño quedan claras estas divisiones, a la hora de implementar las reglas iban surgiendo muchas relaciones entre todos los hechos de la base de conocimiento. Por ejemplo, se esperaba que los hechos referidos a los movimientos de las voces únicamente fueran utilizados por el módulo del análisis melódico. Sin embargo, también es necesario para localizar algunos errores armónicos. Además, la existencia de algunos errores melódicos provoca a su vez errores armónicos , y viceversa. 
+Aunque en el análisis y el diseño quedan claras estas divisiones, a la hora de implementar las reglas, iban surgiendo muchas relaciones entre todos los hechos de la base de conocimiento. Por ejemplo, se esperaba que los hechos referidos a los movimientos de las voces únicamente fueran utilizados por el módulo del análisis melódico. Sin embargo, también es necesario para localizar algunos errores armónicos. Además, la existencia de algunos errores melódicos provoca a su vez errores armónicos y viceversa. 
 
 Una vez se terminaron de implementar todas las reglas y hechos, se procedió a verificar y validar el prototipo. 
 
-La  \textbf{verificación} consistió en comprobar que los ficheros se leían correctamente y los hechos deducidos se asertaban en el sistema de la manera esperada. Esto se comprobó fácilmente observando en la ventana de hechos que aparece en la propia interfaz de CLIPS.
+La  \textbf{verificación} consistió en comprobar que los ficheros se leían correctamente y los hechos deducidos se asertaban en el sistema de la manera esperada. Esto se comprobó fácilmente observando la ventana de hechos que aparece en la propia interfaz de CLIPS.
 
 La \textbf{validación} se realizó creando archivos de prueba, con los formatos descritos anteriormente, que contuviesen al menos un error de cada tipo. Los modelos de prueba fueron recogidos de las fuentes bibliográficas, las cuáles contienen una gran cantidad de ejemplos
 
 \subsection{Modularización del sistema}
 
-Tras la creación del primer prototipo y su verificación y validación, comencé el proceso de modularización el sistema. 
+Tras la creación del primer prototipo y su verificación y validación, comencé el proceso de modularización del sistema. 
 
 Al estar implementadas todas las reglas y funcionalidades del sistema, este proceso, aunque tedioso, fue el más sencillo. 
 
 Fui comprobando para cada regla los antencendentes que debían cumplirse y así poder agruparlas según los hechos que necesitaban.
 Una vez agrupadas, pude definir los hechos asertados necesarios para cada uno de los módulos.
 
-Como resultado final obtuve los tres módulos de análisis, cada uno con sus reglas y hechos diferenciados. 
+Como resultado final, obtuve los tres módulos de análisis, cada uno con sus reglas y hechos diferenciados. 
 
 \section{Aplicación web}
 
@@ -239,18 +239,18 @@ Antes de la ejecución de cada módulo se siguen los siguientes pasos:
 	\item Se cargan las reglas del módulo.
 \end{itemize}
 
-Debido a algún problema con la librería PyCLIPS o el intérprete de DJango, la función \textit{clear} no puede ejecutarse. Esto provoca que cada vez que se lancen los módulos del sistema, se redefinan las plantillas con las funciones de PyCLIPS. CLIPS no permité sobreescribir hechos o plantillas, por lo que nos daba un error de redefinición. 
+Debido a algún problema con la librería PyCLIPS o el intérprete de Python, la función \textit{clear} no puede ejecutarse. Esto provoca que cada vez que se lancen los módulos del sistema, se redefinan las plantillas con las funciones de PyCLIPS. CLIPS no permite sobreescribir hechos o plantillas, por lo que nos daba un error de redefinición. 
 
 Para el correcto funcionamiento del sistema, las plantillas debían ser definidas una única vez al inicio del sistema. Tras consultar la documentación y el foro de la comunidad encontré la solución: había que definir las plantillas en el archivo \textit{urls.py}. Este archivo contiene las expresiones regulares de las ``urls'' en las que se visualizarán las secciones de la pagina web. Éste código se ejecuta una única vez al inicio de la aplicación, lo que nos permite evitar que las plantillas se creen una y otra vez.
 
 Aunque se solucionó el problema de las plantillas, no se podía leer el archivo de hechos. Para asertar conjuntos de hechos en el entorno de CLIPS se utiliza la instrucción \textit{deffacts}. Esta instrucción no era reconocida por la función \textit{LoadFacts} de PyCLIPS, que es la encargada de cargar el archivo. Intenté modificar la sintaxis del archivo utilizando otras instrucciones como \textit{assert}, que ``aserta'' los hechos en la memoria de trabajo, o escribiendo directamente los hechos, sin éxito. Al igual que con la función \textit{clear}, no conseguía hacer que la función \textit{LoadFacts} se ejecutase correctamente. 
 
-Finalmente opté por almacenar el contenido de los hechos en archivos independientes - un archivo por tipo de template - y añadir nuevas reglas para la lectura de estos ficheros y la creación de los hechos correspondientes. 
+Finalmente, opté por almacenar el contenido de los hechos en archivos independientes - un archivo por tipo de template - y añadir nuevas reglas para la lectura de estos ficheros y la creación de los hechos correspondientes. 
 
 \bigskip
 Algunos de estos problemas referidos a funciones e instrucciones que no se ejecutan o dan errores de ejecución se deben principalmente a que PyCLIPS define los hechos, reglas y demás elementos de CLIPS como objetos. Esto hace que se den problemas de asignación y liberación de memoria, como en el caso de la instrucción \textit{clear}, entre otros. 
 
-También comprobé que el uso de PyCLIPS mediante comandos en la consola no daba ninguno de estos problemas. Esto sugiere que quizá haya algún problema con el intérprete a la hora de ejecutar scripts que contengan código de esta librería o con el que emplea DJango. 
+También comprobé que el uso de PyCLIPS mediante comandos en la consola no daba ninguno de estos problemas. Esto sugiere que quizá haya algún problema con el intérprete a la hora de ejecutar scripts que contengan código de esta librería.
 
 \bigskip
 En cualquier caso, una vez se solucionaron estos problemas, se pudo completar la integración del sistema de manera satisfactoria.
@@ -269,7 +269,7 @@ De estas opciones, se decidió que la segunda cumplía mejor con los requisitos 
 
 Por este motivo, mostrar los errores en tiempo real no le resulta tan útil al usuario como mostrar la lista completa. El tener la lista completa permite tener una visión general de todas las faltas y errores. 
 
-De igual manera, el hecho de mostrarlo gráficamente no resultaba especialmente útil por la posibilidad de que existan secciones que se repitan o parezcan a lo largo de la obra, dificultando la señalización concreta de los errores. 
+De igual manera, el hecho de mostrarlo gráficamente no resultaba especialmente útil por la posibilidad de que existan secciones que se repitan o se parezcan a lo largo de la obra, dificultando la señalización concreta de los errores. 
 
 En todos los errores encontrados se especifica el compás, la parte, el tipo de error encontrado, las voces involucradas y una explicación sobre el mismo, haciendo alusión al porqué es producido y la razón por la que no debe darse. Si no se encontrasen errores, el sistema mostraría un mensaje de éxito.
 
