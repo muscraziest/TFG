@@ -4,11 +4,14 @@
 
 Los resultados obtenidos tras la validación del sistema por Clara Luz han sido entre un 85-90\% de acierto. Esto significa que de todos los errores señalados por Clara Luz, el sistema detecto el 85-90\% de todos ellos aproximadamente.
 
-En los casos de errores no detectados, se debía mayormente a que eran situaciones extremas o excepcionales que no había considerado para el desarrollo del sistema.
+En los casos de errores no detectados, se debía a que eran situaciones extremas o excepcionales que no había considerado para el desarrollo del sistema, como por ejemplo resoluciones excepcionales de séptimas o detección de quintas paralelas entre acordes sin tener en cuenta las notas de paso. 
 
-Sin embargo, el sistema en muchos de los ejemplos, fue capaz de detectar errores que no habían sido encontrados por Clara Luz.
+Sin embargo, el sistema en muchos de los ejemplos, fue capaz de detectar errores que no habían sido encontrados por Clara Luz. Esta cantidad de errores podían ser desde encontrar un error no señalizado a incluso diez o más, por lo que es difícil estimar un porcentaje claro.
+
+Si no tenemos en cuenta el porcentaje de error debido a casos no contemplados por el sistema o no implementados, el sistema encuentra prácticamente todos los errores, suponiendo un 95\% o más de acierto.
 
 \bigskip
+
 Respecto al tiempo empleado para analizar las partituras, si comparamos el tiempo empleado por el sistema con la interfaz web y sin ella, los resultados no son muy favorables. La ejecución del sistema experto en el entorno de CLIPS tarda unos pocos segundos, mientras que con la interfaz tarda entre 1 y 5 minutos. 
 
 \section{Conclusiones}
@@ -17,15 +20,22 @@ En relación a los resultados referidos al porcentaje de errores encontrados, co
 
 He de destacar el hecho de que el sistema encontró errores que no habían sido señalados por Clara Luz. Esto supone que el sistema, en algunas ocasiones, puede analizar partituras mejor o con más detalle que un experto. Obviamente en el caso del experto siempre está el factor humano y la garantía de cometer errores más fácilmente que una máquina. Aún así, este hecho fue una muy grata sorpresa.
 
+También destacar el hecho de que si en la partitura se encuentra alguno de los errores o faltas que se describen en los requisitos, siempre es capaz de detectarlos y señalarlos, lo cual satisface por completo los objetivos propuestos.
+
 \bigskip
 En cuanto a los resultados sobre el tiempo de ejecución, el hecho de crear la interfaz web ha supuesto una pérdida de velocidad considerable. 
 
-Al haber embebido el sistema dentro de una aplicación web, se ha perdido una de las mejores características de CLIPS, que es su velocidad de procesamiento. Esta ventaja de CLIPS se ha sacrificado para poder hacer un sistema más accesible y con una interfaz más afable, dado que es muy improbable que los usuarios finales tengan algún conocimiento sobre CLIPS o su existencia.
+Al haber embebido el sistema dentro de una aplicación web, se ha perdido una de las mejores características de CLIPS, que es su velocidad de procesamiento. Esta ventaja de CLIPS se ha sacrificado para poder hacer un sistema más accesible y con una interfaz más afable, dado que es muy improbable que los usuarios finales tengan algún conocimiento sobre CLIPS o su existencia. 
 
 Por otro lado, para un experto, estos análisis tan exhaustivos pueden llevar alrededor de 20 minutos para un coral de 24-32 compases, que suele ser la longitud media de este tipo de obras. Teniendo en cuenta esta comparación, el sistema tarda, como mínimo, cuatro veces menos que un experto, lo cual supone una ganancia en tiempo bastante aceptable.
 
+Dado que el tiempo no era realmente un requisito indispensable o un objetivo propuesto no le he dado demasiada importancia a la pérdida de eficiencia que nos ha supuesto la interfaz, y más si tenemos en cuenta que para el usuario supone una mejora respecto a hacer el análisis manualmente. 
+
+Aún así he realizado algunas pruebas y mediciones sobre la ejecución del sistema con la interfaz. He podido comprobar que la pérdida de velocidad no radica en la ejecución del sistema experto sino que parece estar más bien relacionada con procesar los resultados para poder mostrarlos de manera correcta. Esto significa que el problema no está relacionado con la implementación del sistema experto sino con alguno de los procedimientos que se llevan a cabo en la interfaz o con su conexión entre el servidor y el usuario.
+
 \bigskip
-Teniendo en cuenta todo lo anterior, podemos concluir que este sistema proporciona unos resultados bastante buenos en un tiempo bastante aceptable. 
+
+Teniendo en cuenta todo lo anterior, podemos concluir que este sistema proporciona unos resultados bastante buenos en un tiempo bastante aceptable y que hemos podido satisfacer todos los requisitos y alcanzar los objetivos propuestos.
 
 \section{Futuro desarrollo}
 
@@ -39,7 +49,9 @@ Uno de los motivos principales por los que se escogió hacer un sistema experto 
 	\item Añadir nuevas funcionalidades a la aplicación como creación de usuarios, llevar un registro de las partituras analizadas, añadir estadísticas, ...
 \end{itemize}
 
-Además, está el hecho de que se puede intentar mejorar la eficiencia del sistema utilizando programación concurrente o mejorando el uso de la memoria.
+\bigskip
+
+Además, está el hecho de que se puede intentar mejorar la eficiencia del sistema utilizando programación concurrente, mejorando el uso de la memoria o incluso intentar trasladarlo a otro tipo de interfaz que pueda ser más eficiente en términos de velocidad.
 
 \bigskip
 En definitiva, este sistema aún tiene muchas posibilidades de mejorar y crecer, aunque como primera versión ha dado unos resultados más que satisfactorios.

@@ -53,7 +53,7 @@ En la siguiente figura, se muestra gráficamente lo que supone esta transformaci
 	\label{fig5.1.1}
 \end{figure}
 
-Como podemos ver, al realizar esta subdivisión podemos ir analizando en bloques equivalente en tiempo. Los resultados del análisis no se ven afectados, dado que únicamente hemos modificado la duración de las notas, la cual no interviene en los errores que vamos a detectar.
+Como podemos ver, al realizar esta subdivisión podemos ir analizando en bloques equivalentes en tiempo, verticalmente es más sencillo analizar de esta manera que sin la subdivisón. Los resultados del análisis no se ven afectados, dado que únicamente hemos modificado la duración de las notas, la cual no interviene en los errores que vamos a detectar.
 
 En el caso del análisis melódico, no es necesario hacer esta subdivisión porque analizamos cada voz de manera independientede de las otras, analizamos la partitura horizontalmente.
 
@@ -156,7 +156,7 @@ Una vez se terminaron de implementar todas las reglas y hechos, se procedió a v
 
 La  \textbf{verificación} consistió en comprobar que los ficheros se leían correctamente y los hechos deducidos se asertaban en el sistema de la manera esperada. Esto se comprobó fácilmente observando la ventana de hechos que aparece en la propia interfaz de CLIPS.
 
-La \textbf{validación} se realizó creando archivos de prueba, con los formatos descritos anteriormente, que contuviesen al menos un error de cada tipo. Los modelos de prueba fueron recogidos de las fuentes bibliográficas, las cuáles contienen una gran cantidad de ejemplos
+La \textbf{validación} se realizó creando archivos de prueba, con los formatos descritos anteriormente, que contuviesen al menos un error de cada tipo. Los modelos de prueba fueron recogidos de las fuentes bibliográficas, las cuáles contienen una gran cantidad de ejemplos.
 
 \subsection{Modularización del sistema}
 
@@ -167,7 +167,7 @@ Al estar implementadas todas las reglas y funcionalidades del sistema, este proc
 Fui comprobando para cada regla los antencendentes que debían cumplirse y así poder agruparlas según los hechos que necesitaban.
 Una vez agrupadas, pude definir los hechos asertados necesarios para cada uno de los módulos.
 
-Como resultado final, obtuve los tres módulos de análisis, cada uno con sus reglas y hechos diferenciados. 
+Como resultado final, obtuve los tres módulos de análisis, cada uno con sus reglas y hechos diferenciados, tal y como se describen en el capítulo de Adquisición del conocimiento y que puede verse en \ref{fig3.1}. 
 
 \section{Aplicación web}
 
@@ -206,7 +206,7 @@ La información contenida en las etiquetas se escribe en ficheros de acuerdo al 
 
 \subsubsection{Determinación de movimientos melódicos}
 
-Para el análisis melódico y algunas cuestiones del análisis armónico es necesario conocer la dirección que van tomando las melodías. Esta información no viene representada de forma explícita en el archivo de la partitura, sino que debemos de extraerla nosotros. 
+Para el análisis melódico y algunas cuestiones del análisis armónico es necesario conocer la dirección que van tomando las melodías. Esta información no viene representada de forma explícita en el archivo de la partitura, sino que debemos extraerla nosotros. 
 
 Una vez se han creado los archivos que contienen las notas de las voces, vamos comprobando las notas dos a dos para determinar si la melodía hace un movimiento descendente, ascendente o se mantiene. 
 
@@ -220,12 +220,14 @@ Gracias a esta última característica, en un principio se pensó que únicament
 
 El primer problema con el que me encontré fue que los archivos no podían cargarse. Tras buscar en la documentación de PyCLIPS \cite{PYCLIPS}, encontré la respuesta a este problema. PyCLIPS permite cargar archivos de CLIPS que contengan reglas o hechos, pero no ambas en un mismo fichero. Así pues, dividí los ficheros en ficheros con reglas y ficheros con hechos. 
 
-De nuevo, surgió otro problema, esta vez con los archivos de hechos. En este caso, no se aceptaban las definiciones de las estructuras \texttt{deftemplate}. Para solucionarlo, decidí añadirlas utilizando explícitamente las funciones de PyCLIPS. A pesar de que parecía haberse solucionado, esto derivó en nuevos problemas asociados a dos funciones de CLIPS: las funciones \texttt{clear} y \texttt{reset}.
+De nuevo, surgió otro problema, esta vez con los archivos de hechos. En este caso, no se aceptaban las definiciones de las estructuras \texttt{deftemplate}. Consulté de nuevo la documentación y también varios foros, sin encontrar demasiada información al respecto ni un motivo real por el cual no estuviera funcionando. Tras consultar también la documentación propia de CLIPS \cite{CLIPSI, CLIPSII} llegué a la conclusión de que los \texttt{deftemplate} no podían ser aceptados como hechos. Así que para solucionarlo, decidí añadirlas utilizando explícitamente las funciones de PyCLIPS. A pesar de que parecía haberse solucionado, esto derivó en nuevos problemas asociados a dos funciones de CLIPS: las funciones \texttt{clear} y \texttt{reset}.
 
 \bigskip
+
 La función \texttt{clear} borra todo el entorno de CLIPS, eliminando de la memoria de trabajo todos los hechos, reglas, plantillas y funciones que estuviesen definidos.
 
 \bigskip
+
 La función \texttt{reset} reinicia el entorno, eliminando sólo los hechos y dejando en la memoria de trabajo todas las reglas, plantillas y funciones.
 
 \bigskip
@@ -241,13 +243,15 @@ Antes de la ejecución de cada módulo se siguen los siguientes pasos:
 	\item Se cargan las reglas del módulo.
 \end{itemize}
 
-Debido a algún problema con la librería PyCLIPS o el intérprete de Python, la función \texttt{clear} no puede ejecutarse. Esto provoca que cada vez que se lancen los módulos del sistema, se redefinan las plantillas con las funciones de PyCLIPS. CLIPS no permite sobreescribir hechos o plantillas, por lo que nos daba un error de redefinición. 
+\bigskip
 
-Para el correcto funcionamiento del sistema, las plantillas debían ser definidas una única vez al inicio del sistema. Tras consultar la documentación y el foro de la comunidad encontré la solución: había que definir las plantillas en el archivo \texttt{urls.py}. Este archivo contiene las expresiones regulares de las ``urls'' en las que se visualizarán las secciones de la pagina web. Éste código se ejecuta una única vez al inicio de la aplicación, lo que nos permite evitar que las plantillas se creen una y otra vez.
+Tras consultar con algunos usuarios de la comunidad y preguntar en varios foros llegué a la conclusión de que debido a algún problema con la librería PyCLIPS o el intérprete de Python, la función \texttt{clear} no puede ejecutarse correctamente. Esto provoca que cada vez que se lancen los módulos del sistema, se redefinan las plantillas con las funciones de PyCLIPS. CLIPS no permite sobreescribir hechos o plantillas, por lo que nos daba un error de redefinición. 
 
-Aunque se solucionó el problema de las plantillas, no se podía leer el archivo de hechos. Para asertar conjuntos de hechos en el entorno de CLIPS se utiliza la instrucción \texttt{deffacts}. Esta instrucción no era reconocida por la función \texttt{LoadFacts} de PyCLIPS, que es la encargada de cargar el archivo. Intenté modificar la sintaxis del archivo utilizando otras instrucciones como \texttt{assert}, que ``aserta'' los hechos en la memoria de trabajo, o escribiendo directamente los hechos, sin éxito. Al igual que con la función \texttt{clear}, no conseguía hacer que la función \texttt{LoadFacts} se ejecutase correctamente. 
+Para el correcto funcionamiento del sistema, las plantillas debían ser definidas una única vez al inicio del sistema. Tras consultar la documentación de Django y el foro de la comunidad encontré una solución: había que definir las plantillas en el archivo \texttt{urls.py}. Este archivo contiene las expresiones regulares de las ``urls'' en las que se visualizarán las secciones de la pagina web. Éste código se ejecuta una única vez al inicio de la aplicación, lo que nos permite evitar que las plantillas se creen una y otra vez.
 
-Finalmente, opté por almacenar el contenido de los hechos en archivos independientes - un archivo por tipo de \texttt{template} - y añadir nuevas reglas para la lectura de estos ficheros y la creación de los hechos correspondientes. 
+Aunque se solucionó el problema de las plantillas, no se podía leer el archivo de hechos. Para asertar conjuntos de hechos en el entorno de CLIPS se utiliza la instrucción \texttt{deffacts}. Esta instrucción no era reconocida por la función \texttt{LoadFacts} de PyCLIPS, que es la encargada de cargar el archivo. Intenté modificar la sintaxis del archivo utilizando otras instrucciones como \texttt{assert}, que ``aserta'' los hechos en la memoria de trabajo, o escribiendo directamente los hechos, sin éxito. Al igual que con la función \texttt{clear}, no conseguía hacer que la función \texttt{LoadFacts} se ejecutase correctamente. De nuevo, consulté a la comunidad y busqué en la documentación pero no encontré ninguna respuesta. También busqué otros ejemplos de sistemas expertos que se hubiesen implementado utilizando estas tecnologías y, pese a encontrarlos, comprobé que utilizaban las mismas funciones y recursos que estaba empleando yo.
+
+Finalmente, opté por almacenar el contenido de los hechos en archivos independientes - un archivo por tipo de \texttt{template} - y añadir nuevas reglas con máxima prioridad para la lectura de estos ficheros y la creación de los hechos correspondientes. De esta manera, los hechos de la base de conocimiento se asertan sin problemas al inicio del sistema.
 
 \bigskip
 Algunos de estos problemas referidos a funciones e instrucciones que no se ejecutan o dan errores de ejecución se deben principalmente a que PyCLIPS define los hechos, reglas y demás elementos de CLIPS como objetos. Esto hace que se den problemas de asignación y liberación de memoria, como en el caso de la instrucción \texttt{clear}, entre otros. 

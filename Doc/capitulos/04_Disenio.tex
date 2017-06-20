@@ -12,7 +12,7 @@ Para la implementación del sistema experto se consideraron las siguientes opcio
 
 	\item \textbf{Expert System Builder}. Programa gratuito, implementado en Common Lisp, destinado a simplificar el desarrollo de sistemas expertos.
 
-	\item \textbf{CLIPS}. Lenguaje basado reglas para desarrollar sistemas expertos. Basado en el lenguaje C para permitir una mayor portabilidad. 
+	\item \textbf{CLIPS}. Lenguaje basado en reglas para desarrollar sistemas expertos. Basado en el lenguaje C para permitir una mayor portabilidad. 
 
 \end{itemize} 
 
@@ -84,13 +84,13 @@ El uso de cada color se describe a continuación:
 	\item El tono gris oscuro se usará para la cabeza y el pie.
 \end{itemize}
 
-La maquetación de la interfaz se llevará a cabo haciendo uso de HTML5 y CSS3, apoyándonos en el sistema de temaplates Jinja2. Adicionalmente, se hará uso de jQuery para algunas funcionalidades.
+La maquetación de la interfaz se llevará a cabo haciendo uso de HTML5 y CSS3, apoyándonos en el sistema de templates Jinja2. Adicionalmente, se hará uso de jQuery para algunas funcionalidades.
 
 \section{Arquitectura del sistema}
 
 La arquitectura será \textbf{MVT} (Model-View-Template), que es la arquitectura empleada por DJango. En esta arquitectura, las vistas hacen el papel de ``controlador'' del sistema. Éstas serán las que contendrán al sistema experto.  
 
-El sistema experto se dividirá en tres módulos:
+El sistema experto se dividirá en tres módulos como se comentó en el capítulo anterior:
 
 \begin{itemize}
 
@@ -102,11 +102,11 @@ El sistema experto se dividirá en tres módulos:
 
 \end{itemize}
 
-En imagen \ref{fig4.2.1} se muestra gráficamente cómo sería la arquitectura del sistema.
+En la imagen \ref{fig4.2.1} se muestra gráficamente cómo sería la arquitectura del sistema.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.8]{imagenes/arquitectura.png}
+	\includegraphics[scale=1]{imagenes/arquitectura.png}
 	\caption{Diagrama de la arquitectura del sistema}
 	\label{fig4.2.1}
 \end{figure}

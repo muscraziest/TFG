@@ -9,7 +9,7 @@ Los objetivos que se desean alcanzar con este sistema son los siguientes:
 
 \textbf{OBJ-2.} El sistema deberá analizar desde un punto de vista melódico una partitura y comprobar la existencia de errores referidos a la línea melódica y de contrapunto.
 
-\textbf{OBJ-3.} El sistema deberá analizar desde un punto de vista armónico una partitura y comprobar la existencias de errores referidos a la armonía.
+\textbf{OBJ-3.} El sistema deberá analizar desde un punto de vista armónico una partitura y comprobar la existencia de errores referidos a la armonía.
 
 \textbf{OBJ-4.} El sistema mostrará todos los errores encontrados. 
 
@@ -156,9 +156,9 @@ La realización del análisis armónico implica la comprobación de los siguient
 		\label{fig2.1.6}
 	\end{figure}
 
-	\item \textit{Búsqueda de acordes incompletos}: todos los acordes deberán de tener la fundamental, la tercera y la quinta del acorde en al menos una voz, especialmente si están invertidos. No obstante, se puede dar la situación de que el acorde de tónica quede incompleto, con la ausencia de la quinta, en la cadencia.
+	\item \textit{Búsqueda de acordes incompletos}: todos los acordes deberán tener la fundamental, la tercera y la quinta del acorde en al menos una voz, especialmente si están invertidos. No obstante, se puede dar la situación de que el acorde de tónica quede incompleto, con la ausencia de la quinta, en la cadencia.
 
-	\item \textit{Segunda inverión consecutiva}: en ningún caso podrá haber dos acordes en segunda inversión consecutivos.
+	\item \textit{Segunda inversión consecutiva}: en ningún caso podrá haber dos acordes en segunda inversión consecutivos.
 
 	\item \textit{Lógica tonal}: la armonía de la obra deberá seguir, en la medida de lo posible, el esquema indicado en la figura .
 
@@ -371,7 +371,7 @@ Los requisitos no funcionales son aquellos referidos al desarrollo pero no neces
 		\textbf{Referencias} & \multicolumn{2}{p{11cm}|}{RI-1,RI-2,,RI-3,RI-4,RI-5,RF-1,RF-2} \\ \hline
 		\textbf{Precondición} & \multicolumn{2}{p{11cm}|}{Partitura almacenada en el servidor y opciones seleccionadas enviadas} \\ \hline
 		\textbf{Postcondición} & \multicolumn{2}{p{11cm}|}{Se crearán archivos con los resultados del análisis para mostrarse a través de la interfaz.} \\ \hline
-		\textbf{Propósito} & \multicolumn{2}{p{11cm}|}{Realización del análisis deseado en la partitura aportada por el usuario y obtenicón de resultados.} \\ \hline
+		\textbf{Propósito} & \multicolumn{2}{p{11cm}|}{Realización del análisis deseado en la partitura aportada por el usuario y obtención de resultados.} \\ \hline
 		\textbf{Resumen} & \multicolumn{2}{p{11cm}|}{Una vez se han propocionado todos los datos necesarios, el usuario podrá activar el sistema para obtener la lista de errores y faltas encontrados en su partitura para su posterior corrección.} \\ \hline
 	\end{tabular}
 	\caption{Descripción del caso de uso CU-1}
@@ -386,7 +386,7 @@ Los requisitos no funcionales son aquellos referidos al desarrollo pero no neces
 		(1) Usuario: selecciona las opciones de análisis propuestas por el sistema. & \\ \hline
 		 & (2) Sistema: comprueba las opciones seleccionadas. \\ \hline 
 		(3) Usuario: selecciona el archivo de la partitura y lo sube al servidor del sistema. &  \\ \hline
-		 & (3) Sistema: comprueba el archivo adjuntado.  \\ \hline 
+		 & (4) Sistema: comprueba el archivo adjuntado.  \\ \hline 
 		(5) Usuario: envía los datos al sistema. & \\ \hline
 		 & (6) Sistema: almacena las opciones seleccionadas por el usuario.  \\ \hline
 		 & (7) Sistema: almacena la partitura en el servidor.  \\ \hline
